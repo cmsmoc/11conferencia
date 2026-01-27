@@ -18,12 +18,26 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             height: 100vh;
-            height: 100svh; /* Suporte para barras dinâmicas de navegadores mobile */
+            height: 100svh;
             overflow: hidden; 
             display: flex;
             flex-direction: column;
             background-color: #f8fafc;
-            touch-action: pan-y; /* Previne scroll horizontal acidental, permite vertical */
+            touch-action: pan-y;
+            
+            /* Plano de fundo ampliado ocupando do canto inferior até o meio */
+            background-image: url('https://i.ibb.co/DDmnxT7J/Logotipo-CMSMOC-2025-ICONE-A1.png');
+            background-repeat: no-repeat;
+            background-position: right -15% bottom -10%;
+            background-size: 110% auto; 
+            background-attachment: fixed;
+        }
+
+        @media (min-width: 1024px) {
+            body {
+                background-size: 65% auto;
+                background-position: right -5% bottom -10%;
+            }
         }
 
         .app-main {
@@ -32,6 +46,7 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            background: rgba(248, 250, 252, 0.4); 
         }
 
         .view-content {
@@ -76,6 +91,8 @@
             opacity: 0.2;
             transform: scale(0.85);
             position: relative;
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(4px);
         }
 
         .step-card.active {
@@ -86,11 +103,10 @@
         }
 
         @media (min-width: 1024px) {
-            .step-card { margin: 0 2rem; transform: scale(0.8); }
+            .step-card { margin: 0 2.5rem; transform: scale(0.8); }
             .step-card.active { transform: scale(1.05); }
         }
 
-        /* Status Badges */
         .status-badge {
             position: absolute;
             top: 16px;
@@ -109,15 +125,14 @@
         .badge-done { background: #16a34a; color: white; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); }
         .badge-pending { background: #dc2626; color: white; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); }
 
-        .card-checked { background-color: #ffffff; border-color: #dcfce7 !important; }
-        .card-pending { background-color: #f1f5f9; border-color: #f1f5f9 !important; }
+        .card-checked { border-color: #dcfce7 !important; }
+        .card-pending { background-color: rgba(241, 245, 249, 0.8) !important; border-color: #f1f5f9 !important; }
 
-        /* Régua Temporal */
         .progress-bar-container {
             position: relative;
             width: 100%;
             height: 4px;
-            background: #e2e8f0;
+            background: rgba(226, 232, 240, 0.6);
             border-radius: 2px;
         }
 
@@ -170,7 +185,7 @@
         
         .phase-indicator.active {
             background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border-color: #e2e8f0;
         }
 
@@ -193,27 +208,33 @@
         <p class="font-bold text-slate-800 tracking-widest uppercase text-[10px]">Carregando</p>
     </div>
 
-    <!-- Header Mobile Optimized -->
-    <header class="bg-white border-b border-slate-200 h-[70px] shrink-0 flex items-center px-4 z-50">
-        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <img src="https://i.ibb.co/5xY4fr6x/11ic.png" 
-                 alt="11ª CMS" 
-                 class="h-8 md:h-12 w-auto object-contain">
+    <!-- Header Reestruturado: Imagem Full e Botões Abaixo -->
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 shrink-0 flex flex-col items-center z-50">
+        <div class="w-full">
+            <!-- Imagem Ocupando Largura Total -->
+            <img src="https://i.ibb.co/DHNYhjZv/11p.png" 
+                 alt="11ª Conferência Municipal de Saúde" 
+                 class="w-full h-auto max-h-[140px] lg:max-h-[220px] object-contain md:object-cover transition-transform hover:scale-[1.01]">
+        </div>
 
-            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0 ml-2">
-                <button onclick="setView('timeline')" id="btn-timeline" class="px-3 md:px-4 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all bg-white shadow-sm text-slate-900">Timeline</button>
-                <button onclick="setView('list')" id="btn-list" class="px-3 md:px-4 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all text-slate-500 hover:text-slate-900">Lista</button>
-                <button onclick="setView('grid')" id="btn-grid" class="px-3 md:px-4 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all text-slate-500 hover:text-slate-900">Grade</button>
+        <!-- Seletores de Visão Logo Abaixo da Imagem -->
+        <div class="w-full flex justify-center py-3 bg-slate-50/50 border-t border-slate-100">
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl border border-slate-200 shrink-0 shadow-sm">
+                <button onclick="setView('timeline')" id="btn-timeline" class="px-4 md:px-8 py-2 rounded-xl text-[10px] md:text-xs font-black transition-all bg-white shadow-sm text-slate-900">TIMELINE</button>
+                <button onclick="setView('list')" id="btn-list" class="px-4 md:px-8 py-2 rounded-xl text-[10px] md:text-xs font-black transition-all text-slate-500 hover:text-slate-900">LISTA</button>
+                <button onclick="setView('grid')" id="btn-grid" class="px-4 md:px-8 py-2 rounded-xl text-[10px] md:text-xs font-black transition-all text-slate-500 hover:text-slate-900">GRADE</button>
             </div>
         </div>
     </header>
 
-    <nav class="bg-white border-b border-slate-100 h-[50px] shrink-0 overflow-x-auto custom-scrollbar">
-        <div id="phase-nav" class="h-full flex items-center gap-1 px-4 min-w-max"></div>
+    <!-- Navegação de Fases -->
+    <nav class="bg-white/80 border-b border-slate-100 h-[55px] shrink-0 overflow-x-auto custom-scrollbar">
+        <div id="phase-nav" class="max-w-7xl mx-auto h-full flex items-center gap-1 px-6 min-w-max"></div>
     </nav>
 
     <main class="app-main">
-        <div id="timeline-ruler" class="h-[50px] w-full px-6 lg:px-24 flex items-end pb-2 bg-white/50 backdrop-blur-sm border-b border-slate-100">
+        <!-- Régua de Tempo -->
+        <div id="timeline-ruler" class="h-[55px] w-full px-6 lg:px-24 flex items-end pb-3 bg-white/30 backdrop-blur-sm border-b border-slate-100">
              <div class="progress-bar-container">
                  <div id="progress-line" class="progress-line"></div>
                  <div id="time-grid" class="absolute inset-0 w-full h-full"></div>
@@ -221,39 +242,40 @@
              </div>
         </div>
 
+        <!-- View Timeline -->
         <section id="view-timeline" class="view-content active h-full">
             <div class="timeline-gallery">
                 <div id="card-track" class="card-track"></div>
                 
-                <!-- Arrows Hidden on Small Screens -->
-                <div class="hidden lg:flex absolute inset-x-0 top-1/2 -translate-y-1/2 justify-between px-8 pointer-events-none z-50">
-                    <button onclick="moveStep(-1)" class="pointer-events-auto bg-white/90 p-5 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <div class="hidden lg:flex absolute inset-x-0 top-1/2 -translate-y-1/2 justify-between px-12 pointer-events-none z-50">
+                    <button onclick="moveStep(-1)" class="pointer-events-auto bg-white/90 p-6 rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 border border-slate-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                     </button>
-                    <button onclick="moveStep(1)" class="pointer-events-auto bg-white/90 p-5 rounded-full shadow-xl transition-all hover:scale-110 active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    <button onclick="moveStep(1)" class="pointer-events-auto bg-white/90 p-6 rounded-full shadow-2xl transition-all hover:scale-110 active:scale-95 border border-slate-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                     </button>
                 </div>
             </div>
 
-            <!-- More Compact Summary -->
-            <div class="absolute bottom-0 inset-x-0 h-[85px] bg-white/90 backdrop-blur border-t border-slate-100 flex flex-col items-center justify-center z-40 px-4">
-                <span id="label-counter" class="text-[8px] font-black tracking-[0.2em] text-slate-400 mb-1.5 uppercase">A&Ccedil;&Atilde;O 00 / 00</span>
-                <div id="summary-container" class="px-4 py-2 bg-white rounded-xl shadow-md border border-slate-200 flex items-center gap-3 w-full max-w-lg overflow-hidden">
-                    <span id="label-phase" class="text-[9px] font-black text-blue-600 uppercase shrink-0">Fase 0</span>
-                    <h2 id="label-title" class="text-[11px] lg:text-sm font-bold text-slate-800 truncate">...</h2>
+            <!-- Resumo Fixo Inferior -->
+            <div class="absolute bottom-0 inset-x-0 h-[100px] bg-white/95 backdrop-blur-md border-t border-slate-100 flex flex-col items-center justify-center z-40 px-4 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)]">
+                <span id="label-counter" class="text-[9px] font-black tracking-[0.3em] text-slate-400 mb-2 uppercase">AÇÃO 00 / 00</span>
+                <div id="summary-container" class="px-5 py-3 bg-white rounded-2xl shadow-lg border border-slate-200 flex items-center gap-4 w-full max-w-xl overflow-hidden transition-all duration-500">
+                    <span id="label-phase" class="text-[10px] font-black text-blue-600 uppercase border-r border-slate-100 pr-4 shrink-0">Fase 0</span>
+                    <h2 id="label-title" class="text-[12px] lg:text-base font-extrabold text-slate-800 truncate">Sincronizando dados...</h2>
                 </div>
-                <p class="lg:hidden text-[7px] text-slate-300 font-bold uppercase mt-1 tracking-widest">Deslize para navegar</p>
+                <p class="lg:hidden text-[8px] text-slate-300 font-black uppercase mt-2 tracking-[0.2em]">Deslize para navegar lateralmente</p>
             </div>
         </section>
 
-        <!-- View List & Grid Optimized -->
-        <section id="view-list" class="view-content bg-slate-50 p-4 lg:p-12">
-            <div id="list-render" class="max-w-4xl mx-auto space-y-8"></div>
+        <!-- View List -->
+        <section id="view-list" class="view-content p-5 lg:p-16">
+            <div id="list-render" class="max-w-4xl mx-auto space-y-12"></div>
         </section>
 
-        <section id="view-grid" class="view-content bg-slate-50 p-4 lg:p-12">
-            <div id="grid-render" class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"></div>
+        <!-- View Grid -->
+        <section id="view-grid" class="view-content p-5 lg:p-16">
+            <div id="grid-render" class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"></div>
         </section>
     </main>
 
@@ -269,7 +291,6 @@
         let currentIndex = 0;
         let currentView = 'timeline';
 
-        // SWIPE HANDLER FOR MOBILE
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -298,7 +319,7 @@
                 setTimeout(() => document.getElementById('splash').style.display = 'none', 500);
                 setupSwipe();
             } catch (err) {
-                console.error("Erro:", err);
+                console.error("Erro no carregamento:", err);
             }
         }
 
@@ -404,9 +425,9 @@
         function renderNav() {
             const nav = document.getElementById('phase-nav');
             nav.innerHTML = phases.map(p => `
-                <button onclick="jumpToPhase(${p.id})" class="phase-indicator flex items-center gap-2 px-3 py-1.5 rounded-lg border border-transparent hover:bg-slate-50 transition-all min-w-max">
-                    <span class="w-1.5 h-1.5 rounded-full ${getDotBg(p.color)}"></span>
-                    <span class="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-slate-500">${p.name}</span>
+                <button onclick="jumpToPhase(${p.id})" class="phase-indicator flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-transparent hover:bg-slate-50 transition-all min-w-max">
+                    <span class="w-2 h-2 rounded-full ${getDotBg(p.color)}"></span>
+                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">${p.name}</span>
                 </button>
             `).join('');
         }
@@ -425,7 +446,6 @@
                     `;
                 } 
                 else if (day === 10 || day === 20) {
-                    // Oculta marcadores menores em mobile se necessário
                     grid.innerHTML += `<div class="time-marker" style="left: ${pos}%"></div>`;
                 }
             }
@@ -437,28 +457,28 @@
             track.innerHTML = fullData.map((item, i) => {
                 const p = phases.find(ph => ph.id === item.fase) || phases[0];
                 const statusBadge = item.checked ? 
-                    `<div class="status-badge badge-done"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg>OK</div>` : 
-                    `<div class="status-badge badge-pending"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Pendente</div>`;
+                    `<div class="status-badge badge-done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg>OK</div>` : 
+                    `<div class="status-badge badge-pending"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>PENDENTE</div>`;
                 return `
-                    <div class="step-card p-6 md:p-10 rounded-[2rem] border-2 shadow-sm ${item.checked ? 'card-checked' : 'card-pending'}" onclick="jumpTo(${i})">
+                    <div class="step-card p-8 lg:p-12 rounded-[2.5rem] border-2 shadow-sm ${item.checked ? 'card-checked' : 'card-pending'}" onclick="jumpTo(${i})">
                         ${statusBadge}
-                        <div class="mb-4 md:mb-8 p-4 md:p-6 rounded-2xl bg-white ${getTextColor(p.color)} shadow-inner w-max mx-auto">
-                            ${getSVG(item.icon, getHex(p.color), 28)}
+                        <div class="mb-6 lg:mb-10 p-5 lg:p-7 rounded-3xl bg-white ${getTextColor(p.color)} shadow-inner w-max mx-auto transition-transform group-hover:scale-110">
+                            ${getSVG(item.icon, getHex(p.color), 42)}
                         </div>
-                        <div class="flex flex-col mb-4 md:mb-8 w-full">
-                            <span class="text-[8px] font-black uppercase tracking-[0.2em] mb-2 text-slate-400">ITEM N&ordm; ${item.n}</span>
-                            <div class="h-1 w-8 bg-slate-200/50 mx-auto mb-4 rounded-full"></div>
-                            <h3 class="text-xs md:text-lg font-black text-slate-800 leading-snug">${item.descricao}</h3>
+                        <div class="flex flex-col mb-6 lg:mb-10 w-full">
+                            <span class="text-[10px] font-black uppercase tracking-[0.3em] mb-3 text-slate-400">N&ordm; ${item.n}</span>
+                            <div class="h-1 w-12 bg-slate-200/50 mx-auto mb-6 rounded-full"></div>
+                            <h3 class="text-sm lg:text-2xl font-black text-slate-800 leading-tight">${item.descricao}</h3>
                         </div>
-                        <div class="mt-auto pt-4 border-t border-slate-200 w-full">
-                            <span class="text-xl md:text-3xl font-black tracking-tighter ${getTextColor(p.color)}">${item.data}</span>
+                        <div class="mt-auto pt-6 border-t border-slate-100 w-full">
+                            <span class="text-3xl lg:text-5xl font-black tracking-tighter ${getTextColor(p.color)}">${item.data}</span>
                         </div>
                     </div>
                 `;
             }).join('');
             dots.innerHTML = fullData.map((it, i) => {
                 let pos = it.posDate ? ((it.posDate - startRuler) / totalDuration) * 100 : (i / (fullData.length - 1)) * 100;
-                return `<div class="time-dot rounded-full ${it.checked ? 'bg-green-500' : 'bg-red-500'}" style="left: ${pos}%" onclick="jumpTo(${i})"></div>`;
+                return `<div class="time-dot rounded-full ${it.checked ? 'bg-green-500' : 'bg-red-500'} cursor-pointer hover:scale-150 transition-all duration-300" style="left: ${pos}%" onclick="jumpTo(${i})"></div>`;
             }).join('');
         }
 
@@ -468,22 +488,25 @@
                 const items = fullData.filter(i => i.fase === p.id);
                 return `
                     <div>
-                        <div class="flex items-center gap-3 mb-4 sticky top-0 bg-slate-50/90 backdrop-blur py-3 z-20">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg ${getPhaseBg(p.color)}">
-                                ${getSVG("star", "white", 18)}
+                        <div class="flex items-center gap-4 mb-6 sticky top-0 bg-white/90 backdrop-blur-md py-4 z-20 px-3 rounded-2xl border border-slate-100 shadow-sm">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-xl ${getPhaseBg(p.color)}">
+                                ${getSVG("star", "white", 24)}
                             </div>
-                            <h2 class="text-base font-black text-slate-900">${p.name}</h2>
+                            <h2 class="text-lg lg:text-2xl font-black text-slate-900 tracking-tight">${p.name}</h2>
                         </div>
-                        <div class="space-y-3 lg:pl-16">
+                        <div class="space-y-4 lg:pl-16">
                             ${items.map(it => `
-                                <div class="flex items-center justify-between p-4 rounded-2xl border shadow-sm ${it.checked ? 'bg-white border-green-100 border-l-4 border-l-green-500' : 'bg-slate-100 border-red-100 border-l-4 border-l-red-500'}">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <div class="flex-shrink-0 p-2 rounded-lg bg-white ${getTextColor(p.color)} shadow-sm">
-                                            ${getSVG(it.icon, getHex(p.color), 16)}
+                                <div class="flex items-center justify-between p-5 rounded-3xl border shadow-sm transition-all duration-300 hover:shadow-md ${it.checked ? 'bg-white border-green-100 border-l-8 border-l-green-500' : 'bg-slate-50 border-red-100 border-l-8 border-l-red-500'}">
+                                    <div class="flex items-center gap-4 min-w-0">
+                                        <div class="flex-shrink-0 p-3 rounded-xl bg-white ${getTextColor(p.color)} shadow-sm">
+                                            ${getSVG(it.icon, getHex(p.color), 20)}
                                         </div>
-                                        <h4 class="font-bold text-slate-700 text-[10px] md:text-sm truncate min-w-0">${it.descricao}</h4>
+                                        <div class="min-w-0">
+                                            <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Item #${it.n}</div>
+                                            <h4 class="font-bold text-slate-700 text-xs lg:text-base truncate min-w-0">${it.descricao}</h4>
+                                        </div>
                                     </div>
-                                    <span class="text-[8px] font-black px-3 py-1.5 rounded-lg border ${it.checked ? 'border-green-200 text-green-600' : 'border-red-200 text-red-600'} shrink-0 ml-2 whitespace-nowrap">${it.data}</span>
+                                    <span class="text-[10px] font-black px-4 py-2 rounded-xl border ${it.checked ? 'border-green-200 text-green-600 bg-green-50' : 'border-red-200 text-red-600 bg-red-50'} shrink-0 ml-3 whitespace-nowrap">${it.data}</span>
                                 </div>
                             `).join('')}
                         </div>
@@ -497,15 +520,15 @@
             grid.innerHTML = fullData.map(it => {
                 const p = phases.find(ph => ph.id === it.fase) || phases[0];
                 return `
-                    <div class="p-4 rounded-2xl border shadow-sm flex flex-col relative ${it.checked ? 'bg-white' : 'bg-slate-100'}">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="p-2 rounded-lg bg-white shadow-sm ${getTextColor(p.color)}">
-                                 ${getSVG(it.icon, getHex(p.color), 16)}
+                    <div class="p-6 rounded-[2.5rem] border shadow-sm flex flex-col relative transition-transform duration-300 hover:-translate-y-2 ${it.checked ? 'bg-white' : 'bg-slate-50'}">
+                        <div class="flex justify-between items-start mb-5">
+                            <div class="p-3 rounded-xl bg-white shadow-sm ${getTextColor(p.color)}">
+                                 ${getSVG(it.icon, getHex(p.color), 20)}
                             </div>
-                            ${it.checked ? '<div class="text-green-500"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
+                            ${it.checked ? '<div class="text-green-500 bg-green-50 p-1.5 rounded-full"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"></polyline></svg></div>' : ''}
                         </div>
-                        <h4 class="font-extrabold text-slate-800 text-[9px] mb-2 leading-tight flex-grow">${it.descricao}</h4>
-                        <div class="mt-2 pt-2 border-t border-slate-200 text-[10px] font-black ${getTextColor(p.color)}">${it.data}</div>
+                        <h4 class="font-extrabold text-slate-800 text-[10px] lg:text-sm mb-4 leading-tight flex-grow">${it.descricao}</h4>
+                        <div class="mt-auto pt-3 border-t border-slate-200 text-[12px] font-black ${getTextColor(p.color)}">${it.data}</div>
                     </div>
                 `;
             }).join('');
@@ -517,29 +540,24 @@
             const cards = document.querySelectorAll('.step-card');
             const dots = document.querySelectorAll('.time-dot');
             if(!cards[0]) return;
-
             const cardWidth = cards[0].offsetWidth;
             const computedStyle = window.getComputedStyle(cards[0]);
             const totalStep = cardWidth + parseFloat(computedStyle.marginLeft) + parseFloat(computedStyle.marginRight);
             const offset = -(currentIndex * totalStep) - (cardWidth / 2) - parseFloat(computedStyle.marginLeft);
             track.style.transform = `translateX(${offset}px)`;
-
             cards.forEach((card, i) => card.classList.toggle('active', i === currentIndex));
-
             const item = fullData[currentIndex];
             const phase = phases.find(ph => ph.id === item.fase) || phases[0];
-
-            document.getElementById('label-counter').innerText = `ITEM ${currentIndex + 1} DE ${fullData.length}`;
+            document.getElementById('label-counter').innerText = `AÇÃO ${currentIndex + 1} DE ${fullData.length}`;
             document.getElementById('label-phase').innerHTML = `<span class="flex items-center gap-1">${item.checked ? '✅' : '❌'} FASE ${item.fase}</span>`;
             document.getElementById('label-title').innerText = item.descricao;
             const currentPos = item.posDate ? ((item.posDate - startRuler) / totalDuration) * 100 : (currentIndex / (fullData.length - 1)) * 100;
             document.getElementById('progress-line').style.width = `${currentPos}%`;
             dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
             document.querySelectorAll('.phase-indicator').forEach((btn, i) => btn.classList.toggle('active', phases[i]?.id === item.fase));
-            
             const summary = document.getElementById('summary-container');
-            summary.classList.toggle('border-green-200', item.checked);
-            summary.classList.toggle('border-red-200', !item.checked);
+            summary.classList.toggle('border-green-300', item.checked);
+            summary.classList.toggle('border-red-300', !item.checked);
         }
 
         function setView(view) {
