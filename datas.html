@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma de Pré-Conferências - 11ª Conferência de Saúde</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #005a8d 0%, #003d60 100%);
+        }
+        .conferencia-card {
+            border-top: 10px solid #2d9344;
+            transition: transform 0.2s ease;
+        }
+        .conferencia-card:hover {
+            transform: scale(1.02);
+        }
+        .bg-tema { background-color: #f0fdf4; border-left: 4px solid #2d9344; }
+        .bg-local { background-color: #eff6ff; border-left: 4px solid #005a8d; }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: #fdb913;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .footer-waves {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23005a8d' fill-opacity='1' d='M0,192L48,176C96,160,192,128,288,128C384,128,480,160,576,181.3C672,203,768,213,864,192C960,171,1056,117,1152,101.3C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100px;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <!-- Header Simples e Impactante -->
+    <header class="header-gradient text-white pt-12 pb-20 px-4 shadow-2xl">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block bg-yellow-400 text-blue-900 font-black px-3 py-1 rounded mb-4 shadow-lg text-lg">
+                11ª CONFERÊNCIA MUNICIPAL DE SAÚDE
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black tracking-tighter mb-2 italic uppercase">CONFERÊNCIA MUNICIPAL DE SAÚDE</h1>
+            <p class="text-xl md:text-2xl font-bold text-green-400 uppercase tracking-widest">Cronograma Oficial de Pré-Conferências</p>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-7xl mx-auto px-4 -mt-10 mb-20 relative z-10">
+        
+        <div id="loader" class="flex flex-col items-center justify-center py-32 bg-white rounded-3xl shadow-xl border border-slate-100">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-slate-500 font-black tracking-widest uppercase">Sincronizando Dados...</p>
+        </div>
+
+        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden">
+            <!-- Cards Gerados Automaticamente -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto">
+        <div class="footer-waves"></div>
+        <div class="bg-[#005a8d] text-white pb-12 px-6">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center pt-4 border-t border-white/10">
+                <div class="text-center md:text-left">
+                    <p class="text-xs uppercase opacity-50 font-bold mb-2">Organização</p>
+                    <p class="text-xl font-black">CONSELHO MUNICIPAL DE SAÚDE</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-xs uppercase opacity-50 font-bold mb-2">Realização</p>
+                    <p class="text-2xl font-black tracking-tighter">PREFEITURA DE MONTES CLAROS</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=360099370&single=true&output=csv';
+
+        // Função para escolher ícone baseado no tema
+        function getIconForTheme(theme) {
+            const t = (theme || "").toLowerCase();
+            if (t.includes('servidor')) return 'briefcase';
+            if (t.includes('rural')) return 'tree-pine';
+            if (t.includes('mulher')) return 'venus';
+            if (t.includes('pcd') || t.includes('deficiência')) return 'accessibility';
+            if (t.includes('rua')) return 'tent';
+            if (t.includes('racial') || t.includes('igualdade')) return 'users-2';
+            if (t.includes('lgbt')) return 'heart';
+            if (t.includes('idoso')) return 'contact-2';
+            return 'hospital'; // Padrão
+        }
+
+        async function loadAndDisplay() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Falha ao carregar a folha de cálculo');
+                const data = await response.text();
+                
+                // Limpa as linhas removendo espaços e filtrando linhas vazias
+                const rows = data.split('\n')
+                                 .map(r => r.trim())
+                                 .filter(r => r.length > 0)
+                                 .slice(1);
+
+                const grid = document.getElementById('cardsGrid');
+                grid.innerHTML = '';
+
+                rows.forEach(row => {
+                    // Split robusto para CSV (considera vírgulas fora de aspas)
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
+                    // Se a linha for inválida ou não tiver colunas suficientes, ignora
+                    if (!cols || cols.length < 3) return;
+
+                    // Função auxiliar para limpar aspas e espaços de forma segura
+                    const clean = (val) => (val || "").replace(/"/g, '').trim();
+
+                    const item = {
+                        data: clean(cols[0]),
+                        hora: clean(cols[1]),
+                        tema: clean(cols[2]),
+                        local: clean(cols[3]),
+                        endereco: cols[4] ? clean(cols[4]) : ''
+                    };
+
+                    // Só gera o card se houver pelo menos data e tema
+                    if (!item.data || !item.tema) return;
+
+                    const iconName = getIconForTheme(item.tema);
+
+                    const card = document.createElement('div');
+                    card.className = 'conferencia-card bg-white rounded-[2rem] shadow-xl overflow-hidden flex flex-col h-full border border-slate-100';
+                    
+                    card.innerHTML = `
+                        <div class="p-8 flex-grow">
+                            <!-- Data e Hora -->
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="text-5xl font-black text-blue-800 tracking-tighter italic">
+                                    ${item.data}
+                                </div>
+                                <div class="bg-yellow-400 text-blue-900 px-4 py-1 rounded-full text-sm font-black flex items-center gap-2 shadow-sm">
+                                    <i data-lucide="clock" size="16"></i> ${item.hora}
+                                </div>
+                            </div>
+
+                            <!-- Tema/Público (Destaque Principal) -->
+                            <div class="bg-tema p-5 rounded-2xl mb-4">
+                                <p class="text-[10px] font-black text-green-700 uppercase tracking-[0.2em] mb-1">Pré-Conferência</p>
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-green-600 text-white p-2 rounded-xl shrink-0 mt-1">
+                                        <i data-lucide="${iconName}" size="24"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-black text-slate-800 leading-none uppercase tracking-tight">
+                                        ${item.tema}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <!-- Local (Destaque Principal) -->
+                            <div class="bg-local p-5 rounded-2xl">
+                                <p class="text-[10px] font-black text-blue-700 uppercase tracking-[0.2em] mb-1">Local do Evento</p>
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-blue-700 text-white p-2 rounded-xl shrink-0 mt-1">
+                                        <i data-lucide="map-pin" size="24"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-black text-slate-800 leading-tight uppercase">
+                                            ${item.local}
+                                        </h4>
+                                        <p class="text-xs text-slate-500 font-medium mt-1 uppercase italic">
+                                            ${item.endereco}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Ação -->
+                        <a href="https://www.google.com/search?q=${encodeURIComponent(item.local + ' ' + item.endereco + ' Montes Claros MG')}" 
+                           target="_blank" 
+                           class="w-full bg-slate-900 hover:bg-green-600 text-white py-5 text-center font-black tracking-widest text-sm transition-all flex items-center justify-center gap-3">
+                            <i data-lucide="navigation" size="18"></i>
+                            COMO CHEGAR
+                        </a>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                document.getElementById('loader').classList.add('hidden');
+                grid.classList.remove('hidden');
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('loader').innerHTML = `
+                    <div class="p-10 text-center">
+                        <p class="text-red-500 font-bold uppercase tracking-tighter mb-2">Erro ao carregar dados oficiais</p>
+                        <p class="text-slate-400 text-xs">${error.message}</p>
+                    </div>`;
+            }
+        }
+
+        window.onload = loadAndDisplay;
+    </script>
+</body>
+</html>
