@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Processos - Conferência de Saúde (1Doc Integrado)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .transition-all { transition: all 0.3s ease; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Estilo do quadradinho 1Doc Atualizado */
+        .badge-1doc {
+            background-color: #02B0E6; /* Azul solicitado */
+            color: white;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: inline-block;
+            text-decoration: none;
+            transition: filter 0.2s;
+        }
+        .badge-1doc.clickable:hover {
+            filter: brightness(0.9);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+<div class="w-full bg-white overflow-hidden flex justify-center items-center">
+            <!-- Imagem Ocupando Largura Total, mas limitada na altura -->
+            <img src="https://i.ibb.co/DHNYhjZv/11p.png" alt="11ª Conferência Municipal de Saúde" class="w-full h-auto max-h-[85px] md:max-h-[120px] object-contain transition-transform duration-500 hover:scale-[1.02]">
+        </div>
+    <!-- Navbar -->
+    <nav class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-network-wired text-2xl mr-3"></i>
+                    <span class="font-bold text-lg hidden sm:block">Gestão de Processos CMS & 1Doc</span>
+                    <span class="font-bold text-lg sm:hidden">Gestão CMS</span>
+                </div>
+                <div class="text-sm bg-blue-800 py-1 px-3 rounded-full flex flex-col sm:flex-row items-end sm:items-center">
+                    <span id="total-cost-display" class="font-bold mr-0 sm:mr-1">R$ 0,00</span> 
+                    <span class="text-xs sm:text-sm text-blue-200">Total Acumulado</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Controls -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-lg shadow p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+            
+            <div class="flex gap-2 w-full md:w-80">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Buscar 1doc, evento, fornecedor..." class="w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm" disabled>
+                </div>
+            </div>
+
+            <!-- Botões de Filtro -->
+            <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+                <button onclick="filterData('all')" class="filter-btn active bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-blue-700 transition shadow-sm">Todos</button>
+                
+                <!-- Filtros de Evento -->
+                <button onclick="filterData('Main')" class="filter-btn bg-purple-100 text-purple-800 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-purple-200 transition border border-purple-200">11ª Conferência</button>
+                <button onclick="filterData('Pre')" class="filter-btn bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-gray-200 transition border border-gray-200">Pré-Conferências</button>
+
+                <!-- Filtros de Fornecedor -->
+                <button onclick="filterData('Radimaker')" class="filter-btn bg-orange-50 text-orange-800 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-orange-100 transition border border-orange-200">Radimaker</button>
+                <button onclick="filterData('Central')" class="filter-btn bg-red-50 text-red-800 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-red-100 transition border border-red-200">Central</button>
+                <button onclick="filterData('Supertrigo')" class="filter-btn bg-yellow-50 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-yellow-100 transition border border-yellow-200">Supertrigo</button>
+                <button onclick="filterData('Outros')" class="filter-btn bg-indigo-50 text-indigo-800 px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap hover:bg-indigo-100 transition border border-indigo-200">Outros</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-8 min-h-[300px]">
+        <div id="loader" class="text-center pt-10">
+            <div class="loader"></div>
+            <p class="text-gray-500 mt-2">Sincronizando com planilha...</p>
+        </div>
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- CONFIGURATION ---
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRVpQbt6zJXbLTi_p727vXiA6bL8V4oZqLxuTMq7gWIP4FchT5CcJUghbrqL2WL38MF0ofnHz7Fs9ZX/pub?gid=0&single=true&output=csv';
+
+        let allProcesses = [];
+
+        // --- DATA FETCHING ---
+        async function init() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processCSVData(results.data);
+                },
+                error: function(err) {
+                    console.error("Erro:", err);
+                    document.getElementById('main-content').innerHTML = `
+                        <div class="text-center py-10 text-red-500">
+                            <i class="fas fa-wifi text-4xl mb-2"></i><br>
+                            Erro ao conectar com a planilha. Verifique a internet.
+                        </div>`;
+                }
+            });
+        }
+
+        function cleanCurrency(valueStr) {
+            if (!valueStr) return 0;
+            let clean = valueStr.toString().replace(/[R$\s]/g, '');
+            clean = clean.replace(/\./g, '').replace(',', '.');
+            return parseFloat(clean) || 0;
+        }
+
+        function getSupplierStyle(supplierName) {
+            const name = supplierName ? supplierName.toLowerCase() : "";
+            
+            if (name.includes('radimaker')) return { color: 'orange', icon: 'fa-hamburger' };
+            if (name.includes('central')) return { color: 'red', icon: 'fa-wine-bottle' };
+            if (name.includes('supertrigo')) return { color: 'yellow', icon: 'fa-cookie-bite' };
+            if (name.includes('z&v') || name.includes('confecção')) return { color: 'blue', icon: 'fa-tshirt' }; 
+            if (name.includes('maria sabor') || name.includes('marmitex')) return { color: 'green', icon: 'fa-utensils' }; 
+            if (name.includes('gráfica') || name.includes('rita')) return { color: 'indigo', icon: 'fa-id-badge' }; 
+            if (name.includes('diversos')) return { color: 'purple', icon: 'fa-calculator' }; 
+            
+            return { color: 'gray', icon: 'fa-box-open' };
+        }
+
+        function processCSVData(rows) {
+            allProcesses = rows.map(row => {
+                const id = row["ID Processo"] || row["ID"];
+                const type = row["Tipo de Processo"] || "Solicitação";
+                const isGlobal = type.toLowerCase().includes('global') || type.toLowerCase().includes('estimativa');
+                const supplier = row["Fornecedor"] || "Desconhecido";
+                const style = getSupplierStyle(supplier);
+
+                // Mapeamento das Colunas
+                const docNum = row["Número 1doc"] || row["Numero 1doc"] || "";
+                const docLink = row["Link 1doc"] || "";
+                const eventoDesc = row["Evento"] || row["Público Alvo / Região"] || "";
+
+                return {
+                    id: id,
+                    highlight: isGlobal,
+                    date: row["Data do Evento"] || "",
+                    audience: eventoDesc,
+                    supplier: supplier,
+                    items: (row["Descrição dos Itens"] || "").split('+').map(s => s.trim()), 
+                    total: cleanCurrency(row["Valor Total (R$)"] || row["Valor Total"]),
+                    icon: style.icon,
+                    color: style.color,
+                    title: isGlobal ? "Estimativa Global" : supplier,
+                    docNum: docNum,
+                    docLink: docLink,
+                    // Flag para identificar a Conferência Principal
+                    // Verifica se o texto do evento contém "11ª Conferência" OU se a data é em Abril
+                    isMainEvent: eventoDesc.includes("11ª Conferência") || (row["Data do Evento"] || "").includes("/04/") || (row["Data do Evento"] || "").includes("Abril")
+                };
+            });
+
+            document.getElementById('searchInput').disabled = false;
+            document.getElementById('loader').style.display = 'none';
+            renderCards(allProcesses);
+        }
+
+        // --- RENDER LOGIC ---
+
+        const mainContent = document.getElementById('main-content');
+        const searchInput = document.getElementById('searchInput');
+        const totalDisplay = document.getElementById('total-cost-display');
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+
+        function createCardHTML(proc) {
+            let borderClass = `border-l-4 border-${proc.color}-500`;
+            let bgHeader = `bg-${proc.color}-50`;
+            let textHeader = `text-${proc.color}-700`;
+            let colSpan = proc.highlight ? 'col-span-full bg-gradient-to-r from-purple-50 to-white' : 'bg-white';
+            
+            const itemsList = proc.items.map(i => `<li class="text-xs text-gray-600 truncate"><i class="fas fa-check text-green-500 mr-1"></i>${i}</li>`).join('');
+
+            // Badge 1Doc
+            let badgeHtml = '';
+            if (proc.docNum && proc.docNum.trim() !== '') {
+                if (proc.docLink && proc.docLink.trim() !== '') {
+                    badgeHtml = `<a href="${proc.docLink}" target="_blank" class="badge-1doc clickable">Nº 1doc: ${proc.docNum} <i class="fas fa-external-link-alt ml-1 text-[10px]"></i></a>`;
+                } else {
+                    badgeHtml = `<span class="badge-1doc">Nº 1doc: ${proc.docNum}</span>`;
+                }
+            } else {
+                 badgeHtml = ``;
+            }
+
+            return `
+                <div class="${colSpan} ${borderClass} rounded-lg shadow-sm hover:shadow-lg transition-all card-hover overflow-hidden flex flex-col relative h-full">
+                    <div class="p-4 flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-gray-400">ID #${proc.id}</span>
+                            ${proc.highlight ? '<span class="bg-purple-600 text-white text-xs px-2 py-1 rounded shadow-sm font-bold">ESTIMATIVA</span>' : ''}
+                        </div>
+                        
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-full ${bgHeader} flex items-center justify-center flex-shrink-0">
+                                <i class="fas ${proc.icon} ${textHeader}"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h3 class="font-bold text-gray-800 leading-tight text-sm truncate" title="${proc.highlight ? proc.title : proc.supplier}">${proc.highlight ? proc.title : proc.supplier}</h3>
+                                <p class="text-xs text-gray-500 truncate">${proc.date}</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded p-2 mb-3">
+                            <div class="text-xs font-semibold text-gray-500 mb-1 truncate" title="${proc.audience}">${proc.highlight ? "Resumo:" : proc.audience}</div>
+                            <ul class="space-y-1">
+                                ${itemsList}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-100 flex justify-between items-center mt-auto">
+                        <div class="flex flex-col">
+                           <span class="block text-lg font-bold text-gray-800">${formatCurrency(proc.total)}</span>
+                        </div>
+                        <div>
+                            ${badgeHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCards(data) {
+            mainContent.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                mainContent.innerHTML = `<div class="text-center py-10 text-gray-500"><i class="fas fa-search mb-2 text-2xl"></i><br>Nenhum processo encontrado.</div>`;
+                totalDisplay.innerText = formatCurrency(0);
+                return;
+            }
+
+            let displayTotal = 0;
+            const globals = data.filter(d => d.highlight === true);
+            const individuals = data.filter(d => d.highlight === false);
+            
+            if (individuals.length > 0) {
+                displayTotal = individuals.reduce((acc, curr) => acc + curr.total, 0);
+            } else {
+                displayTotal = globals.reduce((acc, curr) => acc + curr.total, 0);
+            }
+            totalDisplay.innerText = formatCurrency(displayTotal);
+
+            // 1. Renderizar Estimativas Globais (Topo)
+            if (globals.length > 0) {
+                const section = document.createElement('div');
+                section.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        ${globals.map(g => createCardHTML(g)).join('')}
+                    </div>
+                `;
+                mainContent.appendChild(section);
+            }
+
+            // 2. Agrupar Individuais
+            if (individuals.length > 0) {
+                const grouped = individuals.reduce((groups, item) => {
+                    const key = item.date;
+                    if (!groups[key]) {
+                        groups[key] = {
+                            date: item.date,
+                            audience: item.audience,
+                            items: []
+                        };
+                    }
+                    groups[key].items.push(item);
+                    return groups;
+                }, {});
+
+                Object.values(grouped).forEach(group => {
+                    // Simplificação do título do grupo
+                    let groupTitle = group.items[0].audience.replace("Pré-Conferência Municipal de Saúde - ", "");
+                    if (group.items[0].isMainEvent) groupTitle = "Conferência Principal";
+
+                    const section = document.createElement('div');
+                    section.className = "animate-fade-in";
+                    section.innerHTML = `
+                        <div class="flex items-center mb-4 border-b border-gray-200 pb-2 mt-6">
+                            <div class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">
+                                <i class="far fa-calendar-alt text-lg"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-800">${group.date}</h2>
+                                <p class="text-sm text-gray-500">${groupTitle}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            ${group.items.map(item => createCardHTML(item)).join('')}
+                        </div>
+                    `;
+                    mainContent.appendChild(section);
+                });
+            }
+        }
+
+        // --- FILTER LOGIC ---
+        function filterData(criteria) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500');
+                if(btn.innerText.includes(criteria) || (criteria === 'all' && btn.innerText === 'Todos')) {
+                    btn.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                }
+            });
+
+            let filtered = [];
+            if (criteria === 'all') {
+                filtered = allProcesses;
+            } else if (criteria === 'Main') {
+                filtered = allProcesses.filter(p => p.isMainEvent);
+            } else if (criteria === 'Pre') {
+                filtered = allProcesses.filter(p => !p.isMainEvent && !p.highlight);
+            } else if (criteria === 'Outros') {
+                // Filtra fornecedores que não são os principais
+                const mainSuppliers = ['radimaker', 'central', 'supertrigo'];
+                filtered = allProcesses.filter(p => !mainSuppliers.some(s => p.supplier.toLowerCase().includes(s)) && !p.highlight);
+            } else {
+                // Filtra por fornecedor específico
+                filtered = allProcesses.filter(p => p.supplier.toLowerCase().includes(criteria.toLowerCase()));
+            }
+            renderCards(filtered);
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allProcesses.filter(p => 
+                (p.audience && p.audience.toLowerCase().includes(term)) || 
+                (p.date && p.date.includes(term)) || 
+                (p.supplier && p.supplier.toLowerCase().includes(term)) ||
+                (p.docNum && p.docNum.toLowerCase().includes(term)) ||
+                (p.items && p.items.some(i => i.toLowerCase().includes(term)))
+            );
+            renderCards(filtered);
+        });
+
+        init();
+
+    </script>
+</body>
+</html>
