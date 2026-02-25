@@ -49,10 +49,17 @@
 </head>
 <body class="text-slate-900">
 
-    <!-- Header Simples e Impactante -->
-    <header class="header-gradient text-white pt-12 pb-20 px-4 shadow-2xl">
+    <!-- Faixa Branca Superior para a Imagem -->
+    <div class="bg-white py-6 border-b border-slate-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <img src="https://i.ibb.co/DHNYhjZv/11p.png" alt="11ª Conferência" class="mx-auto max-w-full h-auto" style="max-height: 140px;" onerror="this.style.display='none'">
+        </div>
+    </div>
+
+    <!-- Header Azul com Conteúdo Textual -->
+    <header class="header-gradient text-white pt-10 pb-20 px-4 shadow-2xl">
         <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-block bg-yellow-400 text-blue-900 font-black px-3 py-1 rounded mb-4 shadow-lg text-lg">
+            <div class="inline-block bg-yellow-400 text-blue-900 font-black px-3 py-1 rounded mb-4 shadow-lg text-lg uppercase">
                 11ª CONFERÊNCIA MUNICIPAL DE SAÚDE
             </div>
             <h1 class="text-4xl md:text-6xl font-black tracking-tighter mb-2 italic uppercase">CONFERÊNCIA MUNICIPAL DE SAÚDE</h1>
@@ -94,7 +101,6 @@
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=360099370&single=true&output=csv';
 
-        // Função para escolher ícone baseado no tema
         function getIconForTheme(theme) {
             const t = (theme || "").toLowerCase();
             if (t.includes('servidor')) return 'briefcase';
@@ -105,7 +111,7 @@
             if (t.includes('racial') || t.includes('igualdade')) return 'users-2';
             if (t.includes('lgbt')) return 'heart';
             if (t.includes('idoso')) return 'contact-2';
-            return 'hospital'; // Padrão
+            return 'hospital';
         }
 
         async function loadAndDisplay() {
@@ -114,7 +120,6 @@
                 if (!response.ok) throw new Error('Falha ao carregar a folha de cálculo');
                 const data = await response.text();
                 
-                // Limpa as linhas removendo espaços e filtrando linhas vazias
                 const rows = data.split('\n')
                                  .map(r => r.trim())
                                  .filter(r => r.length > 0)
@@ -124,13 +129,9 @@
                 grid.innerHTML = '';
 
                 rows.forEach(row => {
-                    // Split robusto para CSV (considera vírgulas fora de aspas)
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    // Se a linha for inválida ou não tiver colunas suficientes, ignora
                     if (!cols || cols.length < 3) return;
 
-                    // Função auxiliar para limpar aspas e espaços de forma segura
                     const clean = (val) => (val || "").replace(/"/g, '').trim();
 
                     const item = {
@@ -141,17 +142,14 @@
                         endereco: cols[4] ? clean(cols[4]) : ''
                     };
 
-                    // Só gera o card se houver pelo menos data e tema
                     if (!item.data || !item.tema) return;
 
                     const iconName = getIconForTheme(item.tema);
-
                     const card = document.createElement('div');
                     card.className = 'conferencia-card bg-white rounded-[2rem] shadow-xl overflow-hidden flex flex-col h-full border border-slate-100';
                     
                     card.innerHTML = `
                         <div class="p-8 flex-grow">
-                            <!-- Data e Hora -->
                             <div class="flex items-center justify-between mb-8">
                                 <div class="text-5xl font-black text-blue-800 tracking-tighter italic">
                                     ${item.data}
@@ -161,7 +159,6 @@
                                 </div>
                             </div>
 
-                            <!-- Tema/Público (Destaque Principal) -->
                             <div class="bg-tema p-5 rounded-2xl mb-4">
                                 <p class="text-[10px] font-black text-green-700 uppercase tracking-[0.2em] mb-1">Pré-Conferência</p>
                                 <div class="flex items-start gap-4">
@@ -174,7 +171,6 @@
                                 </div>
                             </div>
 
-                            <!-- Local (Destaque Principal) -->
                             <div class="bg-local p-5 rounded-2xl">
                                 <p class="text-[10px] font-black text-blue-700 uppercase tracking-[0.2em] mb-1">Local do Evento</p>
                                 <div class="flex items-start gap-4">
@@ -193,7 +189,6 @@
                             </div>
                         </div>
 
-                        <!-- Botão de Ação -->
                         <a href="https://www.google.com/search?q=${encodeURIComponent(item.local + ' ' + item.endereco + ' Montes Claros MG')}" 
                            target="_blank" 
                            class="w-full bg-slate-900 hover:bg-green-600 text-white py-5 text-center font-black tracking-widest text-sm transition-all flex items-center justify-center gap-3">
@@ -210,11 +205,7 @@
 
             } catch (error) {
                 console.error('Erro:', error);
-                document.getElementById('loader').innerHTML = `
-                    <div class="p-10 text-center">
-                        <p class="text-red-500 font-bold uppercase tracking-tighter mb-2">Erro ao carregar dados oficiais</p>
-                        <p class="text-slate-400 text-xs">${error.message}</p>
-                    </div>`;
+                document.getElementById('loader').innerHTML = `<div class="p-10 text-center"><p class="text-red-500 font-bold uppercase tracking-tighter mb-2">Erro ao carregar dados</p></div>`;
             }
         }
 
