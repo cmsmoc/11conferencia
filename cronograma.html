@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Dinâmico - Conferência de Saúde 2026</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --verde: #1d9c4f;
+            --azul: #157BAB;
+            --amarelo: #FFCC29;
+            --branco: #ffffff;
+            --preto: #1a1a1a;
+            --vermelho: #e53935;
+            --cinza-borda: #e0e0e0;
+            --cinza-texto: #5a5a5a;
+            --cinza-fundo: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--branco);
+            color: var(--preto);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Header Técnico */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-id-image {
+            height: 40px;
+            width: auto;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+
+        .title-block h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--preto);
+            color: var(--branco);
+            padding: 4px 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs de Navegação */
+        .tabs-container {
+            display: flex;
+            border-bottom: 2px solid var(--preto);
+            margin-bottom: 40px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: 2px solid transparent;
+            border-bottom: none;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--cinza-texto);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--preto);
+        }
+
+        .tab-btn.active {
+            background: var(--preto);
+            color: var(--branco);
+            border-color: var(--preto);
+        }
+
+        .view-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* -------------------------------------
+           ESTILOS: VISÃO ESTRUTURAL (LISTA)
+           ------------------------------------- */
+        .timeline {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .phase-card {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            border: 1px solid var(--cinza-borda);
+            border-left: 6px solid var(--preto);
+            background: var(--branco);
+        }
+
+        @media (max-width: 900px) {
+            .phase-card { grid-template-columns: 1fr; }
+            .date-sidebar { border-right: none !important; border-bottom: 1px solid var(--cinza-borda); }
+            header { flex-direction: column; align-items: flex-start; gap: 30px; }
+            footer { flex-direction: column; gap: 20px; text-align: center; }
+        }
+
+        .date-sidebar {
+            padding: 25px;
+            background-color: var(--cinza-fundo);
+            border-right: 1px solid var(--cinza-borda);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .phase-number {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .date-range {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--preto);
+        }
+
+        .content-area {
+            padding: 25px 35px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .task-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px 30px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.9rem;
+            padding: 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .task-item:hover {
+            background-color: var(--cinza-fundo);
+        }
+
+        .task-num {
+            font-weight: 800;
+            color: var(--branco);
+            background: var(--preto);
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            min-width: 30px;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task-text {
+            color: var(--cinza-texto);
+            font-weight: 500;
+        }
+
+        .task-date {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--preto);
+            margin-top: 4px;
+        }
+
+        .task-icon {
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Status Styles */
+        .status-concluido .task-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .status-concluido .task-icon { color: var(--verde); }
+        .status-concluido .task-date { opacity: 0.6; }
+
+        .status-atrasado .task-text {
+            color: var(--vermelho);
+            font-weight: 700;
+        }
+        .status-atrasado .task-icon { color: var(--vermelho); }
+        .status-atrasado .task-date { color: var(--vermelho); }
+
+        /* Phase Color Coding */
+        .p1 { border-left-color: var(--verde); }
+        .p1 .phase-number { color: var(--verde); }
+        .p2 { border-left-color: var(--azul); }
+        .p2 .phase-number { color: var(--azul); }
+        .p3 { border-left-color: var(--amarelo); }
+        .p3 .phase-number { color: var(--amarelo); }
+        .p4 { border-left-color: var(--verde); }
+        .p4 .phase-number { color: var(--verde); }
+        .p5 { border-left-color: var(--azul); }
+        .p5 .phase-number { color: var(--azul); }
+        .p6 { border-left-color: var(--amarelo); }
+        .p6 .phase-number { color: var(--amarelo); }
+
+        /* -------------------------------------
+           ESTILOS: VISÃO TIMELINE HORIZONTAL
+           ------------------------------------- */
+        .horizontal-timeline-wrapper {
+            position: relative;
+            padding: 20px 0 60px 0;
+            overflow-x: auto;
+            /* Estilização da barra de rolagem */
+            scrollbar-width: thin;
+            scrollbar-color: var(--preto) var(--cinza-borda);
+        }
+        
+        .horizontal-timeline-wrapper::-webkit-scrollbar { height: 8px; }
+        .horizontal-timeline-wrapper::-webkit-scrollbar-track { background: var(--cinza-borda); }
+        .horizontal-timeline-wrapper::-webkit-scrollbar-thumb { background-color: var(--preto); border-radius: 4px; }
+
+        .timeline-track {
+            display: flex;
+            gap: 20px;
+            padding: 40px 20px;
+            align-items: flex-start;
+            position: relative;
+            min-width: max-content;
+        }
+
+        /* Linha contínua do tempo */
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            top: 55px; /* Alinhado com as bolinhas */
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: var(--preto);
+            z-index: 0;
+        }
+
+        .timeline-node {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+        }
+
+        .node-date-top {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--preto);
+            text-align: center;
+            margin-bottom: 10px;
+            min-height: 20px;
+        }
+
+        .node-dot {
+            width: 18px;
+            height: 18px;
+            background: var(--branco);
+            border: 4px solid var(--preto);
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+        }
+
+        .node-card {
+            background: var(--branco);
+            border: 1px solid var(--cinza-borda);
+            border-top: 4px solid var(--preto);
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        
+        .node-card.n-p1 { border-top-color: var(--verde); }
+        .node-card.n-p2 { border-top-color: var(--azul); }
+        .node-card.n-p3 { border-top-color: var(--amarelo); }
+        .node-card.n-p4 { border-top-color: var(--verde); }
+        .node-card.n-p5 { border-top-color: var(--azul); }
+        .node-card.n-p6 { border-top-color: var(--amarelo); }
+
+        .node-etapa {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--cinza-texto);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .node-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--preto);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .node-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid var(--cinza-fundo);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Icons SVG */
+        .icon { width: 18px; height: 18px; }
+        .icon-check { stroke: var(--verde); }
+        .icon-warn { stroke: var(--vermelho); }
+
+        /* Loader */
+        .loader {
+            text-align: center;
+            padding: 50px;
+            font-weight: 700;
+            color: var(--cinza-texto);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--cinza-borda);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--cinza-texto);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-logo-cms {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="title-block">
+                <img src="https://i.ibb.co/7HcNP5f/11id.png" alt="ID Identidade" class="header-id-image">
+                <div class="status-badge">DOCUMENTO ESTRATÉGICO DINÂMICO</div>
+                <h1>CRONOGRAMA ATUALIZADO</h1>
+            </div>
+            <div class="meta-info"></div>
+        </header>
+
+        <!-- Sistema de Tabs -->
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('estrutural')">VISÃO ESTRUTURAL (LISTA)</button>
+            <button class="tab-btn" onclick="switchTab('timeline')">TIMELINE HORIZONTAL</button>
+        </div>
+
+        <div id="loader" class="loader">Sincronizando com Base de Dados...</div>
+
+        <!-- Visão 1: Estrutural -->
+        <div id="view-estrutural" class="view-content active">
+            <main class="timeline" id="estrutural-container">
+                <!-- Conteúdo gerado via JS -->
+            </main>
+        </div>
+
+        <!-- Visão 2: Timeline Horizontal -->
+        <div id="view-timeline" class="view-content">
+            <div class="horizontal-timeline-wrapper">
+                <div class="timeline-track" id="timeline-container">
+                    <!-- Conteúdo gerado via JS -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <span>Conselho Municipal de Saúde</span>
+            <img src="https://i.ibb.co/KpxYywZ7/Logotipo-CMSMOCSec.png" alt="Logotipo CMS" class="footer-logo-cms">
+        </footer>
+    </div>
+
+    <script>
+        // URL da sua planilha publicada
+        const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-5x076YH0t-mm6JMJ0xRVys9MSgYmx__uofTX8JsbOxFH9LVUriyTMy-oUgiBN8D8hxC1MumyxccZ/pub?gid=961145464&single=true&output=csv";
+
+        // Ícones SVG
+        const ICON_CHECK = `<svg class="icon icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        const ICON_WARN = `<svg class="icon icon-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+
+        // DADOS DE FALLBACK (Caso a planilha esteja vazia ou falhe)
+        const FALLBACK_DATA = [
+            { etapa: "01", titulo: "ATOS INSTITUCIONAIS", periodo: "Jan-Fev / 2026", tarefa: "Convocação oficial pelo CMS (461ª ROP)", data: "24/01/2026", status: "concluído" }
+        ];
+
+        // Lógica de Troca de Tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            document.getElementById(`view-${tabId}`).classList.add('active');
+        }
+
+        // Parse de CSV melhorado para lidar com quebras de linha padrão do Google Sheets (\r\n)
+        function parseCSV(csvText) {
+            const lines = csvText.split(/\r?\n/).filter(l => l.trim() !== '');
+            if (lines.length < 2) return []; // Só tem cabeçalho ou vazio
+            
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                // Regex para separar por vírgulas, ignorando vírgulas dentro de aspas
+                const values = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
+                if (values.length >= 4) {
+                    data.push({
+                        etapa: values[0] ? values[0].replace(/"/g, '').trim() : '',
+                        titulo: values[1] ? values[1].replace(/"/g, '').trim() : '',
+                        periodo: values[2] ? values[2].replace(/"/g, '').trim() : '',
+                        tarefa: values[3] ? values[3].replace(/"/g, '').trim() : '',
+                        data: values[4] ? values[4].replace(/"/g, '').trim() : '',
+                        status: values[5] ? values[5].replace(/"/g, '').trim().toLowerCase() : ''
+                    });
+                }
+            }
+            return data;
+        }
+
+        // Converte data DD/MM/YYYY para objeto Date para ordenação
+        function parseDateBR(dateStr) {
+            if (!dateStr) return new Date(9999, 0, 1); // Joga pro final se não tiver data
+            const parts = dateStr.split('/');
+            if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
+            return new Date(dateStr); // Fallback
+        }
+
+        function getStatusClasses(status) {
+            if (status.includes('concluíd') || status === 'ok' || status === 'concluido') {
+                return { css: 'status-concluido', icon: ICON_CHECK, label: 'CONCLUÍDO' };
+            }
+            if (status.includes('atrasado')) {
+                return { css: 'status-atrasado', icon: ICON_WARN, label: 'ATRASADO' };
+            }
+            return { css: '', icon: '', label: 'PENDENTE' };
+        }
+
+        // Extrai número da etapa para paleta de cores (ex: "Etapa 02" -> 2)
+        function getColorIndex(etapaStr) {
+            const num = parseInt(etapaStr.replace(/\D/g, ''));
+            return isNaN(num) ? 1 : ((num - 1) % 6) + 1;
+        }
+
+        // Renderiza Visão Estrutural (Grid/Cards)
+        function renderEstrutural(data) {
+            const container = document.getElementById('estrutural-container');
+            container.innerHTML = '';
+
+            // Agrupa por Etapa
+            const grupos = {};
+            data.forEach(item => {
+                const key = `${item.etapa}|${item.titulo}|${item.periodo}`;
+                if (!grupos[key]) grupos[key] = [];
+                grupos[key].push(item);
+            });
+
+            let globalEtapaIndex = 1;
+
+            for (const [key, items] of Object.entries(grupos)) {
+                const [etapa, titulo, periodo] = key.split('|');
+                const colorClass = `p${getColorIndex(etapa)}`;
+                
+                let htmlList = '';
+                items.forEach((item, index) => {
+                    const numItem = `${globalEtapaIndex}.${index + 1}`;
+                    const statusInfo = getStatusClasses(item.status);
+                    
+                    htmlList += `
+                        <li class="task-item ${statusInfo.css}">
+                            <span class="task-num">${numItem}</span>
+                            <div class="task-content">
+                                <span class="task-text">${item.tarefa}</span>
+                                ${item.data ? `<span class="task-date">${item.data}</span>` : ''}
+                            </div>
+                            <div class="task-icon">${statusInfo.icon}</div>
+                        </li>
+                    `;
+                });
+
+                const sectionHTML = `
+                    <section class="phase-card ${colorClass}">
+                        <div class="date-sidebar">
+                            <span class="phase-number">ETAPA ${etapa}</span>
+                            <span class="date-range">${periodo}</span>
+                        </div>
+                        <div class="content-area">
+                            <h2>${titulo}</h2>
+                            <ul class="task-list">
+                                ${htmlList}
+                            </ul>
+                        </div>
+                    </section>
+                `;
+                container.innerHTML += sectionHTML;
+                globalEtapaIndex++;
+            }
+        }
+
+        // Renderiza Timeline Horizontal (Ordenada por Data)
+        function renderTimeline(data) {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+
+            // Clona e Ordena dados por data
+            const sortedData = [...data].sort((a, b) => parseDateBR(a.data) - parseDateBR(b.data));
+
+            sortedData.forEach(item => {
+                if(!item.tarefa) return; // ignora linhas vazias
+
+                const statusInfo = getStatusClasses(item.status);
+                const colorClass = `n-p${getColorIndex(item.etapa)}`;
+
+                const nodeHTML = `
+                    <div class="timeline-node">
+                        <div class="node-date-top">${item.data || 'Sem data'}</div>
+                        <div class="node-dot"></div>
+                        <div class="node-card ${colorClass}">
+                            <span class="node-etapa">${item.etapa} • ${item.titulo}</span>
+                            <div class="node-title">${item.tarefa}</div>
+                            <div class="node-status-bar ${statusInfo.css}">
+                                <span>${statusInfo.label}</span>
+                                ${statusInfo.icon}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += nodeHTML;
+            });
+        }
+
+        // Inicialização Principal
+        async function init() {
+            let appData = [];
+            try {
+                const response = await fetch(SPREADSHEET_CSV_URL);
+                const csvText = await response.text();
+                appData = parseCSV(csvText);
+                
+                // Se a planilha estiver acessível mas vazia (sem linhas de dados), usamos fallback
+                if (appData.length === 0) {
+                    console.log("Planilha vazia identificada. Carregando dados de fallback...");
+                    appData = FALLBACK_DATA;
+                }
+            } catch (error) {
+                console.warn("Erro ao ler CSV, utilizando fallback estrutural.", error);
+                appData = FALLBACK_DATA;
+            }
+
+            // Oculta loader
+            document.getElementById('loader').style.display = 'none';
+
+            // Renderiza visões
+            renderEstrutural(appData);
+            renderTimeline(appData);
+        }
+
+        // Inicia aplicação
+        init();
+
+    </script>
+</body>
+</html>
