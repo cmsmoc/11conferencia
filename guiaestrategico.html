@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Guia Estratégico — 11ª Conferência Municipal de Saúde · CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cms-blue:   #1B6CB5;
+  --cms-navy:   #0D2E5A;
+  --cms-green:  #1E8A4A;
+  --cms-yellow: #F5C400;
+  --cms-white:  #FFFFFF;
+  --cms-off:    #F7F8FA;
+  --cms-ink:    #111827;
+  --cms-muted:  #6B7280;
+  --cms-border: #E5E7EB;
+}
+
+@page { size: A4; margin: 0; }
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: avoid; }
+  .avoid-break { page-break-inside: avoid; }
+  a { text-decoration: none; color: inherit; }
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #e5e7eb;
+  color: var(--cms-ink);
+  line-height: 1.6;
+}
+
+.print-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  background: var(--cms-navy); padding: 10px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.print-bar span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.print-btn {
+  background: var(--cms-yellow); color: var(--cms-navy);
+  border: none; cursor: pointer; border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  padding: 8px 20px;
+}
+.print-btn:hover { opacity: 0.85; }
+
+.page {
+  width: 210mm; min-height: 297mm;
+  background: white; margin: 60px auto 24px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+}
+
+.stripe {
+  height: 5px;
+  background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
+}
+
+/* ── COVER ── */
+.cover {
+  background: var(--cms-green); min-height: 297mm;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 420px; height: 420px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 65%);
+}
+.cover::after {
+  content: '';
+  position: absolute; bottom: -60px; left: 40px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(13,46,90,0.25) 0%, transparent 65%);
+}
+.cover-stripe { height: 6px; background: linear-gradient(to right, #F5C400 33.3%, #0D2E5A 33.3% 66.6%, #1B6CB5 66.6%); }
+.cover-inner {
+  flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 52px 52px 48px; position: relative; z-index: 1;
+}
+.cover-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,255,255,0.65); margin-bottom: 28px;
+}
+.cover-rule { width: 48px; height: 3px; background: var(--cms-yellow); margin-bottom: 32px; }
+.cover-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 50px; font-weight: 900; letter-spacing: -2px; line-height: 0.92;
+  color: white; margin-bottom: 16px;
+}
+.cover-title em { color: var(--cms-yellow); font-style: normal; display: block; }
+.cover-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.7);
+  margin-top: 20px; letter-spacing: -0.3px;
+}
+.cover-desc {
+  margin-top: 32px; padding: 20px 24px;
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; max-width: 440px;
+}
+.cover-desc p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.7; font-weight: 300; }
+.cover-meta-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); min-width: 90px;
+}
+.cover-meta-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75);
+}
+.cover-meta-value.yellow { color: var(--cms-yellow); }
+.cover-meta-row { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+.cover-meta-divider { height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0; }
+
+/* ── PAGE HEADER / FOOTER ── */
+.page-header {
+  background: var(--cms-navy); padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.page-header-left {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+.page-header-right {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-yellow);
+}
+.page-body { padding: 36px 40px 28px; }
+.page-footer-bar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 14px 40px; display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--cms-border);
+}
+.page-footer-bar span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--cms-muted);
+}
+
+/* ── TYPOGRAPHY ── */
+.section-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--cms-blue); margin-bottom: 6px;
+}
+.section-eyebrow.green { color: var(--cms-green); }
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 27px; font-weight: 900; letter-spacing: -1px; line-height: 1.0;
+  color: var(--cms-navy); margin-bottom: 20px;
+}
+.section-title span { color: var(--cms-green); }
+p { font-size: 13px; color: #374151; line-height: 1.75; margin-bottom: 12px; }
+p:last-child { margin-bottom: 0; }
+
+/* ── SCALE COMPARISON ── */
+.context-box {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
+}
+.ctx-card {
+  border-radius: 10px; padding: 16px 18px; border: 1px solid var(--cms-border);
+}
+.ctx-card.macro { background: #EFF6FF; border-color: #BFDBFE; }
+.ctx-card.muni  { background: #F0FDF4; border-color: #BBF7D0; }
+.ctx-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.ctx-card.macro .ctx-label { color: var(--cms-blue); }
+.ctx-card.muni  .ctx-label { color: var(--cms-green); }
+.ctx-item { font-size: 12px; color: #374151; line-height: 1.6; margin-bottom: 4px; display: flex; gap: 8px; }
+.ctx-item span { color: var(--cms-muted); flex-shrink: 0; }
+
+/* ── INSIGHT CARDS ── */
+.insight-card {
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--cms-border); margin-bottom: 12px;
+}
+.insight-header {
+  padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px;
+}
+.insight-header.navy   { background: var(--cms-navy); }
+.insight-header.green  { background: #D1FAE5; }
+.insight-header.blue   { background: #DBEAFE; }
+.insight-header.yellow { background: #FEF9C3; }
+.insight-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px; font-weight: 900; line-height: 1; flex-shrink: 0; min-width: 28px;
+}
+.insight-header.navy   .insight-num { color: var(--cms-yellow); }
+.insight-header.green  .insight-num { color: var(--cms-green); }
+.insight-header.blue   .insight-num { color: var(--cms-blue); }
+.insight-header.yellow .insight-num { color: #92400E; }
+.insight-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--cms-navy); margin-bottom: 3px;
+}
+.insight-header.navy .insight-title { color: white; }
+.insight-sub { font-size: 11.5px; color: var(--cms-muted); line-height: 1.4; }
+.insight-header.navy .insight-sub { color: rgba(255,255,255,0.55); }
+.insight-body { padding: 13px 16px; background: white; font-size: 12.5px; color: #374151; line-height: 1.65; }
+
+/* ── ACTION TABLE ── */
+.action-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.action-table thead tr { background: var(--cms-navy); }
+.action-table th {
+  padding: 10px 12px; text-align: left;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.8);
+}
+.action-table td { padding: 9px 12px; border-top: 1px solid var(--cms-border); color: #374151; vertical-align: top; }
+.action-table tbody tr:nth-child(even) td { background: var(--cms-off); }
+.priority {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+}
+.priority.alta  { background: #FEE2E2; color: #991B1B; }
+.priority.media { background: #FEF3C7; color: #92400E; }
+.priority.baixa { background: #D1FAE5; color: #065F46; }
+.responsible {
+  font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600;
+  color: var(--cms-blue); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ── PHASE CARDS ── */
+.phase-card {
+  border-radius: 10px; padding: 15px 17px;
+  margin-bottom: 10px; border: 1px solid var(--cms-border);
+  position: relative; overflow: hidden;
+}
+.phase-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+}
+.phase-card.p1::before { background: var(--cms-yellow); }
+.phase-card.p2::before { background: var(--cms-blue); }
+.phase-card.p3::before { background: var(--cms-green); }
+.phase-card.p4::before { background: var(--cms-navy); }
+.phase-inner { padding-left: 12px; }
+.phase-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--cms-muted); margin-bottom: 4px;
+}
+.phase-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; font-weight: 700; color: var(--cms-navy); margin-bottom: 6px;
+}
+.phase-items { font-size: 12px; color: #374151; line-height: 1.7; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 7px 0; border-bottom: 1px solid var(--cms-border);
+  font-size: 12.5px; color: #374151; line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-box { width: 15px; height: 15px; border: 2px solid #BBF7D0; border-radius: 3px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── OPP GRID ── */
+.opp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+.opp-card {
+  border-radius: 10px; padding: 15px 17px;
+  border: 1px solid var(--cms-border); background: white;
+  position: relative; overflow: hidden;
+}
+.opp-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.opp-card.blue::before  { background: var(--cms-blue); }
+.opp-card.green::before { background: var(--cms-green); }
+.opp-card.yellow::before{ background: var(--cms-yellow); }
+.opp-card.navy::before  { background: var(--cms-navy); }
+.opp-title {
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+  color: var(--cms-navy); margin-bottom: 6px;
+}
+.opp-body { font-size: 12px; color: var(--cms-muted); line-height: 1.6; }
+
+/* ── HIGHLIGHT ── */
+.highlight {
+  background: var(--cms-navy); border-radius: 10px; padding: 18px 22px; margin: 14px 0;
+}
+.highlight p { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 6px; }
+.highlight-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: white; margin-bottom: 8px; }
+.highlight-accent { color: var(--cms-yellow) !important; font-weight: 700; }
+.highlight.green { background: var(--cms-green); }
+
+/* ── MINI STATS ── */
+.mini-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 14px 0; }
+.mini-stat {
+  background: var(--cms-off); border: 1px solid var(--cms-border);
+  border-radius: 8px; padding: 14px; text-align: center;
+}
+.mini-stat-num {
+  font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900;
+  letter-spacing: -1px; color: var(--cms-navy); line-height: 1; margin-bottom: 3px;
+}
+.mini-stat-num.green  { color: var(--cms-green); }
+.mini-stat-num.yellow { color: #D97706; }
+.mini-stat-label {
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase; color: var(--cms-muted); line-height: 1.3;
+}
+
+/* ── UTILS ── */
+.divider      { height: 1px; background: var(--cms-border); margin: 16px 0; }
+.divider-bold { height: 3px; background: var(--cms-green);  margin: 14px 0 18px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mt-sm { margin-top: 12px; }
+.mt-md { margin-top: 20px; }
+.pb-footer { padding-bottom: 46px; }
+</style>
+</head>
+<body>
+
+<div class="print-bar no-print">
+  <span>CMS Montes Claros · Guia Estratégico · 11ª Conferência Municipal de Saúde</span>
+  <button class="print-btn" onclick="window.print()">⎙ Imprimir / Salvar PDF</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 1 · CAPA
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-stripe"></div>
+    <div class="cover-inner">
+      <div>
+        <p class="cover-eyebrow">Conselho Municipal de Saúde · Montes Claros — MG</p>
+        <div class="cover-rule"></div>
+        <h1 class="cover-title">DO<br>FEEDBACK<br>À<br><em>AÇÃO</em></h1>
+        <p class="cover-subtitle">Guia Estratégico para a<br>11ª Conferência Municipal de Saúde</p>
+        <div class="cover-desc">
+          <p>Insights da 5ª Conferência Macrorregional Norte traduzidos em diretrizes práticas para a escala municipal — com atenção às diferenças fundamentais de porte, público e logística entre as duas etapas.</p>
+        </div>
+      </div>
+      <div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Fonte dos dados</span>
+          <span class="cover-meta-value yellow">109 avaliações · 5ª Conf. Macrorregional Norte</span>
+        </div>
+        <div class="cover-meta-divider"></div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Etapa avaliada</span>
+          <span class="cover-meta-value">Macrorregional · 80+ municípios · grande escala</span>
+        </div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Etapa alvo</span>
+          <span class="cover-meta-value">Municipal · Montes Claros · escala local</span>
+        </div>
+        <div class="cover-meta-divider"></div>
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Elaboração</span>
+          <span class="cover-meta-value">CMS Montes Claros · 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 2 · ENTENDENDO A ESCALA
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">11ª Conferência Municipal de Saúde</span>
+    <span class="page-header-right">Entendendo a Escala</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">01 · Ponto de partida</p>
+    <h2 class="section-title">Duas conferências,<br><span>duas realidades</span></h2>
+
+    <p>Antes de qualquer recomendação, é preciso nomear a diferença de escala. A avaliação da 5ª Conferência Macrorregional descreve um evento de grande porte com delegados de mais de 80 municípios — logística complexa, deslocamentos longos, diárias imprescindíveis. A 11ª Conferência Municipal de Saúde de Montes Claros é uma outra coisa. Aplicar as mesmas soluções sem considerar essa diferença seria um erro.</p>
+
+    <div class="context-box mt-md avoid-break">
+      <div class="ctx-card macro">
+        <div class="ctx-label">5ª Conf. Macrorregional Norte</div>
+        <div class="ctx-item"><span>·</span>80+ municípios, centenas de delegados</div>
+        <div class="ctx-item"><span>·</span>Participantes viajando centenas de km</div>
+        <div class="ctx-item"><span>·</span>Diárias e hospedagem essenciais</div>
+        <div class="ctx-item"><span>·</span>Público disperso e heterogêneo</div>
+        <div class="ctx-item"><span>·</span>Elege delegados para a etapa estadual</div>
+        <div class="ctx-item"><span>·</span>Logística complexa e difícil de controlar</div>
+        <div class="ctx-item"><span>·</span>Etapa intermediária do ciclo nacional</div>
+      </div>
+      <div class="ctx-card muni">
+        <div class="ctx-label">11ª Conf. Municipal · Montes Claros</div>
+        <div class="ctx-item"><span>·</span>Público predominantemente local</div>
+        <div class="ctx-item"><span>·</span>Participantes chegam de casa ou do trabalho</div>
+        <div class="ctx-item"><span>·</span>Sem necessidade de hospedagem</div>
+        <div class="ctx-item"><span>·</span>Público mais conhecido e previsível</div>
+        <div class="ctx-item"><span>·</span>Elege delegados para a etapa macrorregional</div>
+        <div class="ctx-item"><span>·</span>Logística controlável — menor margem de erro</div>
+        <div class="ctx-item"><span>·</span>Base do ciclo — primeira voz do controle social</div>
+      </div>
+    </div>
+
+    <div class="highlight avoid-break">
+      <p class="highlight-title">O que muda com a escala municipal</p>
+      <p>Os problemas de <span class="highlight-accent">diárias, hospedagem e translado que dominaram as críticas da macrorregional praticamente não se aplicam aqui</span>. O público é local. Isso libera toda a atenção organizacional para o que realmente define uma conferência municipal de qualidade: <span class="highlight-accent">profundidade do debate, representatividade comunitária e legitimidade do processo eleitoral</span>.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="avoid-break">
+      <p class="section-eyebrow">O que a macrorregional nos ensina mesmo assim</p>
+      <p>Alguns padrões transcendem o tamanho do evento e se aplicam diretamente à conferência municipal:</p>
+      <div class="mini-stats mt-sm">
+        <div class="mini-stat">
+          <div class="mini-stat-num green">91%</div>
+          <div class="mini-stat-label">Querem ser ouvidos — e isso não depende do porte</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num yellow">24</div>
+          <div class="mini-stat-label">Menções a atraso — problema que se repete em toda escala</div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-num">14</div>
+          <div class="mini-stat-label">Questionaram a votação — legitimidade começa aqui</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>CMS Montes Claros · Guia Estratégico · 11ª Conferência Municipal de Saúde</span>
+    <span>Pág. 2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 3 · INSIGHTS ESTRATÉGICOS
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">11ª Conferência Municipal de Saúde</span>
+    <span class="page-header-right">Insights Estratégicos</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow">02 · O que os dados realmente dizem</p>
+    <h2 class="section-title">Leitura<br><span>estratégica</span></h2>
+
+    <div class="avoid-break">
+      <div class="insight-card">
+        <div class="insight-header navy">
+          <span class="insight-num">I</span>
+          <div>
+            <div class="insight-title">Escala menor = menos desculpa, mais responsabilidade</div>
+            <div class="insight-sub">O que era difícil na macrorregional se torna obrigação no municipal</div>
+          </div>
+        </div>
+        <div class="insight-body">Atrasos e lanche insuficiente na macrorregional tinham alguma explicação na logística de centenas de pessoas vindas de dezenas de cidades. Na conferência municipal, o público é local, os números são gerenciáveis. <strong>Não há margem para os mesmos erros em escala menor.</strong> É a oportunidade de fazer com excelência o que lá foi difícil.</div>
+      </div>
+    </div>
+
+    <div class="avoid-break">
+      <div class="insight-card">
+        <div class="insight-header green">
+          <span class="insight-num">II</span>
+          <div>
+            <div class="insight-title">O debate pode — e deve — ser mais profundo aqui</div>
+            <div class="insight-sub">Palestras e grupos foram os itens mais elogiados na macrorregional</div>
+          </div>
+        </div>
+        <div class="insight-body">Na macrorregional, o tempo de fala foi diluído entre centenas de participantes de realidades muito diferentes. Na conferência municipal, com um público menor, mais homogêneo e conhecedor do território local, <strong>cada voz tem mais espaço e mais contexto</strong>. Os grupos podem debater com mais profundidade, as propostas chegam mais refinadas para a etapa seguinte.</div>
+      </div>
+    </div>
+
+    <div class="avoid-break">
+      <div class="insight-card">
+        <div class="insight-header blue">
+          <span class="insight-num">III</span>
+          <div>
+            <div class="insight-title">A legitimidade da macrorregional começa aqui</div>
+            <div class="insight-sub">14 menções a problemas na eleição de delegados na etapa anterior</div>
+          </div>
+        </div>
+        <div class="insight-body">Os delegados que representarão Montes Claros na próxima etapa macrorregional — e depois na estadual — são escolhidos na conferência municipal. <strong>Votação confusa aqui contamina a cadeia inteira.</strong> Criar um regulamento claro, publicado com antecedência e explicado na abertura, resolve na raiz o problema que mais gerou insatisfação na macrorregional.</div>
+      </div>
+    </div>
+
+    <div class="avoid-break">
+      <div class="insight-card">
+        <div class="insight-header yellow">
+          <span class="insight-num">IV</span>
+          <div>
+            <div class="insight-title">O público-alvo é diferente — a mobilização também precisa ser</div>
+            <div class="insight-sub">A conferência municipal é a porta de entrada do controle social</div>
+          </div>
+        </div>
+        <div class="insight-body">Na macrorregional, os participantes eram majoritariamente delegados eleitos e profissionais de saúde já engajados. Na conferência municipal, o desafio é outro: <strong>como mobilizar ativamente usuários do SUS, moradores dos bairros e trabalhadores da saúde de Montes Claros</strong> que ainda não participam? Essa é a vocação única da etapa municipal — ser a voz de quem usa o sistema todo dia.</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>CMS Montes Claros · Guia Estratégico · 11ª Conferência Municipal de Saúde</span>
+    <span>Pág. 3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 4 · PLANO DE AÇÃO
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">11ª Conferência Municipal de Saúde</span>
+    <span class="page-header-right">Plano de Ação</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow green">03 · Ações concretas</p>
+    <h2 class="section-title">O que fazer<br><span>diferente</span></h2>
+
+    <p style="margin-bottom:14px;">Ações calibradas para a escala e o público municipal — priorizadas pelo impacto direto na qualidade da conferência.</p>
+
+    <table class="action-table avoid-break">
+      <thead>
+        <tr>
+          <th style="width:34%">Ação</th>
+          <th style="width:30%">Como fazer</th>
+          <th style="width:14%">Prioridade</th>
+          <th style="width:22%">Responsável</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Publicar regulamento com critérios de eleição de delegados</strong></td>
+          <td>Documento com metodologia de votação, quórum e critérios. Disponibilizar 30 dias antes e apresentar na abertura</td>
+          <td><span class="priority alta">Alta</span></td>
+          <td><span class="responsible">Comissão Organizadora</span></td>
+        </tr>
+        <tr>
+          <td><strong>Mobilização ativa nos bairros e unidades de saúde</strong></td>
+          <td>Comunicar via UBS, CAPS, ACS e conselhos locais com 30+ dias. Incluir usuários do SUS ativamente, não só profissionais</td>
+          <td><span class="priority alta">Alta</span></td>
+          <td><span class="responsible">Comunicação</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cronômetro visível para palestrantes e falas</strong></td>
+          <td>Timer projetado na tela ou em display frontal. Moderador com autonomia para encerrar no tempo estipulado</td>
+          <td><span class="priority alta">Alta</span></td>
+          <td><span class="responsible">Coordenação</span></td>
+        </tr>
+        <tr>
+          <td><strong>Abertura institucional curta e objetiva</strong></td>
+          <td>Máx. 2 autoridades, 3 min cada. Abertura encerrada em 20 min. Resto do tempo é dos participantes</td>
+          <td><span class="priority alta">Alta</span></td>
+          <td><span class="responsible">Cerimonial</span></td>
+        </tr>
+        <tr>
+          <td><strong>Coffee break saudável, planejado por número de inscritos</strong></td>
+          <td>Quantidade = inscritos + 15% de reserva. Frutas, água e sucos obrigatórios. Cardápio compatível com a pauta de saúde do evento</td>
+          <td><span class="priority alta">Alta</span></td>
+          <td><span class="responsible">Logística</span></td>
+        </tr>
+        <tr>
+          <td><strong>Capacitar orientadores de grupo antes do evento</strong></td>
+          <td>Reunião obrigatória com todos os orientadores: objetivos, regras do debate, gestão do tempo, como lidar com impasses</td>
+          <td><span class="priority media">Média</span></td>
+          <td><span class="responsible">Comissão</span></td>
+        </tr>
+        <tr>
+          <td><strong>Lista de presença apenas no encerramento</strong></td>
+          <td>Não circular lista na chegada. Registrar ao final para desestimular saída antecipada antes da votação</td>
+          <td><span class="priority media">Média</span></td>
+          <td><span class="responsible">Secretaria</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pacote de acessibilidade</strong></td>
+          <td>Material com fonte ampliada e versão PDF acessível; intérprete de Libras; apoio para mobilidade reduzida</td>
+          <td><span class="priority media">Média</span></td>
+          <td><span class="responsible">Comissão</span></td>
+        </tr>
+        <tr>
+          <td><strong>Enviar materiais digitais pós-evento</strong></td>
+          <td>Coletar e-mail no credenciamento. Enviar apresentações e propostas aprovadas em até 5 dias úteis</td>
+          <td><span class="priority baixa">Baixa</span></td>
+          <td><span class="responsible">Comunicação</span></td>
+        </tr>
+        <tr>
+          <td><strong>Inserir jovens e estudantes de saúde</strong></td>
+          <td>Reservar vagas ou criar modalidade específica para estudantes. Conferência municipal é a porta de entrada ideal para novos conselheiros</td>
+          <td><span class="priority baixa">Baixa</span></td>
+          <td><span class="responsible">Comissão</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>CMS Montes Claros · Guia Estratégico · 11ª Conferência Municipal de Saúde</span>
+    <span>Pág. 4</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 5 · VANTAGENS DO FORMATO MUNICIPAL
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">11ª Conferência Municipal de Saúde</span>
+    <span class="page-header-right">Vantagens do Formato Municipal</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow green">04 · O que só é possível aqui</p>
+    <h2 class="section-title">Vantagens que<br><span>precisam ser usadas</span></h2>
+
+    <p>A escala municipal não é uma versão menor da macrorregional — é um formato com ativos próprios. Se bem aproveitados, tornam a conferência municipal mais rica e mais legítima do que qualquer etapa de maior porte.</p>
+
+    <div class="opp-grid mt-md avoid-break">
+      <div class="opp-card blue">
+        <div class="opp-title">Enraizamento no território</div>
+        <div class="opp-body">Os participantes conhecem as UBS, os bairros e os problemas de saúde local pelo nome. Os debates podem ser concretos e diretamente aterrados na realidade de Montes Claros — sem a generalização forçada que a escala macrorregional impõe.</div>
+      </div>
+      <div class="opp-card green">
+        <div class="opp-title">Voz dos usuários do SUS</div>
+        <div class="opp-body">Na macrorregional, predominam profissionais e delegados. Na municipal, é viável mobilizar ativamente pacientes, cuidadores e moradores dos bairros — o público que o SUS existe para servir e que raramente chega às etapas seguintes.</div>
+      </div>
+      <div class="opp-card yellow">
+        <div class="opp-title">Responsabilização local</div>
+        <div class="opp-body">Os participantes são locais e estarão presentes para cobrar o que foi deliberado. A conferência municipal cria um vínculo de prestação de contas que a macrorregional — com público disperso por 80 municípios — não consegue manter.</div>
+      </div>
+      <div class="opp-card navy">
+        <div class="opp-title">Formação de novos conselheiros</div>
+        <div class="opp-body">Espaço ideal para inserir jovens, estudantes de saúde e primeiros-participantes. A conferência municipal pode ser usada deliberadamente como escola de controle social, formando a base para as próximas edições.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="avoid-break">
+      <p class="section-eyebrow">O que preservar e ampliar da macrorregional</p>
+      <div class="opp-grid mt-sm">
+        <div class="opp-card green">
+          <div class="opp-title">Metodologia de grupos por eixo</div>
+          <div class="opp-body">Com público menor, os orientadores têm mais condições de conduzir debates aprofundados. Replicar a estrutura, melhorar a execução.</div>
+        </div>
+        <div class="opp-card blue">
+          <div class="opp-title">Ações de saúde no evento</div>
+          <div class="opp-body">Massagem, auriculoterapia e PIC foram destaques positivos. Na escala municipal é ainda mais fácil dimensionar e garantir atendimento a todos.</div>
+        </div>
+        <div class="opp-card blue">
+          <div class="opp-title">Respeito à redação das propostas</div>
+          <div class="opp-body">Preservar a formulação original de cada proposta mantém a autoria e valoriza a voz de quem elaborou — princípio que deve valer em qualquer escala.</div>
+        </div>
+        <div class="opp-card green">
+          <div class="opp-title">Qualidade dos palestrantes</div>
+          <div class="opp-body">O conteúdo programático foi o item mais elogiado. Na municipal, priorizar palestrantes com conexão com a realidade específica de Montes Claros.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>CMS Montes Claros · Guia Estratégico · 11ª Conferência Municipal de Saúde</span>
+    <span>Pág. 5</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PÁGINA 6 · CRONOGRAMA E CONCLUSÃO
+══════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe"></div>
+  <div class="page-header">
+    <span class="page-header-left">11ª Conferência Municipal de Saúde</span>
+    <span class="page-header-right">Preparação e Conclusão</span>
+  </div>
+  <div class="page-body pb-footer">
+
+    <p class="section-eyebrow green">05 · Fases de preparação</p>
+    <h2 class="section-title">Quando<br><span>fazer o quê</span></h2>
+
+    <div class="avoid-break">
+      <div class="phase-card p1">
+        <div class="phase-inner">
+          <div class="phase-label">Fase 1 · 60 dias antes</div>
+          <div class="phase-title">Estrutura e regulamentos</div>
+          <div class="phase-items">
+            · Publicar regulamento com critérios de participação e metodologia de eleição de delegados<br>
+            · Abrir inscrições com formulário incluindo e-mail e necessidades de acessibilidade<br>
+            · Definir eixos temáticos e selecionar orientadores de grupo<br>
+            · Montar comissão com papéis escritos e responsáveis nomeados
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="avoid-break">
+      <div class="phase-card p2">
+        <div class="phase-inner">
+          <div class="phase-label">Fase 2 · 30 a 45 dias antes</div>
+          <div class="phase-title">Mobilização local</div>
+          <div class="phase-items">
+            · Distribuir material de divulgação nas UBS, CAPS, escolas, sindicatos e equipamentos sociais<br>
+            · Comunicar via redes dos conselhos locais de saúde de cada região da cidade<br>
+            · Convidar ativamente usuários do SUS — não só profissionais e delegados<br>
+            · Confirmar palestrantes e enviar programação preliminar
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="avoid-break">
+      <div class="phase-card p3">
+        <div class="phase-inner">
+          <div class="phase-label">Fase 3 · 15 dias antes</div>
+          <div class="phase-title">Logística e capacitação</div>
+          <div class="phase-items">
+            · Reunião de capacitação com todos os orientadores de grupo<br>
+            · Fechar contratação do lanche com cardápio e quantidade baseados nas inscrições<br>
+            · Enviar materiais digitais por e-mail aos inscritos (programação, propostas base)<br>
+            · Confirmar recursos de acessibilidade
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="avoid-break">
+      <div class="phase-card p4">
+        <div class="phase-inner">
+          <div class="phase-label">Fase 4 · Pós-evento (em até 7 dias)</div>
+          <div class="phase-title">Consolidação e transparência</div>
+          <div class="phase-items">
+            · Enviar apresentações e propostas aprovadas por e-mail para todos os inscritos<br>
+            · Publicar lista de delegados eleitos com total de votos e critérios utilizados<br>
+            · Aplicar e divulgar publicamente os resultados da avaliação do evento
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid-2 avoid-break">
+      <div>
+        <p class="section-eyebrow">Lições da macrorregional que se aplicam</p>
+        <ul class="checklist mt-sm">
+          <li><div class="check-box"></div>Cronômetro e disciplina de tempo</li>
+          <li><div class="check-box"></div>Abertura curta — máx. 20 minutos</li>
+          <li><div class="check-box"></div>Regulamento de votação público e claro</li>
+          <li><div class="check-box"></div>Lanche saudável e em quantidade planejada</li>
+          <li><div class="check-box"></div>Lista de presença só no encerramento</li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-eyebrow">Oportunidades únicas da escala municipal</p>
+        <ul class="checklist mt-sm">
+          <li><div class="check-box"></div>Mobilizar usuários do SUS dos bairros</li>
+          <li><div class="check-box"></div>Debater com foco na realidade de Montes Claros</li>
+          <li><div class="check-box"></div>Inserir jovens e estudantes de saúde</li>
+          <li><div class="check-box"></div>Gestores como participantes dos grupos</li>
+          <li><div class="check-box"></div>Prestação de contas local dos encaminhamentos</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight green mt-md avoid-break">
+      <p class="highlight-title" style="color:white;">A conferência municipal é a base de tudo</p>
+      <p style="color:rgba(255,255,255,0.85);">As propostas que chegam à etapa estadual começam aqui. Os delegados que vão representar Montes Claros são escolhidos aqui. A qualidade do controle social na cidade se mede por quanto espaço a conferência municipal abre para que a voz de quem usa o SUS todo dia chegue às políticas públicas — e não seja filtrada antes disso.</p>
+    </div>
+
+  </div>
+  <div class="page-footer-bar">
+    <span>Conselho Municipal de Saúde · Montes Claros — MG · Guia Estratégico · 2025</span>
+    <span>Pág. 6</span>
+  </div>
+</div>
+
+</body>
+</html>
