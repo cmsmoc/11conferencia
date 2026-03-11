@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pré-Conferências — 11ª CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+
+/* ════════════════════════════════════════════════════════════
+   PRÉ-CONFERÊNCIAS — 11ª CMS MONTES CLAROS
+   Sistema de Lista de Presença + Declarações ao Vivo
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  --azul-sus:        #1A5EA8;
+  --azul-medio:      #2E8BC0;
+  --azul-claro:      #7EC8E3;
+  --azul-wave:       #0D3D6B;
+  --verde-sus:       #3AAA35;
+  --verde-wave:      #5BBF6A;
+  --amarelo-brasil:  #F5C800;
+  --branco-puro:     #FFFFFF;
+  --cinza-off:       #F4F7FB;
+  --cinza-texto:     #2C3E50;
+  --cinza-medio:     #6B7F96;
+  --cinza-borda:     #D6E4F0;
+  --gradient-wave:   linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+  --gradient-card:   linear-gradient(145deg, #FFFFFF 0%, #EAF4FB 100%);
+  --font:            'Georama', sans-serif;
+  --sombra-card:     0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06);
+  --sombra-hover:    0 12px 40px rgba(26,94,168,.18), 0 2px 8px rgba(26,94,168,.10);
+  --radius:          14px;
+  --radius-sm:       8px;
+  --radius-pill:     999px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--cinza-off);
+  color: var(--cinza-texto);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: var(--azul-medio); text-decoration: none; }
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: var(--gradient-wave);
+  z-index: 9999;
+  width: 0%;
+  transition: width .1s linear;
+}
+
+/* ── NAV ── */
+.top-nav {
+  position: sticky; top: 0; z-index: 1000;
+  background: rgba(13,61,107,.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo img { height: 32px; width: auto; }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: rgba(255,255,255,.7);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  transition: color .2s;
+}
+.nav-back:hover { color: #fff; }
+.nav-back::before { content: '←'; }
+.nav-title {
+  font-size: 13px; font-weight: 700;
+  color: rgba(255,255,255,.9);
+  letter-spacing: -.01em;
+}
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ── VIEWS ── */
+#view-list { display: block; }
+#view-detail { display: none; }
+#view-presenca { display: none; }
+
+/* ══════════════════════════════════
+   HERO
+   ══════════════════════════════════ */
+.hero {
+  background: linear-gradient(155deg, #0D3D6B 0%, #1A5EA8 50%, #2E8BC0 85%, #3AAA35 100%);
+  padding: 64px 40px 110px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='%23F4F7FB' d='M0,80 C360,20 1080,60 1440,5 L1440,80 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.hero-glow {
+  position: absolute; top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(245,200,0,.09) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: glow 6s ease-in-out infinite;
+}
+@keyframes glow { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+.hero-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.9); font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  background: var(--amarelo-brasil); border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+.hero-title {
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 900; color: #fff;
+  line-height: 1.05; letter-spacing: -.03em;
+  margin-bottom: 14px;
+}
+.hero-title .accent { color: var(--amarelo-brasil); }
+.hero-desc {
+  font-size: 16px; color: rgba(255,255,255,.72);
+  max-width: 580px; line-height: 1.7; margin-bottom: 36px;
+}
+.hero-stats {
+  display: flex; gap: 20px; flex-wrap: wrap;
+}
+.hero-stat {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-sm);
+  padding: 12px 22px; text-align: center;
+}
+.hero-stat-num { display: block; font-size: 28px; font-weight: 900; color: var(--amarelo-brasil); line-height: 1; }
+.hero-stat-lbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 3px; }
+
+/* ══════════════════════════════════
+   GRID DE CONFERÊNCIAS
+   ══════════════════════════════════ */
+.confs-section {
+  max-width: 960px; margin: -36px auto 80px;
+  padding: 0 32px;
+  position: relative; z-index: 5;
+}
+.confs-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.toolbar-label {
+  font-size: 11px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--azul-sus);
+  display: flex; align-items: center; gap: 7px;
+}
+.toolbar-label::before {
+  content: ''; display: block; width: 18px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.search-box {
+  background: #fff; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; flex: 1; max-width: 320px;
+}
+.search-box input {
+  border: none; outline: none; font-family: var(--font);
+  font-size: 13px; color: var(--cinza-texto);
+  background: transparent; width: 100%;
+}
+.search-box input::placeholder { color: var(--cinza-medio); }
+
+.confs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── STATUS BADGES ── */
+.status-realizada { background: #E8F8EC; color: #1B7A30; }
+.status-proxima { background: #FEF8E7; color: #9A6500; }
+.status-aguardando { background: #F0EBF8; color: #5B2D8E; }
+
+/* ── CARD DE CONFERÊNCIA ── */
+.conf-card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+.conf-card:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--sombra-hover);
+  border-color: var(--azul-medio);
+}
+.conf-card-accent {
+  height: 6px;
+  background: var(--gradient-wave);
+}
+.conf-card-body { padding: 18px 20px; }
+.conf-card-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+  margin-bottom: 12px;
+}
+.conf-date-block {
+  background: linear-gradient(135deg, var(--azul-wave), var(--azul-sus));
+  border-radius: var(--radius-sm);
+  padding: 8px 12px; text-align: center;
+  min-width: 52px; flex-shrink: 0;
+}
+.conf-date-dd { font-size: 20px; font-weight: 900; color: #fff; line-height: 1; }
+.conf-date-mm { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.7); letter-spacing: .06em; text-transform: uppercase; }
+.conf-status-pill {
+  font-size: 9px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+.conf-name {
+  font-size: 15px; font-weight: 800;
+  color: var(--cinza-texto);
+  line-height: 1.3; margin-bottom: 10px;
+  letter-spacing: -.01em;
+}
+.conf-meta {
+  display: flex; flex-direction: column; gap: 5px;
+  font-size: 12px; color: var(--cinza-medio);
+}
+.conf-meta span {
+  display: flex; align-items: flex-start; gap: 7px;
+  line-height: 1.4;
+}
+.conf-meta span i { flex-shrink: 0; margin-top: 1px; }
+.conf-card-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--cinza-borda);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.conf-n-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--cinza-medio);
+}
+.conf-n-dot {
+  width: 8px; height: 8px;
+  background: var(--verde-sus); border-radius: 50%;
+}
+.conf-action {
+  font-size: 11px; font-weight: 800;
+  color: var(--azul-sus);
+  text-transform: uppercase; letter-spacing: .07em;
+  display: flex; align-items: center; gap: 4px;
+}
+.conf-card:hover .conf-action { gap: 8px; }
+.conf-action::after { content: '→'; transition: margin .2s; }
+
+/* ── CARD AGUARDANDO (sem dados) ── */
+.conf-card.sem-dados { opacity: .72; }
+.conf-card.sem-dados:hover { opacity: 1; }
+
+/* ══════════════════════════════════
+   VIEW DETALHE — CONF ESPECÍFICA
+   ══════════════════════════════════ */
+.detail-header {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 100%);
+  padding: 40px 40px 80px;
+  position: relative; overflow: hidden;
+}
+.detail-header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 56px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 56'%3E%3Cpath fill='%23F4F7FB' d='M0,56 C480,10 960,46 1440,0 L1440,56 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.detail-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: rgba(255,255,255,.7); font-size: 12px; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase;
+  cursor: pointer; margin-bottom: 22px;
+  background: none; border: none; font-family: var(--font);
+  transition: color .2s; padding: 0;
+}
+.back-btn:hover { color: #fff; }
+.back-btn::before { content: '←'; margin-right: 2px; }
+.detail-eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--amarelo-brasil);
+  margin-bottom: 8px;
+}
+.detail-title {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 900; color: #fff;
+  line-height: 1.15; letter-spacing: -.02em;
+  margin-bottom: 18px;
+}
+.detail-metas {
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.detail-meta-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.85); font-size: 12px; font-weight: 500;
+  padding: 5px 13px; border-radius: var(--radius-pill);
+}
+
+/* ── CONTENT ÁREA ── */
+.detail-content {
+  max-width: 960px; margin: -28px auto 80px;
+  padding: 0 32px; position: relative; z-index: 5;
+}
+
+/* ── CARDS DE AÇÃO ── */
+.action-cards {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 24px;
+}
+.action-card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  padding: 24px 28px;
+  display: flex; align-items: flex-start; gap: 16px;
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  position: relative; overflow: hidden;
+}
+.action-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; background: var(--gradient-wave);
+}
+.action-card:hover { transform: translateY(-5px); box-shadow: var(--sombra-hover); border-color: var(--azul-medio); }
+.action-card-icon {
+  font-size: 36px; flex-shrink: 0;
+}
+.action-card h3 {
+  font-size: 15px; font-weight: 800; color: var(--azul-wave);
+  margin-bottom: 5px; letter-spacing: -.01em;
+}
+.action-card p {
+  font-size: 13px; color: var(--cinza-medio); line-height: 1.6;
+}
+.action-card .action-arrow {
+  margin-left: auto; font-size: 18px; color: var(--azul-medio);
+  align-self: center; transition: transform .2s; flex-shrink: 0;
+}
+.action-card:hover .action-arrow { transform: translateX(4px); }
+
+/* ── INFO CARD ── */
+.info-card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+}
+.info-card-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--cinza-borda);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.info-card-title {
+  font-size: 11px; font-weight: 800;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--azul-sus);
+  display: flex; align-items: center; gap: 7px;
+}
+.info-card-title::before {
+  content: ''; width: 16px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.info-card-body { padding: 22px; }
+
+/* ══════════════════════════════════
+   VIEW LISTA DE PRESENÇA
+   ══════════════════════════════════ */
+.presenca-header {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 70%, #1a8c6e 100%);
+  padding: 40px 40px 80px;
+  position: relative; overflow: hidden;
+}
+.presenca-header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 56px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 56'%3E%3Cpath fill='%23F4F7FB' d='M0,56 C480,10 960,46 1440,0 L1440,56 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.presenca-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
+.presenca-title {
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 900; color: #fff;
+  line-height: 1.15; letter-spacing: -.02em; margin-bottom: 8px;
+}
+.presenca-sub { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 24px; }
+.presenca-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.p-stat {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--radius-sm); padding: 10px 18px; text-align: center;
+}
+.p-stat-num { display: block; font-size: 22px; font-weight: 900; color: #fff; line-height: 1; }
+.p-stat-lbl { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+/* ── PRESENÇA CONTENT ── */
+.presenca-content {
+  max-width: 960px; margin: -28px auto 80px;
+  padding: 0 32px; position: relative; z-index: 5;
+}
+
+/* ── TOOLBAR DE BUSCA ── */
+.presenca-toolbar {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-hover);
+  padding: 16px 22px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.pt-search {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: 10px;
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm); padding: 9px 14px;
+}
+.pt-search input {
+  border: none; outline: none; font-family: var(--font);
+  font-size: 13px; color: var(--cinza-texto);
+  background: transparent; width: 100%;
+}
+.pt-search input::placeholder { color: var(--cinza-medio); }
+.pt-count {
+  font-size: 12px; font-weight: 700; color: var(--cinza-medio);
+  white-space: nowrap;
+}
+.pt-count span { color: var(--azul-sus); font-weight: 800; }
+
+/* ── LOADING STATE ── */
+.loading-state {
+  text-align: center; padding: 60px 20px;
+}
+.loading-spinner {
+  width: 44px; height: 44px;
+  border: 4px solid var(--cinza-borda);
+  border-top-color: var(--azul-sus);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-state p { font-size: 14px; color: var(--cinza-medio); }
+
+/* ── ERROR STATE ── */
+.error-state {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  padding: 40px; text-align: center;
+}
+.error-icon { font-size: 48px; margin-bottom: 14px; display: block; }
+.error-state h3 { font-size: 18px; font-weight: 800; color: var(--cinza-texto); margin-bottom: 8px; }
+.error-state p { font-size: 14px; color: var(--cinza-medio); line-height: 1.7; margin-bottom: 20px; }
+
+/* ── TABELA DE PRESENÇA ── */
+.presenca-table-wrap {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+}
+.pt-table-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--cinza-borda);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.pt-table-title {
+  font-size: 11px; font-weight: 800;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--azul-sus);
+  display: flex; align-items: center; gap: 7px;
+}
+.pt-table-title::before {
+  content: ''; width: 16px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.total-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #E8F8EC; color: #1B7A30;
+  font-size: 12px; font-weight: 800;
+  padding: 5px 14px; border-radius: var(--radius-pill);
+}
+.total-badge::before { content: '✓'; font-size: 11px; }
+.table-scroll { overflow-x: auto; }
+table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+thead th {
+  background: var(--cinza-off);
+  padding: 11px 20px; text-align: left;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cinza-medio);
+  border-bottom: 1.5px solid var(--cinza-borda);
+  white-space: nowrap;
+}
+thead th:first-child { width: 44px; text-align: center; }
+tbody tr {
+  border-bottom: 1px solid var(--cinza-borda);
+  transition: background .15s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--cinza-off); }
+tbody td {
+  padding: 13px 20px; color: var(--cinza-texto);
+  vertical-align: middle;
+}
+tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size: 12px; font-weight: 600; }
+.nome-cell { font-weight: 700; }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+}
+.status-presente { background: #E8F8EC; color: #1B7A30; }
+.decl-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--azul-sus); color: #fff;
+  font-family: var(--font); font-size: 10px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  border: none; cursor: pointer;
+  transition: all .2s;
+}
+.decl-btn:hover { background: var(--azul-wave); transform: translateY(-1px); }
+
+/* ══════════════════════════════════
+   MODAL DECLARAÇÃO
+   ══════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13,61,107,.55);
+  backdrop-filter: blur(6px);
+  z-index: 5000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: #fff; border-radius: var(--radius);
+  box-shadow: 0 24px 80px rgba(13,61,107,.35);
+  max-width: 680px; width: 100%;
+  transform: scale(.95) translateY(12px);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+
+/* ── DECLARAÇÃO DESIGN ── */
+.decl-document {
+  font-family: var(--font);
+}
+.decl-header {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 100%);
+  padding: 32px 36px;
+  position: relative;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+}
+.decl-header-left { flex: 1; }
+.decl-header-logo img { height: 48px; width: auto; filter: brightness(0) invert(1); opacity: .9; }
+.decl-tipo-badge {
+  display: inline-block;
+  background: rgba(245,200,0,.2); border: 1px solid rgba(245,200,0,.4);
+  color: var(--amarelo-brasil);
+  font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: var(--radius-pill);
+  margin-bottom: 8px;
+}
+.decl-header h2 {
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,.7);
+  margin-bottom: 3px; text-transform: uppercase; letter-spacing: .06em;
+}
+.decl-header h1 {
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 900; color: #fff; line-height: 1.2; letter-spacing: -.01em;
+}
+.decl-wave-bar {
+  height: 5px;
+  background: var(--gradient-wave);
+}
+.decl-body { padding: 32px 36px; }
+.decl-seal {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--cinza-off); border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda);
+  padding: 18px 22px; margin-bottom: 28px;
+}
+.decl-seal-icon { font-size: 36px; flex-shrink: 0; }
+.decl-seal-text h3 { font-size: 13px; font-weight: 800; color: var(--azul-wave); margin-bottom: 3px; }
+.decl-seal-text p { font-size: 12px; color: var(--cinza-medio); line-height: 1.5; }
+.decl-text {
+  font-size: 14px; color: var(--cinza-texto); line-height: 1.85;
+  margin-bottom: 28px;
+  text-align: justify;
+}
+.decl-text strong { color: var(--azul-wave); font-weight: 800; }
+.decl-text em { color: var(--azul-sus); font-style: normal; font-weight: 700; }
+.decl-dados {
+  background: linear-gradient(135deg, #EAF4FB, #E8F8EC);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda);
+  padding: 20px 22px; margin-bottom: 28px;
+}
+.decl-dados-title {
+  font-size: 10px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--azul-sus);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.decl-dados-title::before {
+  content: ''; width: 14px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.decl-dados-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.decl-dado-item label {
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--cinza-medio); margin-bottom: 3px;
+}
+.decl-dado-item span {
+  font-size: 14px; font-weight: 700; color: var(--cinza-texto);
+}
+.decl-numero-line {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+  padding: 14px 0;
+  border-top: 1.5px dashed var(--cinza-borda);
+  border-bottom: 1.5px dashed var(--cinza-borda);
+  margin-bottom: 28px;
+}
+.decl-numero-label { font-size: 11px; font-weight: 600; color: var(--cinza-medio); text-transform: uppercase; letter-spacing: .08em; }
+.decl-numero-val {
+  font-size: 16px; font-weight: 900;
+  color: var(--azul-sus); letter-spacing: .08em;
+  font-family: 'Courier New', monospace;
+}
+.decl-assinatura {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+}
+.decl-assina-block {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.decl-assina-line {
+  width: 200px; height: 1px;
+  background: var(--cinza-borda);
+}
+.decl-assina-name { font-size: 12px; font-weight: 700; color: var(--cinza-texto); text-align: center; }
+.decl-assina-role { font-size: 11px; color: var(--cinza-medio); text-align: center; }
+.decl-qr-placeholder {
+  width: 70px; height: 70px;
+  background: var(--cinza-off); border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.decl-footer {
+  background: var(--cinza-off); border-top: 1.5px solid var(--cinza-borda);
+  padding: 14px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.decl-footer p { font-size: 11px; color: var(--cinza-medio); }
+.decl-actions {
+  padding: 18px 36px;
+  border-top: 1px solid var(--cinza-borda);
+  display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;
+}
+.btn-fechar {
+  background: var(--cinza-off); color: var(--cinza-texto);
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  padding: 9px 20px; border-radius: var(--radius-pill);
+  border: 1.5px solid var(--cinza-borda);
+  cursor: pointer; transition: all .2s;
+}
+.btn-fechar:hover { background: #fff; border-color: var(--azul-claro); }
+.btn-imprimir {
+  background: var(--azul-sus); color: #fff;
+  font-family: var(--font); font-size: 12px; font-weight: 800;
+  padding: 9px 20px; border-radius: var(--radius-pill);
+  border: none; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: 7px;
+}
+.btn-imprimir:hover { background: var(--azul-wave); }
+
+/* ══════════════════════════════════
+   FLYER BADGE no CARD GRID
+   ══════════════════════════════════ */
+.flyer-badge-card {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, var(--azul-sus), var(--azul-medio));
+  color: #fff;
+  font-size: 9px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all .2s;
+  border: none; font-family: var(--font);
+}
+.flyer-badge-card:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(26,94,168,.3); }
+
+/* ══════════════════════════════════
+   PAINEL FLYER NA VIEW DETALHE
+   ══════════════════════════════════ */
+.detail-with-flyer {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
+  align-items: start;
+}
+.flyer-panel {
+  position: sticky; top: 80px;
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+  transition: box-shadow .3s;
+}
+.flyer-panel:hover { box-shadow: var(--sombra-hover); }
+.flyer-panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--cinza-borda);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.flyer-panel-label {
+  font-size: 10px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--azul-sus);
+  display: flex; align-items: center; gap: 6px;
+}
+.flyer-panel-label::before {
+  content: ''; width: 14px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.flyer-expand-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; color: var(--cinza-medio);
+  padding: 2px; transition: color .2s;
+}
+.flyer-expand-btn:hover { color: var(--azul-sus); }
+.flyer-img-wrap {
+  position: relative; overflow: hidden;
+  cursor: zoom-in;
+}
+.flyer-img-wrap img {
+  width: 100%; display: block;
+  transition: transform .4s ease;
+}
+.flyer-img-wrap:hover img { transform: scale(1.03); }
+.flyer-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(13,61,107,.6) 0%, transparent 50%);
+  opacity: 0; transition: opacity .3s;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 14px;
+}
+.flyer-img-wrap:hover .flyer-img-overlay { opacity: 1; }
+.flyer-zoom-hint {
+  color: #fff; font-size: 11px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 5px 14px; border-radius: var(--radius-pill);
+}
+.flyer-share-row {
+  padding: 10px 14px;
+  display: flex; gap: 8px;
+}
+.flyer-share-btn {
+  flex: 1; background: var(--cinza-off);
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 11px; font-weight: 700;
+  color: var(--cinza-texto); cursor: pointer;
+  padding: 7px 10px; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.flyer-share-btn:hover { background: var(--azul-sus); color: #fff; border-color: var(--azul-sus); }
+.flyer-share-btn.primary { background: var(--azul-sus); color: #fff; border-color: var(--azul-sus); }
+.flyer-share-btn.primary:hover { background: var(--azul-wave); }
+
+/* ── SEM FLYER PLACEHOLDER ── */
+.flyer-placeholder {
+  background: linear-gradient(145deg, var(--cinza-off), #e8eef7);
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--cinza-borda);
+  padding: 32px 20px; text-align: center;
+  color: var(--cinza-medio);
+  font-size: 13px; line-height: 1.6;
+}
+.flyer-placeholder-icon { font-size: 36px; margin-bottom: 10px; display: block; opacity: .5; }
+
+/* ══════════════════════════════════
+   LIGHTBOX
+   ══════════════════════════════════ */
+.lightbox-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7, 24, 45, .92);
+  backdrop-filter: blur(12px);
+  z-index: 8000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.lightbox-overlay.active { opacity: 1; pointer-events: all; }
+.lightbox-box {
+  position: relative;
+  max-width: 520px; width: 100%;
+  transform: scale(.92);
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.lightbox-overlay.active .lightbox-box { transform: scale(1); }
+.lightbox-box img {
+  width: 100%; border-radius: var(--radius);
+  box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  display: block;
+}
+.lightbox-close {
+  position: absolute; top: -14px; right: -14px;
+  width: 36px; height: 36px;
+  background: #fff; border: none;
+  border-radius: 50%; font-size: 18px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  transition: all .2s; color: var(--cinza-texto);
+}
+.lightbox-close:hover { background: var(--amarelo-brasil); transform: scale(1.1); }
+.lightbox-caption {
+  text-align: center; margin-top: 16px;
+  color: rgba(255,255,255,.65); font-size: 13px;
+  font-weight: 600; letter-spacing: .04em;
+}
+.lightbox-download {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 12px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.8);
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  padding: 8px 18px; border-radius: var(--radius-pill);
+  text-decoration: none; transition: all .2s;
+}
+.lightbox-download:hover { background: rgba(255,255,255,.2); color: #fff; }
+.toast {
+  position: fixed; bottom: 28px; right: 28px;
+  background: var(--azul-wave); color: #fff;
+  padding: 12px 20px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  z-index: 9000;
+  transform: translateX(120%);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  max-width: 300px;
+}
+.toast.show { transform: translateX(0); }
+
+/* ══════════════════════════════════
+   SPLASH SCREEN
+   ══════════════════════════════════ */
+#splash {
+  position: fixed; inset: 0; z-index: 99999;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 0;
+  transition: opacity .6s ease, transform .6s ease;
+}
+#splash.fade-out {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+#splash img {
+  width: min(340px, 72vw);
+  opacity: 0;
+  transform: translateY(18px) scale(.96);
+  transition: opacity .7s ease .15s, transform .7s ease .15s;
+}
+#splash img.show { opacity: 1; transform: translateY(0) scale(1); }
+.splash-bar {
+  margin-top: 36px;
+  width: 160px; height: 3px;
+  background: var(--cinza-borda);
+  border-radius: 2px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity .4s ease .4s;
+}
+.splash-bar.show { opacity: 1; }
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-wave);
+  border-radius: 2px;
+  transition: width 1.6s cubic-bezier(.4,0,.2,1) .5s;
+}
+.splash-bar-fill.go { width: 100%; }
+
+/* ══════════════════════════════════
+   HERO LAYOUT — LOGO ACIMA (fixo)
+   ══════════════════════════════════ */
+.hero-logo-above {
+  margin-bottom: 32px;
+}
+.hero-logo-above img {
+  width: min(420px, 80vw);
+  height: auto;
+  animation: float 5s ease-in-out infinite;
+  filter: drop-shadow(0 18px 48px rgba(0,0,0,.55)) drop-shadow(0 4px 12px rgba(0,0,0,.35));
+}
+
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 0% 0%, rgba(0,0,0,.38) 0%, transparent 70%);
+  pointer-events: none; z-index: 1;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* ══════════════════════════════════
+   BRAND STRIP (pré-footer)
+   ══════════════════════════════════ */
+.brand-strip {
+  background: #fff;
+  border-top: 1px solid var(--cinza-borda);
+  padding: 36px 40px;
+  position: relative; overflow: hidden;
+}
+.brand-strip::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; background: var(--gradient-wave);
+}
+.brand-strip-inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; position: relative; z-index: 1;
+  flex-wrap: wrap;
+}
+.brand-strip-divider {
+  width: 1px; height: 56px;
+  background: var(--cinza-borda);
+  flex-shrink: 0;
+}
+.brand-strip-text { text-align: center; }
+.brand-strip-text p {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--cinza-medio); margin-bottom: 4px;
+}
+.brand-strip-text strong {
+  font-size: 13px; font-weight: 800; color: var(--cinza-texto);
+}
+@media (max-width: 600px) {
+  .brand-strip-divider { display: none; }
+  .brand-strip-inner { flex-direction: column; gap: 20px; }
+}
+.scroll-top {
+  position: fixed; bottom: 28px; right: 28px;
+  width: 44px; height: 44px;
+  background: var(--azul-sus); color: #fff;
+  border: none; border-radius: 50%;
+  font-size: 18px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(26,94,168,.4);
+  opacity: 0; transform: translateY(12px);
+  transition: all .3s; z-index: 990;
+  display: flex; align-items: center; justify-content: center;
+}
+.scroll-top.show { opacity: 1; transform: translateY(0); }
+.scroll-top:hover { background: var(--azul-wave); }
+
+@media print {
+  .decl-actions, .modal-overlay > *:not(.modal-box),
+  .top-nav, .hero, .confs-section,
+  .presenca-toolbar, .scroll-top, .toast { display: none !important; }
+  .modal-overlay { position: static; background: none; padding: 0; display: block !important; opacity: 1; pointer-events: all; }
+  .modal-box { box-shadow: none; max-height: none; transform: none !important; }
+}
+
+/* ══════════════════════════════════
+   EMPTY / PLACEHOLDER
+   ══════════════════════════════════ */
+.no-csv-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FEF8E7; color: #9A6500;
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero, .presenca-header, .detail-header { padding: 48px 20px 90px; }
+  .confs-section, .detail-content, .presenca-content { padding: 0 16px; margin-bottom: 60px; }
+  .action-cards { grid-template-columns: 1fr; }
+  .confs-grid { grid-template-columns: 1fr; }
+  .decl-dados-grid { grid-template-columns: 1fr; }
+  .decl-body { padding: 22px 20px; }
+  .decl-header { padding: 22px 20px; flex-direction: column; }
+  .decl-footer { padding: 14px 20px; }
+  .decl-actions { padding: 14px 20px; }
+  .top-nav { padding: 0 16px; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══ SPLASH SCREEN ══ -->
+<div id="splash">
+  <img id="splashLogo" src="https://i.ibb.co/VWptdq1R/LOGO-11-CONF-BLACK.png" alt="11ª CMS Montes Claros">
+  <div class="splash-bar" id="splashBar">
+    <div class="splash-bar-fill" id="splashFill"></div>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav class="top-nav">
+  <div class="nav-logo">
+    <img src="https://i.ibb.co/jkbLx2nz/icon-GG.png" alt="11ª CMS" style="height:36px;width:auto">
+  </div>
+  <div class="nav-title" id="navTitle">Pré-Conferências</div>
+  <div class="nav-actions">
+    <a href="hub-controle-social-11cms.html" class="nav-back" style="text-decoration:none">Hub Principal</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     VIEW 1: LISTA DE PRÉ-CONFERÊNCIAS
+     ═══════════════════════════════════ -->
+<div id="view-list">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-inner" style="position:relative;z-index:2;max-width:700px">
+
+      <!-- LOGO ACIMA -->
+      <div class="hero-logo-above">
+        <img src="https://i.ibb.co/WvwzN0TC/LOGO-11-CONF-WHITE.png" alt="11ª CMS Montes Claros">
+      </div>
+
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        10 de março a 27 de março de 2026
+      </div>
+      <h1 class="hero-title">
+        Pré-Conferências<br>
+        <span class="accent">11ª CMS</span> Montes Claros
+      </h1>
+      <p class="hero-desc">
+        Antes da Conferência Municipal, a cidade debate nos bairros, nas comunidades e nos territórios. São 13 pré-conferências temáticas e regionais que constroem, de baixo para cima, as propostas que irão à plenária final.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">13</span>
+          <div class="hero-stat-lbl">Pré-Conferências</div>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">18</span>
+          <div class="hero-stat-lbl">Dias de Processo</div>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">07h30</span>
+          <div class="hero-stat-lbl">Início de cada evento</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRID -->
+  <div class="confs-section">
+    <div class="confs-toolbar">
+      <div class="toolbar-label">13 Pré-Conferências</div>
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--cinza-medio)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchConfs" placeholder="Buscar pré-conferência..." oninput="filterConfs()">
+      </div>
+    </div>
+    <div class="confs-grid" id="confsGrid">
+      <!-- Preenchido via JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     VIEW 2: DETALHE DA PRÉ-CONF
+     ═══════════════════════════════════ -->
+<div id="view-detail">
+  <div class="detail-header">
+    <div class="detail-inner">
+      <button class="back-btn" onclick="goToList()">Voltar para lista</button>
+      <div class="detail-eyebrow" id="d-eyebrow">Pré-Conferência · 11ª CMS</div>
+      <h1 class="detail-title" id="d-title">Nome da Pré-Conf</h1>
+      <div class="detail-metas" id="d-metas"></div>
+    </div>
+  </div>
+  <div class="detail-content">
+    <div id="detail-main-area">
+      <!-- preenchido dinamicamente por openConf() -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     VIEW 3: LISTA DE PRESENÇA
+     ═══════════════════════════════════ -->
+<div id="view-presenca">
+  <div class="presenca-header">
+    <div class="presenca-inner">
+      <button class="back-btn" onclick="goToDetail()" style="background:none;border:none;font-family:var(--font);padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.7)'">← Voltar</button>
+      <div style="font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--amarelo-brasil);margin-bottom:6px;margin-top:14px" id="p-eyebrow">Pré-Conferência</div>
+      <h1 class="presenca-title" id="p-title">Lista de Presença</h1>
+      <p class="presenca-sub" id="p-sub">Participantes registrados com certificado de participação</p>
+      <div class="presenca-stats" id="p-stats">
+        <div class="p-stat">
+          <span class="p-stat-num" id="p-stat-total">—</span>
+          <div class="p-stat-lbl">Participantes</div>
+        </div>
+        <div class="p-stat">
+          <span class="p-stat-num" id="p-stat-data">—</span>
+          <div class="p-stat-lbl">Data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="presenca-content">
+    <!-- TOOLBAR -->
+    <div class="presenca-toolbar">
+      <div class="pt-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--cinza-medio);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchPresenca" placeholder="Buscar participante pelo nome..." oninput="filterPresenca()">
+      </div>
+      <div class="pt-count">Exibindo <span id="count-showing">—</span> de <span id="count-total">—</span> participantes</div>
+    </div>
+
+    <!-- TABELA -->
+    <div id="presenca-container">
+      <div class="loading-state" id="loading-presenca">
+        <div class="loading-spinner"></div>
+        <p>Carregando lista de presença...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     LIGHTBOX FLYER
+     ═══════════════════════════════ -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOutside(event)">
+  <div class="lightbox-box">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightboxImg" src="" alt="Flyer da Pré-Conferência">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+    <div style="text-align:center">
+      <a class="lightbox-download" id="lightboxDownload" href="" target="_blank" download>
+        ⬇ Abrir imagem em nova aba
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BRAND STRIP — PRÉ-RODAPÉ ══ -->
+<div class="brand-strip">
+  <div class="brand-strip-inner">
+    <img src="https://i.ibb.co/sv7yGVc1/tagsecexec1.png"
+         alt="Conselho Municipal de Saúde · Secretaria Executiva"
+         style="max-height:88px;width:auto;display:block"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{textContent:'CMS Montes Claros · Secretaria Executiva',style:'font-weight:800;font-size:14px;color:#2C3E50'}))">
+    <div class="brand-strip-divider"></div>
+    <div class="brand-strip-text">
+      <p>Realização</p>
+      <strong>Conselho Municipal de Saúde de Montes Claros</strong>
+    </div>
+    <div class="brand-strip-divider"></div>
+    <div class="brand-strip-text">
+      <p>Organização</p>
+      <strong>Secretaria Executiva · 11ª CMS 2026</strong>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg">—</span></div>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DADOS DAS 13 PRÉ-CONFERÊNCIAS
+   ═══════════════════════════════════════════════════════ */
+const PRECONFS = [
+  {
+    id: 'saude-mulher',
+    data: '10/03/2026', dia: '10', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Saúde da Mulher',
+    local: 'CIMAMS',
+    endereco: 'Av. Gov. Magalhães Pinto, 4000 – A',
+    csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTkLtQRQYj_9iXqJU4f7KoA_w_RLQloS6W-6pO-yAaJqaykGD4iLRogyiCXverRv6sjkpR_JZq16s2d/pub?gid=89542680&single=true&output=csv',
+    temDados: true,
+    flyer: 'https://i.ibb.co/FLSg7Cf9/Pr-Confer-ncia-Sa-de-da-Mulher.png',
+    emoji: '♀️',
+    descricao: 'Debate sobre saúde integral da mulher: atenção ginecológica, saúde materna, violência obstétrica e acesso a serviços especializados no SUS.'
+  },
+  {
+    id: 'prestadores-pcds',
+    data: '11/03/2026', dia: '11', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Prestadores de Serviço e PCDs',
+    local: 'Câmara Municipal',
+    endereco: 'Rua Urbino Viana, 600 - Vila Guilhermina',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/sp7DxFys/Pr-Confer-ncia-PCDs.png',
+    emoji: '🤝',
+    descricao: 'Fórum com prestadores de serviço ao SUS e representantes de pessoas com deficiência para discutir qualidade, acessibilidade e integração dos serviços.'
+  },
+  {
+    id: 'grande-renascenca',
+    data: '12/03/2026', dia: '12', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Renascença',
+    local: 'Salão Paroquial – Paróquia Menino Jesus de Praga',
+    endereco: 'Praça Ernestina Ferreira Nunes, s/n, Alice Maia',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/3tf3p72/Pr-Confer-ncia-Grande-Renascen-a.png',
+    emoji: '🏘️',
+    descricao: 'Pré-conferência regional da Grande Renascença: levantamento de demandas e propostas das comunidades da região.'
+  },
+  {
+    id: 'grande-santos-reis',
+    data: '13/03/2026', dia: '13', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Santos Reis',
+    local: 'Hospital das Clínicas Mário Ribeiro',
+    endereco: 'R. Plínio Ribeiro, 539 - Jardim Brasil',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/h1rHBZRM/Pr-Confer-ncia-Grande-Santos-Reis.png',
+    emoji: '🏘️',
+    descricao: 'Pré-conferência regional da Grande Santos Reis, com foco nas demandas de saúde do setor norte da cidade.'
+  },
+  {
+    id: 'grande-delfino',
+    data: '17/03/2026', dia: '17', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Delfino',
+    local: 'Colégio das Irmãs Imaculada Conceição',
+    endereco: 'A Confirmar',
+    csvUrl: null, temDados: false,
+    flyer: null,
+    emoji: '🏘️',
+    descricao: 'Pré-conferência da Grande Delfino: construção coletiva de propostas com moradores e entidades da região.'
+  },
+  {
+    id: 'grande-independencia',
+    data: '18/03/2026', dia: '18', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Independência',
+    local: 'Assembleia de Deus Madureira (Sede)',
+    endereco: 'Rua Marquesa dos Santos, 612, Independência',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/hwp0vGL/Pr-Confer-ncia-Grande-Independ-ncia.png',
+    emoji: '🏘️',
+    descricao: 'Pré-conferência da Grande Independência, mobilizando lideranças comunitárias e usuários do SUS da região.'
+  },
+  {
+    id: 'grande-major-prates',
+    data: '19/03/2026', dia: '19', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Major Prates',
+    local: 'UBS Major Prates',
+    endereco: 'Av. Olímpio Prates, s/n – Praça do Major Prates',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/HDMqgbPV/Pr-Confer-ncia-Grande-Major-Prates.png',
+    emoji: '🏘️',
+    descricao: 'Pré-conferência da Grande Major Prates, realizada na própria UBS da região — reforçando o protagonismo da Atenção Primária.'
+  },
+  {
+    id: 'grande-maracana',
+    data: '20/03/2026', dia: '20', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Grande Maracanã',
+    local: 'CAIC (a confirmar)',
+    endereco: 'Aguardando confirmação',
+    csvUrl: null, temDados: false,
+    flyer: 'https://i.ibb.co/CpBdHL3c/Pr-Confer-ncia-Grande-Maracan.png',
+    emoji: '🏘️',
+    descricao: 'Pré-conferência da Grande Maracanã: debate regional sobre as prioridades de saúde do setor leste da cidade.'
+  },
+  {
+    id: 'zona-rural',
+    data: '23/03/2026', dia: '23', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Zona Rural',
+    local: 'Sindicato dos Trabalhadores Rurais',
+    endereco: 'Rua Iolanda de Almeida, 222 – Cidade Nova',
+    csvUrl: null, temDados: false, flyer: null,
+    emoji: '🌿',
+    descricao: 'Pré-conferência da zona rural: saúde do trabalhador rural, acesso a serviços em áreas remotas e cuidados específicos para populações do campo.'
+  },
+  {
+    id: 'servidores-publicos',
+    data: '24/03/2026', dia: '24', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Servidores Públicos Municipais',
+    local: 'CIMAMS',
+    endereco: 'Av. Gov. Magalhães Pinto, 4000 – A',
+    csvUrl: null, temDados: false, flyer: null,
+    emoji: '🏛️',
+    descricao: 'Pré-conferência dos servidores públicos municipais: saúde do trabalhador do setor público, condições de trabalho e qualidade dos serviços prestados.'
+  },
+  {
+    id: 'igualdade-racial',
+    data: '25/03/2026', dia: '25', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'Igualdade Racial',
+    local: 'Casa da Cidadania',
+    endereco: 'Praça Raul Soares, s/n – Centro (Praça da Estação)',
+    csvUrl: null, temDados: false, flyer: null,
+    emoji: '✊',
+    descricao: 'Pré-conferência de igualdade racial: enfrentamento do racismo institucional no SUS, saúde da população negra e equidade no acesso aos serviços.'
+  },
+  {
+    id: 'lgbtqia',
+    data: '26/03/2026', dia: '26', mes: 'MAR',
+    hora: '07h30 às 11h30',
+    nome: 'População LGBTQIA+',
+    local: 'Casa da Cidadania',
+    endereco: 'Praça Raul Soares, s/n – Centro (Praça da Estação)',
+    csvUrl: null, temDados: false, flyer: null,
+    emoji: '🏳️‍🌈',
+    descricao: 'Pré-conferência da população LGBTQIA+: acesso à saúde integral, processo transexualizador, enfrentamento da LGBTfobia e humanização do atendimento no SUS.'
+  },
+  {
+    id: 'pop-rua',
+    data: '27/03/2026', dia: '27', mes: 'MAR',
+    hora: '07h30 às 11h00',
+    nome: 'População em Situação de Rua',
+    local: 'Centro POP (Canelas II)',
+    endereco: 'Av. Viriato Ribeiro de Aquino, 90 – Canelas II',
+    csvUrl: null, temDados: false, flyer: null,
+    emoji: '🏠',
+    descricao: 'Pré-conferência com a população em situação de rua: acesso a serviços de saúde, saúde mental, vínculos de cuidado e direitos fundamentais.'
+  },
+];
+
+/* ═══════════════════════════════════════════════════════
+   ESTADO GLOBAL
+   ═══════════════════════════════════════════════════════ */
+let currentConf = null;
+let allParticipantes = [];
+let filteredParticipantes = [];
+
+/* ═══════════════════════════════════════════════════════
+   UTILITÁRIOS
+   ═══════════════════════════════════════════════════════ */
+function getStatus(dataStr) {
+  const [d, m, y] = dataStr.split('/').map(Number);
+  const confDate = new Date(y, m - 1, d);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  if (confDate < today) return 'realizada';
+  if (confDate.getTime() === today.getTime()) return 'hoje';
+  return 'proxima';
+}
+
+function statusLabel(s) {
+  if (s === 'realizada') return { label: 'Realizada', cls: 'status-realizada' };
+  if (s === 'hoje') return { label: '🔴 Hoje!', cls: 'status-realizada' };
+  return { label: 'Próxima', cls: 'status-proxima' };
+}
+
+function showToast(msg, dur = 4000) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDER GRID DE CONFERÊNCIAS
+   ═══════════════════════════════════════════════════════ */
+function renderConfs(list) {
+  const grid = document.getElementById('confsGrid');
+  if (!list.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--cinza-medio)">Nenhuma pré-conferência encontrada.</div>';
+    return;
+  }
+  grid.innerHTML = list.map((c, i) => {
+    const st = getStatus(c.data);
+    const stInfo = statusLabel(st);
+    const endInfo = c.endereco === 'Aguardando' || c.endereco === 'A Confirmar' || c.endereco === 'Aguardando confirmação'
+      ? `<span class="no-csv-badge">⏳ A confirmar</span>`
+      : `<i>📍</i>${c.endereco}`;
+    const flyerBadge = c.flyer
+      ? `<button class="flyer-badge-card" onclick="event.stopPropagation(); openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">🖼 Ver flyer</button>`
+      : '';
+    return `
+      <div class="conf-card ${!c.temDados && st === 'proxima' ? 'sem-dados' : ''}" onclick="openConf(${i})">
+        <div class="conf-card-accent"></div>
+        <div class="conf-card-body">
+          <div class="conf-card-header">
+            <div class="conf-date-block">
+              <div class="conf-date-dd">${c.dia}</div>
+              <div class="conf-date-mm">${c.mes}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <span class="conf-status-pill ${stInfo.cls}">${stInfo.label}</span>
+              ${flyerBadge}
+            </div>
+          </div>
+          <div class="conf-name">${c.emoji} ${c.nome}</div>
+          <div class="conf-meta">
+            <span><i>🏢</i>${c.local}</span>
+            <span>${endInfo}</span>
+            <span><i>🕐</i>${c.hora}</span>
+          </div>
+        </div>
+        <div class="conf-card-footer">
+          <div class="conf-n-pill">
+            ${c.temDados ? `<span class="conf-n-dot"></span> Lista disponível` : `<span style="opacity:.5">Dados em breve</span>`}
+          </div>
+          <div class="conf-action">Ver detalhes</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function filterConfs() {
+  const q = document.getElementById('searchConfs').value.toLowerCase();
+  const filtered = PRECONFS.filter(c =>
+    c.nome.toLowerCase().includes(q) ||
+    c.local.toLowerCase().includes(q) ||
+    c.data.includes(q)
+  );
+  renderConfs(filtered);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVEGAÇÃO DE VIEWS
+   ═══════════════════════════════════════════════════════ */
+function showView(v) {
+  ['list','detail','presenca'].forEach(x => {
+    document.getElementById(`view-${x}`).style.display = x === v ? 'block' : 'none';
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function openConf(idx) {
+  currentConf = PRECONFS[idx];
+  const c = currentConf;
+  const st = getStatus(c.data);
+  const stInfo = statusLabel(st);
+
+  document.getElementById('d-eyebrow').textContent = `Pré-Conferência ${c.data} · 11ª CMS Montes Claros`;
+  document.getElementById('d-title').textContent = `${c.emoji} ${c.nome}`;
+  document.getElementById('navTitle').textContent = c.nome;
+
+  // Metas chips
+  document.getElementById('d-metas').innerHTML = `
+    <div class="detail-meta-chip">📅 ${c.data}</div>
+    <div class="detail-meta-chip">🕐 ${c.hora}</div>
+    <div class="detail-meta-chip">🏢 ${c.local}</div>
+    ${c.flyer ? `<div class="detail-meta-chip" style="cursor:pointer;background:rgba(245,200,0,.15);border-color:rgba(245,200,0,.4);color:var(--amarelo-brasil)" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">🖼 Ver flyer</div>` : ''}
+  `;
+
+  // Info grid
+  const infoGridHtml = `
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:4px">Data</div>
+      <div style="font-size:15px;font-weight:700;color:var(--cinza-texto)">${c.data}</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:4px">Horário</div>
+      <div style="font-size:15px;font-weight:700;color:var(--cinza-texto)">${c.hora}</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:4px">Local</div>
+      <div style="font-size:15px;font-weight:700;color:var(--cinza-texto)">${c.local}</div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:4px">Endereço</div>
+      <div style="font-size:14px;font-weight:600;color:var(--cinza-medio)">${c.endereco}</div>
+    </div>
+    <div style="grid-column:1/-1">
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:4px">Sobre esta pré-conferência</div>
+      <div style="font-size:14px;color:var(--cinza-medio);line-height:1.7">${c.descricao}</div>
+    </div>
+  `;
+
+  // Flyer panel HTML
+  const flyerHtml = c.flyer ? `
+    <div class="flyer-panel">
+      <div class="flyer-panel-header">
+        <div class="flyer-panel-label">Material de divulgação</div>
+        <button class="flyer-expand-btn" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">⛶</button>
+      </div>
+      <div class="flyer-img-wrap" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">
+        <img src="${c.flyer}" alt="Flyer ${c.nome}" loading="lazy">
+        <div class="flyer-img-overlay">
+          <span class="flyer-zoom-hint">🔍 Ampliar</span>
+        </div>
+      </div>
+      <div class="flyer-share-row">
+        <button class="flyer-share-btn primary" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">
+          🔍 Ampliar
+        </button>
+        <a class="flyer-share-btn" href="${c.flyer}" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px">
+          ⬇ Baixar
+        </a>
+      </div>
+    </div>
+  ` : `
+    <div class="flyer-placeholder">
+      <span class="flyer-placeholder-icon">🖼️</span>
+      <strong style="display:block;color:var(--cinza-texto);margin-bottom:4px;font-size:13px">Flyer em breve</strong>
+      O material de divulgação desta pré-conferência será publicado em breve.
+    </div>
+  `;
+
+  // Monta layout com ou sem flyer (sempre com painel lateral)
+  document.getElementById('detail-main-area').innerHTML = `
+    <div class="detail-with-flyer">
+      <div class="detail-main-col">
+        <div class="action-cards">
+          <div class="action-card" id="btn-ver-presenca-inner">
+            <span class="action-card-icon">📋</span>
+            <div>
+              <h3>Lista de Presença</h3>
+              <p>Veja os participantes registrados e confira sua presença nesta pré-conferência.</p>
+            </div>
+            <span class="action-arrow">→</span>
+          </div>
+          <div class="action-card" onclick="goToPresenca()">
+            <span class="action-card-icon">📄</span>
+            <div>
+              <h3>Declarações de Participação</h3>
+              <p>Os PDFs de declaração estão disponíveis na lista de presença, ao lado de cada participante.</p>
+            </div>
+            <span class="action-arrow">→</span>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-header">
+            <div class="info-card-title">Informações do evento</div>
+            <span class="conf-status-pill ${stInfo.cls}">${stInfo.label}</span>
+          </div>
+          <div class="info-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+              ${infoGridHtml}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>${flyerHtml}</div>
+    </div>
+  `;
+
+  // Rebinda botão de presença
+  const btnInner = document.getElementById('btn-ver-presenca-inner');
+  if (!c.temDados) {
+    btnInner.style.opacity = '.5';
+    btnInner.style.cursor = 'not-allowed';
+    btnInner.onclick = () => showToast('⏳ A lista de presença desta pré-conferência ainda não está disponível.');
+  } else {
+    btnInner.style.opacity = '1';
+    btnInner.style.cursor = 'pointer';
+    btnInner.onclick = goToPresenca;
+  }
+
+  showView('detail');
+}
+
+function goToList() {
+  document.getElementById('navTitle').textContent = 'Pré-Conferências';
+  currentConf = null;
+  showView('list');
+}
+
+function goToDetail() {
+  showView('detail');
+}
+
+/* ═══════════════════════════════════════════════════════
+   LISTA DE PRESENÇA — CARREGA CSV
+   ═══════════════════════════════════════════════════════ */
+async function goToPresenca() {
+  if (!currentConf || !currentConf.temDados) {
+    showToast('⏳ Dados ainda não disponíveis para esta pré-conferência.');
+    return;
+  }
+
+  const c = currentConf;
+  document.getElementById('p-eyebrow').textContent = `Pré-Conferência · ${c.data} · 11ª CMS`;
+  document.getElementById('p-title').textContent = `${c.emoji} ${c.nome}`;
+  document.getElementById('p-sub').textContent = `Participantes registrados — ${c.local}`;
+  document.getElementById('p-stat-data').textContent = c.data;
+  document.getElementById('p-stat-total').textContent = '...';
+  document.getElementById('count-total').textContent = '...';
+  document.getElementById('count-showing').textContent = '...';
+  document.getElementById('searchPresenca').value = '';
+
+  showView('presenca');
+
+  // Mostra loading
+  document.getElementById('presenca-container').innerHTML = `
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando lista de presença via Google Sheets...</p>
+    </div>`;
+
+  try {
+    const csv = await fetchCSV(c.csvUrl);
+    const participantes = parseCSV(csv);
+    if (!participantes.length) throw new Error('Nenhum participante encontrado na planilha.');
+
+    allParticipantes = participantes;
+    filteredParticipantes = [...participantes];
+
+    document.getElementById('p-stat-total').textContent = participantes.length;
+    document.getElementById('count-total').textContent = participantes.length;
+    document.getElementById('count-showing').textContent = participantes.length;
+
+    renderTabela(filteredParticipantes);
+  } catch (err) {
+    document.getElementById('presenca-container').innerHTML = `
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <h3>Não foi possível carregar a lista</h3>
+        <p>A planilha pode estar temporariamente indisponível ou sua conexão bloqueou o acesso ao Google Sheets.<br><br>
+        Tente novamente em instantes ou acesse diretamente o link da planilha.</p>
+        <button onclick="goToPresenca()" style="background:var(--azul-sus);color:#fff;font-family:var(--font);font-size:13px;font-weight:700;padding:10px 22px;border-radius:var(--radius-pill);border:none;cursor:pointer">↺ Tentar novamente</button>
+      </div>`;
+  }
+}
+
+/* ── FETCH CSV com CORS proxy ── */
+async function fetchCSV(url) {
+  // Tenta direto primeiro (funciona em muitos browsers)
+  try {
+    const r = await fetch(url, { mode: 'cors' });
+    if (r.ok) return await r.text();
+  } catch (_) {}
+
+  // Fallback via proxy CORS público
+  const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+  const r2 = await fetch(proxy);
+  if (!r2.ok) throw new Error('Falha no carregamento');
+  return await r2.text();
+}
+
+/* ── PARSE CSV ──
+   Coluna B (índice 1) = Nome
+   Coluna L (índice 11) = Tipo de certificado / info extra
+*/
+function parseCSV(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  const result = [];
+  // Pula cabeçalho (linha 0)
+  for (let i = 1; i < lines.length; i++) {
+    const cols = splitCSVLine(lines[i]);
+    const nome = (cols[1] || '').trim().replace(/^"|"$/g, '');
+    const colL = (cols[11] || '').trim().replace(/^"|"$/g, '');
+    if (nome && nome.length > 2) {
+      result.push({ nome, colL, idx: i });
+    }
+  }
+  return result;
+}
+
+function splitCSVLine(line) {
+  const result = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '"') { inQ = !inQ; continue; }
+    if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+    cur += line[i];
+  }
+  result.push(cur);
+  return result;
+}
+
+/* ── RENDER TABELA ── */
+function renderTabela(lista) {
+  if (!lista.length) {
+    document.getElementById('presenca-container').innerHTML = `
+      <div class="error-state">
+        <span class="error-icon">🔍</span>
+        <h3>Nenhum resultado encontrado</h3>
+        <p>Tente um nome diferente na busca.</p>
+      </div>`;
+    return;
+  }
+
+  const c = currentConf;
+  const rows = lista.map((p) => {
+    const temPdf = p.colL && p.colL.startsWith('http');
+    const btnDecl = temPdf
+      ? `<a class="decl-btn" href="${p.colL}" target="_blank" rel="noopener">📄 Abrir PDF</a>`
+      : `<span style="font-size:11px;color:var(--cinza-medio)">—</span>`;
+    return `
+    <tr>
+      <td>${p.idx}</td>
+      <td class="nome-cell">${p.nome}</td>
+      <td><span class="status-pill status-presente">✓ Presente</span></td>
+      <td style="font-size:12px;color:var(--cinza-medio)">${c.nome}</td>
+      <td style="font-size:12px;color:var(--cinza-medio)">${c.data}</td>
+      <td>${btnDecl}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('presenca-container').innerHTML = `
+    <div class="presenca-table-wrap">
+      <div class="pt-table-header">
+        <div class="pt-table-title">Participantes Registrados</div>
+        <span class="total-badge">${lista.length} Presentes</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>Situação</th>
+              <th>Pré-Conferência</th>
+              <th>Data</th>
+              <th>Declaração / PDF</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyPresenca">${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function filterPresenca() {
+  const q = document.getElementById('searchPresenca').value.toLowerCase();
+  filteredParticipantes = q
+    ? allParticipantes.filter(p => p.nome.toLowerCase().includes(q))
+    : [...allParticipantes];
+  document.getElementById('count-showing').textContent = filteredParticipantes.length;
+  renderTabela(filteredParticipantes);
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIGHTBOX
+   ═══════════════════════════════════════════════════════ */
+function openLightbox(url, caption) {
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightboxCaption').textContent = `Flyer · Pré-Conferência ${caption}`;
+  document.getElementById('lightboxDownload').href = url;
+  document.getElementById('lightboxOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeLightboxOutside(e) {
+  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* ═══════════════════════════════════════════════════════
+   SCROLL / PROGRESS BAR
+   ═══════════════════════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const s = window.scrollY;
+  const t = document.body.scrollHeight - window.innerHeight;
+  if (t > 0) document.getElementById('progress-bar').style.width = `${(s/t)*100}%`;
+  const btn = document.getElementById('scrollTop');
+  s > 300 ? btn.classList.add('show') : btn.classList.remove('show');
+});
+
+/* ═══════════════════════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  const logo = document.getElementById('splashLogo');
+  const bar  = document.getElementById('splashBar');
+  const fill = document.getElementById('splashFill');
+  const splash = document.getElementById('splash');
+
+  // Ativa logo e barra após micro-delay
+  requestAnimationFrame(() => {
+    setTimeout(() => { logo.classList.add('show'); bar.classList.add('show'); }, 60);
+    setTimeout(() => { fill.classList.add('go'); }, 120);
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+      setTimeout(() => { splash.style.display = 'none'; }, 650);
+    }, 2200);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════ */
+renderConfs(PRECONFS);
+</script>
+</body>
+</html>
