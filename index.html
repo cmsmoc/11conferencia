@@ -958,10 +958,14 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
   0%,100% { transform: translateY(0); }
   50%      { transform: translateY(-10px); }
 }
+
+/* ══════════════════════════════════
+   BRAND STRIP (pré-footer)
    ══════════════════════════════════ */
 .brand-strip {
-  background: linear-gradient(135deg, #0D3D6B 0%, #1A5EA8 60%, #2E8BC0 100%);
-  padding: 40px 40px;
+  background: #fff;
+  border-top: 1px solid var(--cinza-borda);
+  padding: 36px 40px;
   position: relative; overflow: hidden;
 }
 .brand-strip::before {
@@ -969,35 +973,24 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
   position: absolute; top: 0; left: 0; right: 0;
   height: 4px; background: var(--gradient-wave);
 }
-.brand-strip::after {
-  content: '';
-  position: absolute; top: -80px; right: -80px;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(245,200,0,.08) 0%, transparent 70%);
-  border-radius: 50%;
-}
 .brand-strip-inner {
   max-width: 960px; margin: 0 auto;
   display: flex; align-items: center; justify-content: center;
-  gap: 32px; position: relative; z-index: 1;
+  gap: 40px; position: relative; z-index: 1;
   flex-wrap: wrap;
 }
 .brand-strip-divider {
-  width: 1px; height: 60px;
-  background: rgba(255,255,255,.15);
+  width: 1px; height: 56px;
+  background: var(--cinza-borda);
   flex-shrink: 0;
 }
-.brand-strip-text {
-  text-align: center;
-}
+.brand-strip-text { text-align: center; }
 .brand-strip-text p {
-  font-size: 11px; font-weight: 600;
-  letter-spacing: .06em; text-transform: uppercase;
-  color: rgba(255,255,255,.5); margin-bottom: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--cinza-medio); margin-bottom: 4px;
 }
 .brand-strip-text strong {
-  font-size: 13px; font-weight: 800;
-  color: rgba(255,255,255,.85);
+  font-size: 13px; font-weight: 800; color: var(--cinza-texto);
 }
 @media (max-width: 600px) {
   .brand-strip-divider { display: none; }
@@ -1197,88 +1190,6 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
 </div>
 
 <!-- ═══════════════════════════════
-     MODAL DECLARAÇÃO
-     ═══════════════════════════════ -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal-box" id="modalBox">
-    <div class="decl-document">
-      <div class="decl-header">
-        <div class="decl-header-left">
-          <div class="decl-tipo-badge">Declaração de Participação</div>
-          <h2>11ª Conferência Municipal de Saúde</h2>
-          <h1 id="m-conf-name">Pré-Conferência</h1>
-        </div>
-        <div class="decl-header-logo">
-          <img src="https://i.ibb.co/PzrBQDwY/LOGOTIPO-CONSELHO-MONO-BRANCO.png" alt="CMS MC" onerror="this.style.display='none'">
-        </div>
-      </div>
-      <div class="decl-wave-bar"></div>
-      <div class="decl-body">
-        <div class="decl-seal">
-          <span class="decl-seal-icon">🏥</span>
-          <div class="decl-seal-text">
-            <h3>Conselho Municipal de Saúde — Montes Claros/MG</h3>
-            <p>Secretaria Executiva · 11ª Conferência Municipal de Saúde — 2026</p>
-          </div>
-        </div>
-        <div class="decl-text" id="m-text">
-          <!-- preenchido via JS -->
-        </div>
-        <div class="decl-dados">
-          <div class="decl-dados-title">Dados do(a) Participante</div>
-          <div class="decl-dados-grid">
-            <div class="decl-dado-item">
-              <label>Nome completo</label>
-              <span id="m-nome">—</span>
-            </div>
-            <div class="decl-dado-item">
-              <label>Pré-Conferência</label>
-              <span id="m-preconf">—</span>
-            </div>
-            <div class="decl-dado-item">
-              <label>Data</label>
-              <span id="m-data">—</span>
-            </div>
-            <div class="decl-dado-item">
-              <label>Horário</label>
-              <span id="m-hora">07h30 às 11h30</span>
-            </div>
-            <div class="decl-dado-item">
-              <label>Local</label>
-              <span id="m-local">—</span>
-            </div>
-            <div class="decl-dado-item">
-              <label>Município</label>
-              <span>Montes Claros — MG</span>
-            </div>
-          </div>
-        </div>
-        <div class="decl-numero-line">
-          <span class="decl-numero-label">Número do registro</span>
-          <span class="decl-numero-val" id="m-numero">DECL-2026-00000000</span>
-        </div>
-        <div class="decl-assinatura">
-          <div class="decl-assina-block">
-            <div class="decl-assina-line"></div>
-            <div class="decl-assina-name">Secretaria Executiva</div>
-            <div class="decl-assina-role">Conselho Municipal de Saúde — Montes Claros/MG</div>
-          </div>
-          <div class="decl-qr-placeholder">🔏</div>
-        </div>
-      </div>
-      <div class="decl-footer">
-        <p>Documento emitido eletronicamente pelo sistema da 11ª CMS Montes Claros</p>
-        <p id="m-emissao">Emitido em: —</p>
-      </div>
-      <div class="decl-actions">
-        <button class="btn-fechar" onclick="closeModal()">Fechar</button>
-        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════
      LIGHTBOX FLYER
      ═══════════════════════════════ -->
 <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOutside(event)">
@@ -1298,9 +1209,9 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
 <div class="brand-strip">
   <div class="brand-strip-inner">
     <img src="https://i.ibb.co/sv7yGVc1/tagsecexec1.png"
-         alt="Conselho Municipal de Saúde + Secretaria Executiva"
-         style="max-height:72px;width:auto;opacity:.9"
-         onerror="this.style.display='none'">
+         alt="Conselho Municipal de Saúde · Secretaria Executiva"
+         style="max-height:88px;width:auto;display:block"
+         onerror="this.replaceWith(Object.assign(document.createElement('div'),{textContent:'CMS Montes Claros · Secretaria Executiva',style:'font-weight:800;font-size:14px;color:#2C3E50'}))">
     <div class="brand-strip-divider"></div>
     <div class="brand-strip-text">
       <p>Realização</p>
@@ -1309,7 +1220,7 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
     <div class="brand-strip-divider"></div>
     <div class="brand-strip-text">
       <p>Organização</p>
-      <strong>Secretaria Executiva do CMS-MC · 11ª CMS 2026</strong>
+      <strong>Secretaria Executiva · 11ª CMS 2026</strong>
     </div>
   </div>
 </div>
@@ -1509,13 +1420,6 @@ function showToast(msg, dur = 4000) {
   setTimeout(() => t.classList.remove('show'), dur);
 }
 
-function gerarNumero(nome) {
-  let hash = 0;
-  for (let i = 0; i < nome.length; i++) hash = ((hash << 5) - hash) + nome.charCodeAt(i) | 0;
-  const num = Math.abs(hash % 90000000) + 10000000;
-  return 'DECL-2026-' + String(num);
-}
-
 /* ═══════════════════════════════════════════════════════
    RENDER GRID DE CONFERÊNCIAS
    ═══════════════════════════════════════════════════════ */
@@ -1674,7 +1578,7 @@ function openConf(idx) {
             <span class="action-card-icon">📄</span>
             <div>
               <h3>Declarações de Participação</h3>
-              <p>Acesse e imprima a declaração de participação individual com número de registro.</p>
+              <p>Os PDFs de declaração estão disponíveis na lista de presença, ao lado de cada participante.</p>
             </div>
             <span class="action-arrow">→</span>
           </div>
@@ -1833,19 +1737,21 @@ function renderTabela(lista) {
   }
 
   const c = currentConf;
-  const rows = lista.map((p, i) => `
+  const rows = lista.map((p) => {
+    const temPdf = p.colL && p.colL.startsWith('http');
+    const btnDecl = temPdf
+      ? `<a class="decl-btn" href="${p.colL}" target="_blank" rel="noopener">📄 Abrir PDF</a>`
+      : `<span style="font-size:11px;color:var(--cinza-medio)">—</span>`;
+    return `
     <tr>
       <td>${p.idx}</td>
       <td class="nome-cell">${p.nome}</td>
       <td><span class="status-pill status-presente">✓ Presente</span></td>
       <td style="font-size:12px;color:var(--cinza-medio)">${c.nome}</td>
       <td style="font-size:12px;color:var(--cinza-medio)">${c.data}</td>
-      <td>
-        <button class="decl-btn" onclick="openDeclaracao('${p.nome.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
-          📄 Declaração
-        </button>
-      </td>
-    </tr>`).join('');
+      <td>${btnDecl}</td>
+    </tr>`;
+  }).join('');
 
   document.getElementById('presenca-container').innerHTML = `
     <div class="presenca-table-wrap">
@@ -1862,7 +1768,7 @@ function renderTabela(lista) {
               <th>Situação</th>
               <th>Pré-Conferência</th>
               <th>Data</th>
-              <th>Declaração</th>
+              <th>Declaração / PDF</th>
             </tr>
           </thead>
           <tbody id="tbodyPresenca">${rows}</tbody>
@@ -1878,41 +1784,6 @@ function filterPresenca() {
     : [...allParticipantes];
   document.getElementById('count-showing').textContent = filteredParticipantes.length;
   renderTabela(filteredParticipantes);
-}
-
-/* ═══════════════════════════════════════════════════════
-   MODAL DECLARAÇÃO
-   ═══════════════════════════════════════════════════════ */
-function openDeclaracao(nome) {
-  if (!currentConf) return;
-  const c = currentConf;
-  const num = gerarNumero(nome + c.id);
-  const hoje = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
-
-  document.getElementById('m-conf-name').textContent = `Pré-Conferência: ${c.nome}`;
-  document.getElementById('m-nome').textContent = nome;
-  document.getElementById('m-preconf').textContent = c.nome;
-  document.getElementById('m-data').textContent = c.data;
-  document.getElementById('m-hora').textContent = c.hora;
-  document.getElementById('m-local').textContent = c.local + ' — ' + c.endereco;
-  document.getElementById('m-numero').textContent = num;
-  document.getElementById('m-emissao').textContent = `Emitido em: ${hoje}`;
-
-  document.getElementById('m-text').innerHTML = `
-    O <strong>Conselho Municipal de Saúde de Montes Claros</strong>, por meio de sua Secretaria Executiva, no âmbito da <em>11ª Conferência Municipal de Saúde — 2026</em>, declara para os devidos fins que<br><br>
-    <strong style="font-size:16px;display:block;text-align:center;margin:14px 0;padding:10px;background:var(--cinza-off);border-radius:8px">${nome}</strong>
-    participou da Pré-Conferência <strong>"${c.nome}"</strong>, realizada em <em>${c.data}</em>, no período das <em>${c.hora}</em>, nas dependências de <em>${c.local}</em>, em Montes Claros — MG, como parte integrante do processo democrático de construção da Política Municipal de Saúde 2026–2029.<br><br>
-    A participação ora declarada constitui expressão do exercício do <strong>Controle Social no SUS</strong>, nos termos da Lei Federal 8.142/1990 e da Constituição Federal de 1988.
-  `;
-
-  document.getElementById('modalOverlay').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-}
-function closeModalOutside(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
 /* ═══════════════════════════════════════════════════════
