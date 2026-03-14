@@ -1030,8 +1030,380 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
 }
 
 /* ══════════════════════════════════
-   RESPONSIVE — MOBILE FIRST
+   QR CODE MODAL
    ══════════════════════════════════ */
+.qr-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7,24,45,.88);
+  backdrop-filter: blur(10px);
+  z-index: 8500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.qr-modal-overlay.active { opacity: 1; pointer-events: all; }
+.qr-modal-box {
+  background: #fff; border-radius: var(--radius);
+  box-shadow: 0 32px 80px rgba(0,0,0,.5);
+  padding: 32px 28px; max-width: 340px; width: 100%;
+  text-align: center;
+  transform: scale(.9) translateY(20px);
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+}
+.qr-modal-overlay.active .qr-modal-box { transform: scale(1) translateY(0); }
+.qr-modal-title {
+  font-size: 11px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--azul-sus);
+  margin-bottom: 6px;
+}
+.qr-modal-nome {
+  font-size: 16px; font-weight: 900; color: var(--azul-wave);
+  margin-bottom: 20px; line-height: 1.3;
+}
+#qrCanvas {
+  margin: 0 auto 20px;
+  border: 6px solid var(--cinza-off);
+  border-radius: var(--radius-sm);
+  display: block;
+}
+.qr-info {
+  font-size: 11px; color: var(--cinza-medio); margin-bottom: 20px; line-height: 1.5;
+}
+.qr-url-chip {
+  display: block;
+  background: var(--cinza-off); border: 1px solid var(--cinza-borda);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px; font-size: 10px; font-family: monospace;
+  color: var(--azul-sus); word-break: break-all;
+  margin-bottom: 16px;
+}
+.qr-actions { display: flex; gap: 8px; justify-content: center; }
+.qr-btn {
+  flex: 1; max-width: 130px;
+  padding: 9px 14px; border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 11px; font-weight: 800;
+  cursor: pointer; transition: all .2s; border: none;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.qr-btn-dl { background: var(--azul-sus); color: #fff; }
+.qr-btn-dl:hover { background: var(--azul-wave); }
+.qr-btn-close { background: var(--cinza-off); color: var(--cinza-texto); border: 1.5px solid var(--cinza-borda); }
+.qr-btn-close:hover { background: #fff; border-color: var(--azul-claro); }
+
+/* ══════════════════════════════════
+   AVISO URGENTE POPUP
+   ══════════════════════════════════ */
+.aviso-overlay {
+  position: fixed; inset: 0;
+  background: rgba(7,24,45,.75);
+  backdrop-filter: blur(8px);
+  z-index: 9500;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .4s;
+}
+.aviso-overlay.active { opacity: 1; pointer-events: all; }
+.aviso-box {
+  background: #fff; border-radius: var(--radius);
+  box-shadow: 0 32px 80px rgba(0,0,0,.5);
+  max-width: 560px; width: 100%; overflow: hidden;
+  transform: scale(.92) translateY(24px);
+  transition: all .4s cubic-bezier(.34,1.56,.64,1);
+}
+.aviso-overlay.active .aviso-box { transform: scale(1) translateY(0); }
+.aviso-header {
+  background: linear-gradient(135deg, #7B1C1C, #B71C1C);
+  padding: 18px 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.aviso-header-icon { font-size: 24px; }
+.aviso-header-text h3 {
+  font-size: 11px; font-weight: 800; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(255,255,255,.75);
+  margin-bottom: 2px;
+}
+.aviso-header-text p { font-size: 15px; font-weight: 900; color: #fff; }
+.aviso-wave { height: 4px; background: var(--gradient-wave); }
+.aviso-body { padding: 24px 24px 20px; }
+.aviso-body-texto {
+  font-size: 15px; color: var(--cinza-texto); line-height: 1.75;
+  margin-bottom: 18px;
+}
+.aviso-body img {
+  width: 100%; border-radius: var(--radius-sm);
+  margin-bottom: 18px;
+}
+.aviso-body iframe {
+  width: 100%; aspect-ratio: 16/9; border: none;
+  border-radius: var(--radius-sm); margin-bottom: 18px;
+}
+.aviso-footer {
+  padding: 14px 24px; border-top: 1px solid var(--cinza-borda);
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+.aviso-btn-ok {
+  background: var(--azul-sus); color: #fff;
+  font-family: var(--font); font-size: 12px; font-weight: 800;
+  padding: 9px 24px; border-radius: var(--radius-pill);
+  border: none; cursor: pointer; transition: all .2s;
+}
+.aviso-btn-ok:hover { background: var(--azul-wave); }
+.aviso-badge-urgente {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFF0F0; border: 1.5px solid #FFCDD2;
+  color: #B71C1C; font-size: 10px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: var(--radius-pill);
+  margin-bottom: 12px;
+}
+
+/* ══════════════════════════════════
+   DELEGADOS ELEITOS — na view detail
+   ══════════════════════════════════ */
+.delegados-card {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden; margin-top: 20px;
+}
+.delegados-header {
+  padding: 16px 22px; border-bottom: 1px solid var(--cinza-borda);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.delegados-title {
+  font-size: 11px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: #1E8A4A;
+  display: flex; align-items: center; gap: 7px;
+}
+.delegados-title::before {
+  content: ''; width: 16px; height: 3px;
+  background: linear-gradient(90deg,#1E8A4A,#3AAA35); border-radius: 2px;
+}
+.delegados-count-badge {
+  background: #E8F8EC; color: #1B7A30;
+  font-size: 11px; font-weight: 800;
+  padding: 3px 12px; border-radius: var(--radius-pill);
+}
+.delegados-table-wrap { overflow-x: auto; }
+.delegados-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.delegados-table thead th {
+  background: var(--cinza-off); padding: 10px 18px;
+  text-align: left; font-size: 10px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cinza-medio); border-bottom: 1.5px solid var(--cinza-borda);
+  white-space: nowrap;
+}
+.delegados-table tbody tr { border-bottom: 1px solid var(--cinza-borda); transition: background .15s; }
+.delegados-table tbody tr:last-child { border-bottom: none; }
+.delegados-table tbody tr:hover { background: var(--cinza-off); }
+.delegados-table tbody td { padding: 11px 18px; color: var(--cinza-texto); vertical-align: middle; }
+.delegado-nome { font-weight: 700; }
+.badge-segmento {
+  font-size: 9px; font-weight: 800; padding: 2px 9px;
+  border-radius: var(--radius-pill); letter-spacing: .06em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.seg-usuarios     { background: #EAF4FB; color: #1A5EA8; }
+.seg-trabalhadores{ background: #FFF3CD; color: #856404; }
+.seg-gestores     { background: #E8F8EC; color: #1B7A30; }
+.seg-prestadores  { background: #F3E8FF; color: #6B21A8; }
+.seg-outro        { background: #F4F7FB; color: #6B7F96; }
+.badge-tipo-titular  { background: #1E8A4A; color: #fff; font-size:9px; padding:2px 8px; border-radius:99px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.badge-tipo-suplente { background: #FFF3CD; color: #856404; font-size:9px; padding:2px 8px; border-radius:99px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.delegados-empty {
+  padding: 28px; text-align: center;
+  color: var(--cinza-medio); font-size: 13px;
+}
+
+/* ══════════════════════════════════
+   GALERIA DE FOTOS — seção view-list
+   ══════════════════════════════════ */
+.galeria-section {
+  max-width: 960px; margin: 0 auto 80px;
+  padding: 0 32px;
+}
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.section-titulo {
+  font-size: 11px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--azul-sus);
+  display: flex; align-items: center; gap: 7px;
+}
+.section-titulo::before {
+  content: ''; display: block; width: 18px; height: 3px;
+  background: var(--gradient-wave); border-radius: 2px;
+}
+.galeria-filtros {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.galeria-filtro-btn {
+  background: #fff; border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 11px; font-weight: 700;
+  color: var(--cinza-medio); padding: 5px 14px;
+  cursor: pointer; transition: all .2s;
+}
+.galeria-filtro-btn:hover, .galeria-filtro-btn.ativo {
+  background: var(--azul-sus); color: #fff; border-color: var(--azul-sus);
+}
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.galeria-item {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: zoom-in;
+  position: relative;
+  aspect-ratio: 4/3;
+  background: var(--cinza-off);
+  box-shadow: var(--sombra-card);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+}
+.galeria-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: var(--sombra-hover);
+}
+.galeria-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .4s ease;
+}
+.galeria-item:hover img { transform: scale(1.06); }
+.galeria-item-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(13,61,107,.7) 0%, transparent 55%);
+  opacity: 0; transition: opacity .3s;
+  display: flex; align-items: flex-end; padding: 10px 12px;
+}
+.galeria-item:hover .galeria-item-overlay { opacity: 1; }
+.galeria-item-legenda {
+  color: #fff; font-size: 11px; font-weight: 600; line-height: 1.3;
+}
+.galeria-empty {
+  text-align: center; padding: 48px 20px;
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px dashed var(--cinza-borda);
+  color: var(--cinza-medio);
+}
+.galeria-empty-icon { font-size: 40px; margin-bottom: 12px; display: block; opacity: .4; }
+.galeria-loading {
+  text-align: center; padding: 40px;
+  color: var(--cinza-medio); font-size: 13px;
+}
+
+/* ══════════════════════════════════
+   SEÇÃO EDUCATIVA
+   ══════════════════════════════════ */
+.educativa-section {
+  max-width: 960px; margin: 0 auto 80px;
+  padding: 0 32px;
+}
+.educativa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.edu-card {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  box-shadow: var(--sombra-card);
+  overflow: hidden;
+  transition: all .3s;
+}
+.edu-card:hover { transform: translateY(-5px); box-shadow: var(--sombra-hover); }
+.edu-card-accent {
+  height: 5px;
+}
+.edu-card-accent.azul   { background: linear-gradient(90deg,var(--azul-wave),var(--azul-sus)); }
+.edu-card-accent.verde  { background: linear-gradient(90deg,#1E8A4A,#3AAA35); }
+.edu-card-accent.amarelo{ background: linear-gradient(90deg,#F5C400,#F5A623); }
+.edu-card-accent.roxo   { background: linear-gradient(90deg,#6B21A8,#9333EA); }
+.edu-card-body { padding: 24px 22px; }
+.edu-card-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+.edu-card h3 {
+  font-size: 15px; font-weight: 900; color: var(--azul-wave);
+  margin-bottom: 10px; line-height: 1.3; letter-spacing: -.01em;
+}
+.edu-card p {
+  font-size: 13px; color: var(--cinza-medio); line-height: 1.75;
+}
+.edu-card ul {
+  margin: 10px 0 0 18px; font-size: 13px; color: var(--cinza-medio); line-height: 1.8;
+}
+.edu-destaque {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 100%);
+  border-radius: var(--radius);
+  padding: 32px 36px; margin-bottom: 28px; position: relative; overflow: hidden;
+}
+.edu-destaque::after {
+  content: '"'; position: absolute; right: 24px; top: -10px;
+  font-size: 120px; font-weight: 900; color: rgba(255,255,255,.08);
+  line-height: 1;
+}
+.edu-destaque-label {
+  font-size: 10px; font-weight: 800; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--amarelo-brasil);
+  margin-bottom: 10px;
+}
+.edu-destaque p {
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 700; color: #fff; line-height: 1.6;
+  font-style: italic;
+}
+.edu-destaque cite {
+  display: block; margin-top: 14px;
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.65);
+  font-style: normal; letter-spacing: .06em;
+}
+.edu-numeros {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px; margin-top: 28px;
+}
+.edu-numero-card {
+  background: linear-gradient(135deg, #EAF4FB, #E8F8EC);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda);
+  padding: 18px 20px; text-align: center;
+}
+.edu-numero-val {
+  font-size: 32px; font-weight: 900;
+  color: var(--azul-sus); line-height: 1;
+  margin-bottom: 6px;
+}
+.edu-numero-lbl {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--cinza-medio); line-height: 1.4;
+}
+
+/* Nav tabs para view-list extras */
+.list-tabs {
+  max-width: 960px; margin: 0 auto 28px;
+  padding: 0 32px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.list-tab {
+  background: #fff; border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  color: var(--cinza-medio); padding: 7px 18px;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.list-tab:hover { border-color: var(--azul-medio); color: var(--azul-sus); }
+.list-tab.ativo {
+  background: var(--azul-sus); color: #fff;
+  border-color: var(--azul-sus); box-shadow: 0 4px 12px rgba(26,94,168,.25);
+}
+.list-panel { display: none; }
+.list-panel.ativo { display: block; }
 
 /* ── Tablet e abaixo (≤ 900px) ── */
 @media (max-width: 900px) {
@@ -1227,8 +1599,124 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
   </div>
 </div>
 
-<!-- ═══════════════════════════════════
-     VIEW 2: DETALHE DA PRÉ-CONF
+<!-- ═══════════════════════════════
+     TABS — GALERIA E EDUCATIVA
+     ═══════════════════════════════ -->
+<div class="list-tabs" id="listTabs">
+  <button class="list-tab" onclick="switchTab('galeria')">📸 Galeria de Fotos</button>
+  <button class="list-tab" onclick="switchTab('educativa')">📚 Sobre as Conferências</button>
+</div>
+
+<!-- PAINEL: GALERIA -->
+<div class="list-panel galeria-section" id="panel-galeria">
+  <div class="section-header">
+    <div class="section-titulo">📸 Galeria de Fotos</div>
+    <div id="galeria-count" style="font-size:11px;color:var(--cinza-medio)"></div>
+  </div>
+  <div class="galeria-filtros" id="galeriaFiltros"></div>
+  <div id="galeriaGrid" class="galeria-grid">
+    <div class="galeria-loading">
+      <div class="loading-spinner" style="margin:0 auto 12px"></div>
+      Carregando fotos...
+    </div>
+  </div>
+</div>
+
+<!-- PAINEL: EDUCATIVA -->
+<div class="list-panel educativa-section" id="panel-educativa">
+  <div class="edu-destaque">
+    <div class="edu-destaque-label">⚖️ Princípio Constitucional</div>
+    <p>A saúde é direito de todos e dever do Estado, garantido mediante políticas sociais e econômicas que visem à redução do risco de doença e de outros agravos e ao acesso universal e igualitário às ações e serviços para sua promoção, proteção e recuperação.</p>
+    <cite>— Art. 196 da Constituição Federal de 1988</cite>
+  </div>
+
+  <div class="educativa-grid">
+    <div class="edu-card">
+      <div class="edu-card-accent azul"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">🏛️</span>
+        <h3>O que é uma Conferência Municipal de Saúde?</h3>
+        <p>É um espaço democrático de participação social, realizado periodicamente, onde usuários do SUS, trabalhadores de saúde, gestores e prestadores se reúnem para avaliar a situação de saúde e propor diretrizes para a política municipal de saúde. Suas deliberações orientam o planejamento da Secretaria Municipal de Saúde e o Plano Municipal de Saúde.</p>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-card-accent verde"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">🔎</span>
+        <h3>O que são as Pré-Conferências?</h3>
+        <p>São etapas preparatórias da Conferência Municipal, organizadas por território (bairros e regiões) ou por segmento temático (população negra, LGBTQIA+, zona rural etc.). Elas garantem que as vozes de quem vive a realidade do SUS no dia a dia cheguem até o plenário municipal. Em cada pré-conferência, os participantes debatem, votam propostas e elegem delegados.</p>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-card-accent amarelo"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">🏅</span>
+        <h3>Quem são os Delegados?</h3>
+        <p>Delegados são representantes eleitos nas pré-conferências para participar da Conferência Municipal. Eles carregam as propostas e a voz de sua comunidade ou segmento para o debate estadual e nacional. São eleitos proporcionalmente por segmento:</p>
+        <ul>
+          <li><strong>50%</strong> Usuários do SUS</li>
+          <li><strong>25%</strong> Trabalhadores de Saúde</li>
+          <li><strong>12,5%</strong> Gestores</li>
+          <li><strong>12,5%</strong> Prestadores de Serviço</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-card-accent roxo"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">🗳️</span>
+        <h3>Controle Social no SUS</h3>
+        <p>O controle social é o mecanismo pelo qual a sociedade participa da gestão pública de saúde. No SUS, ele se exerce principalmente pelo Conselho Municipal de Saúde — que fiscaliza, delibera e acompanha a execução das políticas — e pelas Conferências de Saúde, que estabelecem as prioridades e diretrizes. Participar é um direito e um dever de cidadania.</p>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-card-accent azul"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">📋</span>
+        <h3>Como funciona a 11ª CMS Montes Claros?</h3>
+        <p>A 11ª Conferência Municipal de Saúde de Montes Claros está organizada em 3 etapas:</p>
+        <ul>
+          <li><strong>Pré-conferências</strong> — debates territoriais e temáticos (mar/2026)</li>
+          <li><strong>Plenária Municipal</strong> — com delegados eleitos nas pré-confs</li>
+          <li><strong>Conferência Estadual</strong> — delegados eleitos na Municipal</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="edu-card">
+      <div class="edu-card-accent verde"></div>
+      <div class="edu-card-body">
+        <span class="edu-card-icon">📣</span>
+        <h3>Como participar?</h3>
+        <p>Qualquer cidadão pode participar das pré-conferências. Basta comparecer no local e horário de sua pré-conferência regional ou temática. Para ser eleito delegado, é necessário ser inscrito como participante e estar presente na pré-conferência.</p>
+        <p style="margin-top:10px">Acompanhe este site para a abertura das inscrições de cada evento — quando disponíveis, o botão <strong>"📝 Inscreva-se"</strong> aparecerá em cada pré-conferência.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="edu-numeros">
+    <div class="edu-numero-card">
+      <div class="edu-numero-val">13</div>
+      <div class="edu-numero-lbl">Pré-Conferências</div>
+    </div>
+    <div class="edu-numero-card">
+      <div class="edu-numero-val">18</div>
+      <div class="edu-numero-lbl">Dias de processo participativo</div>
+    </div>
+    <div class="edu-numero-card">
+      <div class="edu-numero-val">4</div>
+      <div class="edu-numero-lbl">Segmentos representados</div>
+    </div>
+    <div class="edu-numero-card">
+      <div class="edu-numero-val">2026</div>
+      <div class="edu-numero-lbl">Ano da 11ª Conferência</div>
+    </div>
+  </div>
+</div>
      ═══════════════════════════════════ -->
 <div id="view-detail">
   <div class="detail-header">
@@ -1289,7 +1777,47 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
   </div>
 </div>
 
-<!-- ═══════════════════════════════
+<!-- ═══════════════════════
+     MODAL QR CODE
+     ═══════════════════════ -->
+<div class="qr-modal-overlay" id="qrModalOverlay" onclick="closeQROutside(event)">
+  <div class="qr-modal-box">
+    <div class="qr-modal-title">🔗 Acesso Rápido</div>
+    <div class="qr-modal-nome" id="qrNome">—</div>
+    <canvas id="qrCanvas" width="200" height="200"></canvas>
+    <div class="qr-url-chip" id="qrUrlChip">—</div>
+    <div class="qr-info">Aponte a câmera do celular para acessar esta página diretamente — ou compartilhe com os participantes.</div>
+    <div class="qr-actions">
+      <button class="qr-btn qr-btn-dl" onclick="downloadQR()">⬇ Baixar PNG</button>
+      <button class="qr-btn qr-btn-close" onclick="closeQR()">✕ Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+     AVISO URGENTE POPUP
+     ═══════════════════════ -->
+<div class="aviso-overlay" id="avisoOverlay">
+  <div class="aviso-box">
+    <div class="aviso-header">
+      <span class="aviso-header-icon">🚨</span>
+      <div class="aviso-header-text">
+        <h3>Aviso Importante</h3>
+        <p id="avisoTitulo">Comunicado</p>
+      </div>
+    </div>
+    <div class="aviso-wave"></div>
+    <div class="aviso-body" id="avisoBody">
+      <div class="aviso-badge-urgente">⚡ Urgente</div>
+      <div class="aviso-body-texto" id="avisoConteudo"></div>
+    </div>
+    <div class="aviso-footer">
+      <button class="aviso-btn-ok" onclick="fecharAviso()">✓ Entendi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
      LIGHTBOX FLYER
      ═══════════════════════════════ -->
 <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOutside(event)">
@@ -1314,8 +1842,13 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
          onerror="this.replaceWith(Object.assign(document.createElement('div'),{textContent:'CMS Montes Claros · Secretaria Executiva',style:'font-weight:800;font-size:14px;color:#2C3E50'}))">
     <div class="brand-strip-divider"></div>
     <div class="brand-strip-text">
-      <p>Coordenador das Pré-Conferências</p>
-      <strong>Coordenadoria de Apoio ao Conselho Municipal de Saúde</strong>
+      <p>Realização</p>
+      <strong>Conselho Municipal de Saúde de Montes Claros</strong>
+    </div>
+    <div class="brand-strip-divider"></div>
+    <div class="brand-strip-text">
+      <p>Organização</p>
+      <strong>Secretaria Executiva · 11ª CMS 2026</strong>
     </div>
   </div>
 </div>
@@ -1332,9 +1865,18 @@ tbody td:first-child { text-align: center; color: var(--cinza-medio); font-size:
       Publicar na web → Aba "CONFIG" → formato CSV → Publicar
    2. Cole a URL gerada abaixo (substitua o valor de CONFIG_CSV_URL)
    ═══════════════════════════════════════════════════════ */
-const CONFIG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqZqCe5zufCmwyvk9zgyOiJiJ-1J3tZXm9vjJJcAQAmVkV4H2Qw9rVMQQu9hfs_TFJ-2DnOf-j6Fwm/pub?gid=208606216&single=true&output=csv';
+const CONFIG_CSV_URL = '';
 // ↑ Cole aqui a URL do CSV publicado da aba CONFIG.
 //   Enquanto vazia, o site usa os dados estáticos de fallback abaixo.
+
+/* ─────────────────────────────────────────────────────
+   URLs DOS CSVs AUXILIARES
+   Cole as URLs após publicar cada aba no Google Sheets:
+   Arquivo → Compartilhar → Publicar na web → selecionar aba → CSV
+   ───────────────────────────────────────────────────── */
+const AVISOS_CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqZqCe5zufCmwyvk9zgyOiJiJ-1J3tZXm9vjJJcAQAmVkV4H2Qw9rVMQQu9hfs_TFJ-2DnOf-j6Fwm/pub?gid=284130301&single=true&output=csv';  // Aba AVISOS    — controla popups urgentes
+const DELEGADOS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqZqCe5zufCmwyvk9zgyOiJiJ-1J3tZXm9vjJJcAQAmVkV4H2Qw9rVMQQu9hfs_TFJ-2DnOf-j6Fwm/pub?gid=775625379&single=true&output=csv';  // Aba DELEGADOS — delegados eleitos por conferência
+const FOTOS_CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqZqCe5zufCmwyvk9zgyOiJiJ-1J3tZXm9vjJJcAQAmVkV4H2Qw9rVMQQu9hfs_TFJ-2DnOf-j6Fwm/pub?gid=1832529134&single=true&output=csv';  // Aba FOTOS     — galeria de fotos dos eventos
 
 /* ─────────────────────────────────────────────────────
    DADOS ESTÁTICOS DE FALLBACK
@@ -1416,6 +1958,7 @@ function csvConfigToPreconf(cols) {
     linkForm,
     temDados,
     flyer:     (cols[9]||'').trim() || null,
+    ataUrl:    (cols[12]||'').trim() || null,  // coluna Ata URL (adicionada via script)
     emoji:     EMOJIS[id]   || '📋',
     descricao: DESCRICOES[id] || '',
     obs:       (cols[10]||'').trim(),
@@ -1552,12 +2095,14 @@ function openConf(idx) {
   document.getElementById('d-title').textContent = `${c.emoji} ${c.nome}`;
   document.getElementById('navTitle').textContent = c.nome;
 
-  // Metas chips
+  // Metas chips — inclui QR e Ata quando disponíveis
   document.getElementById('d-metas').innerHTML = `
     <div class="detail-meta-chip">📅 ${c.data}</div>
     <div class="detail-meta-chip">🕐 ${c.hora}</div>
     <div class="detail-meta-chip">🏢 ${c.local}</div>
     ${c.flyer ? `<div class="detail-meta-chip" style="cursor:pointer;background:rgba(245,200,0,.15);border-color:rgba(245,200,0,.4);color:var(--amarelo-brasil)" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">🖼 Ver flyer</div>` : ''}
+    <div class="detail-meta-chip" style="cursor:pointer;background:rgba(26,94,168,.12);border-color:rgba(26,94,168,.3);color:#fff" onclick="openQR('${c.id}','${c.nome.replace(/'/g,"\\'")}')">⬛ QR Code</div>
+    ${c.ataUrl ? `<a class="detail-meta-chip" href="${c.ataUrl}" target="_blank" rel="noopener" style="background:rgba(30,138,74,.15);border-color:rgba(30,138,74,.4);color:#1E8A4A;text-decoration:none">📄 Ata</a>` : ''}
   `;
 
   // Info grid
@@ -1584,7 +2129,7 @@ function openConf(idx) {
     </div>
   `;
 
-  // Flyer panel HTML
+  // Flyer panel
   const flyerHtml = c.flyer ? `
     <div class="flyer-panel">
       <div class="flyer-panel-header">
@@ -1593,28 +2138,58 @@ function openConf(idx) {
       </div>
       <div class="flyer-img-wrap" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">
         <img src="${c.flyer}" alt="Flyer ${c.nome}" loading="lazy">
-        <div class="flyer-img-overlay">
-          <span class="flyer-zoom-hint">🔍 Ampliar</span>
-        </div>
+        <div class="flyer-img-overlay"><span class="flyer-zoom-hint">🔍 Ampliar</span></div>
       </div>
       <div class="flyer-share-row">
-        <button class="flyer-share-btn primary" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">
-          🔍 Ampliar
-        </button>
-        <a class="flyer-share-btn" href="${c.flyer}" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px">
-          ⬇ Baixar
-        </a>
+        <button class="flyer-share-btn primary" onclick="openLightbox('${c.flyer}','${c.nome.replace(/'/g,"\\'")}')">🔍 Ampliar</button>
+        <a class="flyer-share-btn" href="${c.flyer}" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px">⬇ Baixar</a>
+      </div>
+      <div style="padding:10px 14px;border-top:1px solid var(--cinza-borda)">
+        <button class="flyer-share-btn" style="width:100%" onclick="openQR('${c.id}','${c.nome.replace(/'/g,"\\'")}')">⬛ Gerar QR Code</button>
       </div>
     </div>
   ` : `
-    <div class="flyer-placeholder">
-      <span class="flyer-placeholder-icon">🖼️</span>
-      <strong style="display:block;color:var(--cinza-texto);margin-bottom:4px;font-size:13px">Flyer em breve</strong>
-      O material de divulgação desta pré-conferência será publicado em breve.
+    <div>
+      <div class="flyer-placeholder">
+        <span class="flyer-placeholder-icon">🖼️</span>
+        <strong style="display:block;color:var(--cinza-texto);margin-bottom:4px;font-size:13px">Flyer em breve</strong>
+        O material de divulgação será publicado em breve.
+      </div>
+      <div style="margin-top:10px">
+        <button class="flyer-share-btn" style="width:100%;padding:9px" onclick="openQR('${c.id}','${c.nome.replace(/'/g,"\\'")}')">⬛ Gerar QR Code</button>
+      </div>
     </div>
   `;
 
-  // Monta layout com ou sem flyer (sempre com painel lateral)
+  // Ata card (só se tiver ataUrl)
+  const ataHtml = c.ataUrl ? `
+    <div class="action-card" onclick="window.open('${c.ataUrl}','_blank','noopener')" style="border-color:rgba(30,138,74,.3)">
+      <span class="action-card-icon">📄</span>
+      <div>
+        <h3 style="color:#1E8A4A">Ata da Pré-Conferência</h3>
+        <p>Acesse o documento oficial com o registro das deliberações e encaminhamentos deste evento.</p>
+      </div>
+      <span class="action-arrow" style="color:#1E8A4A">→</span>
+    </div>
+  ` : '';
+
+  // Delegados (carregados assincronamente após montar o DOM)
+  const delegadosHtml = `
+    <div class="delegados-card" id="delegadosCard">
+      <div class="delegados-header">
+        <div class="delegados-title">🏅 Delegados Eleitos</div>
+        <span class="delegados-count-badge" id="delegadosCount">carregando…</span>
+      </div>
+      <div id="delegadosBody">
+        <div class="delegados-empty" style="padding:20px;text-align:center">
+          <div class="loading-spinner" style="width:28px;height:28px;border-width:3px;margin:0 auto 10px"></div>
+          <div style="font-size:12px;color:var(--cinza-medio)">Carregando delegados…</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Monta layout completo
   document.getElementById('detail-main-area').innerHTML = `
     <div class="detail-with-flyer">
       <div class="detail-main-col">
@@ -1631,10 +2206,11 @@ function openConf(idx) {
             <span class="action-card-icon" id="btn-form-icon">📄</span>
             <div>
               <h3 id="btn-form-title">Declarações de Participação</h3>
-              <p id="btn-form-desc">Os PDFs de declaração estão disponíveis na lista de presença, ao lado de cada participante.</p>
+              <p id="btn-form-desc">Os PDFs de declaração estão disponíveis na lista de presença.</p>
             </div>
             <span class="action-arrow">→</span>
           </div>
+          ${ataHtml}
         </div>
         <div class="info-card">
           <div class="info-card-header">
@@ -1647,6 +2223,7 @@ function openConf(idx) {
             </div>
           </div>
         </div>
+        ${delegadosHtml}
       </div>
       <div>${flyerHtml}</div>
     </div>
@@ -1655,12 +2232,10 @@ function openConf(idx) {
   // Rebinda botão de presença
   const btnInner = document.getElementById('btn-ver-presenca-inner');
   if (!c.temDados) {
-    btnInner.style.opacity = '.5';
-    btnInner.style.cursor = 'not-allowed';
+    btnInner.style.opacity = '.5'; btnInner.style.cursor = 'not-allowed';
     btnInner.onclick = () => showToast('⏳ A lista de presença desta pré-conferência ainda não está disponível.');
   } else {
-    btnInner.style.opacity = '1';
-    btnInner.style.cursor = 'pointer';
+    btnInner.style.opacity = '1'; btnInner.style.cursor = 'pointer';
     btnInner.onclick = goToPresenca;
   }
 
@@ -1670,8 +2245,7 @@ function openConf(idx) {
     document.getElementById('btn-form-icon').textContent  = '📝';
     document.getElementById('btn-form-title').textContent = 'Inscreva-se agora';
     document.getElementById('btn-form-desc').textContent  = 'O formulário de inscrição está aberto. Clique para participar desta pré-conferência.';
-    btnFormDecl.style.cursor  = 'pointer';
-    btnFormDecl.style.opacity = '1';
+    btnFormDecl.style.cursor = 'pointer'; btnFormDecl.style.opacity = '1';
     btnFormDecl.onclick = () => window.open(c.linkForm, '_blank', 'noopener');
   } else {
     document.getElementById('btn-form-icon').textContent  = '📄';
@@ -1683,6 +2257,8 @@ function openConf(idx) {
   }
 
   showView('detail');
+  // Carrega delegados assincronamente (não bloqueia a transição de view)
+  setTimeout(() => carregarDelegados(c.id), 100);
 }
 
 function goToList() {
@@ -1691,8 +2267,80 @@ function goToList() {
   showView('list');
 }
 
-function goToDetail() {
-  showView('detail');
+function goToDetail() { showView('detail'); }
+
+/* ═══════════════════════════════════════════════════════
+   DELEGADOS — carrega CSV da aba DELEGADOS
+   ═══════════════════════════════════════════════════════ */
+async function carregarDelegados(confId) {
+  const card  = document.getElementById('delegadosCard');
+  const body  = document.getElementById('delegadosBody');
+  const count = document.getElementById('delegadosCount');
+  if (!card || !body) return;
+
+  if (!DELEGADOS_CSV_URL) {
+    body.innerHTML  = `<div class="delegados-empty">Os delegados eleitos serão publicados após a realização deste evento.</div>`;
+    count.textContent = '—';
+    return;
+  }
+
+  try {
+    const csv  = await fetchCSV(DELEGADOS_CSV_URL);
+    const rows = csv.split('\n').filter(l => l.trim()).slice(1)
+      .map(l => splitCSVLine(l))
+      .filter(c => c[0] && c[0].trim().toLowerCase() === confId.toLowerCase())
+      .map(c => ({
+        conf:      (c[0]||'').trim(),
+        nome:      (c[2]||'').trim(),
+        segmento:  (c[3]||'').trim(),
+        tipo:      (c[4]||'').trim(),
+        obs:       (c[5]||'').trim(),
+      }))
+      .filter(d => d.nome);
+
+    if (!rows.length) {
+      body.innerHTML  = `<div class="delegados-empty">Nenhum delegado registrado para esta pré-conferência ainda.</div>`;
+      count.textContent = '0';
+      return;
+    }
+
+    const segClasses = {
+      'Usuários':               'seg-usuarios',
+      'Trabalhadores de Saúde': 'seg-trabalhadores',
+      'Gestores':               'seg-gestores',
+      'Prestadores de Serviço': 'seg-prestadores',
+    };
+
+    const trs = rows.map((d, i) => `
+      <tr>
+        <td style="text-align:center;color:var(--cinza-medio);font-size:12px">${i+1}</td>
+        <td class="delegado-nome">${d.nome}</td>
+        <td><span class="badge-segmento ${segClasses[d.segmento]||'seg-outro'}">${d.segmento||'—'}</span></td>
+        <td><span class="badge-tipo-${d.tipo.toLowerCase()==='titular'?'titular':'suplente'}">${d.tipo||'—'}</span></td>
+        <td style="font-size:12px;color:var(--cinza-medio)">${d.obs||'—'}</td>
+      </tr>`).join('');
+
+    body.innerHTML = `
+      <div class="delegados-table-wrap">
+        <table class="delegados-table">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Nome</th>
+              <th>Segmento</th>
+              <th>Tipo</th>
+              <th>Obs.</th>
+            </tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      </div>`;
+    count.textContent = `${rows.length} eleito${rows.length!==1?'s':''}`;
+
+  } catch(e) {
+    body.innerHTML  = `<div class="delegados-empty">Não foi possível carregar os delegados. Tente novamente.</div>`;
+    count.textContent = '—';
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1703,89 +2351,65 @@ async function goToPresenca() {
     showToast('⏳ Dados ainda não disponíveis para esta pré-conferência.');
     return;
   }
-
   const c = currentConf;
   document.getElementById('p-eyebrow').textContent = `Pré-Conferência · ${c.data} · 11ª CMS`;
-  document.getElementById('p-title').textContent = `${c.emoji} ${c.nome}`;
-  document.getElementById('p-sub').textContent = `Participantes registrados — ${c.local}`;
-  document.getElementById('p-stat-data').textContent = c.data;
-  document.getElementById('p-stat-total').textContent = '...';
-  document.getElementById('count-total').textContent = '...';
+  document.getElementById('p-title').textContent   = `${c.emoji} ${c.nome}`;
+  document.getElementById('p-sub').textContent     = `Participantes registrados — ${c.local}`;
+  document.getElementById('p-stat-data').textContent   = c.data;
+  document.getElementById('p-stat-total').textContent  = '...';
+  document.getElementById('count-total').textContent   = '...';
   document.getElementById('count-showing').textContent = '...';
   document.getElementById('searchPresenca').value = '';
-
   showView('presenca');
-
-  // Mostra loading
   document.getElementById('presenca-container').innerHTML = `
     <div class="loading-state">
       <div class="loading-spinner"></div>
-      <p>Carregando lista de presença via Google Sheets...</p>
+      <p>Carregando lista de presença via Google Sheets…</p>
     </div>`;
-
   try {
     const csv = await fetchCSV(c.csvUrl);
     const participantes = parseCSV(csv);
-    if (!participantes.length) throw new Error('Nenhum participante encontrado na planilha.');
-
+    if (!participantes.length) throw new Error('Nenhum participante encontrado.');
     allParticipantes = participantes;
     filteredParticipantes = [...participantes];
-
-    document.getElementById('p-stat-total').textContent = participantes.length;
-    document.getElementById('count-total').textContent = participantes.length;
+    document.getElementById('p-stat-total').textContent  = participantes.length;
+    document.getElementById('count-total').textContent   = participantes.length;
     document.getElementById('count-showing').textContent = participantes.length;
-
     renderTabela(filteredParticipantes);
   } catch (err) {
     document.getElementById('presenca-container').innerHTML = `
       <div class="error-state">
         <span class="error-icon">⚠️</span>
         <h3>Não foi possível carregar a lista</h3>
-        <p>A planilha pode estar temporariamente indisponível ou sua conexão bloqueou o acesso ao Google Sheets.<br><br>
-        Tente novamente em instantes ou acesse diretamente o link da planilha.</p>
+        <p>A planilha pode estar temporariamente indisponível.<br><br>Tente novamente em instantes.</p>
         <button onclick="goToPresenca()" style="background:var(--azul-sus);color:#fff;font-family:var(--font);font-size:13px;font-weight:700;padding:10px 22px;border-radius:var(--radius-pill);border:none;cursor:pointer">↺ Tentar novamente</button>
       </div>`;
   }
 }
 
-/* ── FETCH CSV com CORS proxy ── */
+/* ── FETCH CSV ── */
 async function fetchCSV(url) {
-  // Tenta direto primeiro (funciona em muitos browsers)
-  try {
-    const r = await fetch(url, { mode: 'cors' });
-    if (r.ok) return await r.text();
-  } catch (_) {}
-
-  // Fallback via proxy CORS público
-  const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
-  const r2 = await fetch(proxy);
+  try { const r = await fetch(url, { mode:'cors' }); if (r.ok) return await r.text(); } catch(_) {}
+  const r2 = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
   if (!r2.ok) throw new Error('Falha no carregamento');
   return await r2.text();
 }
 
-/* ── PARSE CSV ──
-   Coluna B (índice 1) = Nome
-   Coluna L (índice 11) = Tipo de certificado / info extra
-*/
+/* ── PARSE CSV presença ── */
 function parseCSV(text) {
   const lines = text.split('\n').filter(l => l.trim());
   const result = [];
-  // Pula cabeçalho (linha 0)
   for (let i = 1; i < lines.length; i++) {
     const cols = splitCSVLine(lines[i]);
-    const nome = (cols[1] || '').trim().replace(/^"|"$/g, '');
-    const colL = (cols[11] || '').trim().replace(/^"|"$/g, '');
-    if (nome && nome.length > 2) {
-      result.push({ nome, colL, idx: i });
-    }
+    const nome = (cols[1]||'').trim().replace(/^"|"$/g,'');
+    const colL = (cols[11]||'').trim().replace(/^"|"$/g,'');
+    if (nome && nome.length > 2) result.push({ nome, colL, idx: i });
   }
   return result;
 }
 
 function splitCSVLine(line) {
-  const result = [];
-  let cur = '';
-  let inQ = false;
+  const result = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
     if (line[i] === '"') { inQ = !inQ; continue; }
     if (line[i] === ',' && !inQ) { result.push(cur); cur = ''; continue; }
@@ -1806,15 +2430,13 @@ function renderTabela(lista) {
       </div>`;
     return;
   }
-
   const c = currentConf;
-  const rows = lista.map((p) => {
+  const rows = lista.map(p => {
     const temPdf = p.colL && p.colL.startsWith('http');
     const btnDecl = temPdf
       ? `<a class="decl-btn" href="${p.colL}" target="_blank" rel="noopener">📄 Abrir PDF</a>`
       : `<span style="font-size:11px;color:var(--cinza-medio)">—</span>`;
-    return `
-    <tr>
+    return `<tr>
       <td>${p.idx}</td>
       <td class="nome-cell">${p.nome}</td>
       <td><span class="status-pill status-presente">✓ Presente</span></td>
@@ -1823,7 +2445,6 @@ function renderTabela(lista) {
       <td>${btnDecl}</td>
     </tr>`;
   }).join('');
-
   document.getElementById('presenca-container').innerHTML = `
     <div class="presenca-table-wrap">
       <div class="pt-table-header">
@@ -1832,16 +2453,7 @@ function renderTabela(lista) {
       </div>
       <div class="table-scroll">
         <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nome</th>
-              <th>Situação</th>
-              <th>Pré-Conferência</th>
-              <th>Data</th>
-              <th>Declaração / PDF</th>
-            </tr>
-          </thead>
+          <thead><tr><th>#</th><th>Nome</th><th>Situação</th><th>Pré-Conferência</th><th>Data</th><th>Declaração / PDF</th></tr></thead>
           <tbody id="tbodyPresenca">${rows}</tbody>
         </table>
       </div>
@@ -1858,7 +2470,227 @@ function filterPresenca() {
 }
 
 /* ═══════════════════════════════════════════════════════
-   LIGHTBOX
+   QR CODE
+   ═══════════════════════════════════════════════════════ */
+function openQR(confId, confNome) {
+  const url = window.location.href.split('#')[0] + '#' + confId;
+  document.getElementById('qrNome').textContent  = confNome;
+  document.getElementById('qrUrlChip').textContent = url;
+  const canvas = document.getElementById('qrCanvas');
+  // Gera QR com API pública (nativa, sem biblioteca externa)
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}&color=0D3D6B&bgcolor=FFFFFF`;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,200,200);
+  ctx.fillStyle = '#F4F7FB'; ctx.fillRect(0,0,200,200);
+  ctx.fillStyle = '#6B7F96'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('Gerando QR…', 100, 105);
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => { ctx.clearRect(0,0,200,200); ctx.drawImage(img,0,0,200,200); };
+  img.onerror = () => {
+    ctx.clearRect(0,0,200,200);
+    ctx.fillStyle = '#F4F7FB'; ctx.fillRect(0,0,200,200);
+    ctx.fillStyle = '#1A5EA8'; ctx.font = 'bold 13px sans-serif';
+    ctx.fillText('⬛ QR Code', 100, 90);
+    ctx.fillStyle = '#6B7F96'; ctx.font = '11px sans-serif';
+    ctx.fillText('(verifique conexão)', 100, 115);
+  };
+  img.src = qrApiUrl;
+  document.getElementById('qrModalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeQR() {
+  document.getElementById('qrModalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function closeQROutside(e) {
+  if (e.target === document.getElementById('qrModalOverlay')) closeQR();
+}
+function downloadQR() {
+  const canvas = document.getElementById('qrCanvas');
+  const nome   = document.getElementById('qrNome').textContent.replace(/[^a-zA-Z0-9]/g,'-').toLowerCase();
+  const a      = document.createElement('a');
+  a.href       = canvas.toDataURL('image/png');
+  a.download   = `qrcode-${nome}.png`;
+  a.click();
+}
+
+/* ═══════════════════════════════════════════════════════
+   AVISOS URGENTES — carrega aba AVISOS da planilha
+   Colunas CSV: Ativo(0) Titulo(1) Tipo(2) Conteudo(3) Conferencia(4)
+   Tipo: texto | imagem | video
+   Ativo: SIM | NÃO
+   ═══════════════════════════════════════════════════════ */
+async function carregarAvisos() {
+  if (!AVISOS_CSV_URL) return;
+  try {
+    const csv   = await fetchCSV(AVISOS_CSV_URL);
+    const lines = csv.split('\n').filter(l => l.trim()).slice(1);
+    const avisos = lines
+      .map(l => splitCSVLine(l))
+      .filter(c => (c[0]||'').trim().toUpperCase() === 'SIM')
+      .map(c => ({
+        ativo:     (c[0]||'').trim(),
+        titulo:    (c[1]||'Aviso Importante').trim(),
+        tipo:      (c[2]||'texto').trim().toLowerCase(),
+        conteudo:  (c[3]||'').trim(),
+        conferencia:(c[4]||'').trim(),
+      }))
+      .filter(a => a.conteudo);
+
+    // Mostra só o primeiro aviso global (sem conferencia) ou todos em sequência
+    const globais = avisos.filter(a => !a.conferencia);
+    if (globais.length) exibirAviso(globais[0]);
+  } catch(e) {
+    console.warn('Não foi possível carregar avisos:', e);
+  }
+}
+
+function exibirAviso(aviso) {
+  document.getElementById('avisoTitulo').textContent = aviso.titulo;
+  const body = document.getElementById('avisoConteudo');
+  if (aviso.tipo === 'imagem') {
+    body.innerHTML = `<img src="${aviso.conteudo}" alt="${aviso.titulo}" style="width:100%;border-radius:var(--radius-sm);margin-bottom:8px">`;
+  } else if (aviso.tipo === 'video') {
+    // Suporta YouTube e links diretos
+    const isYT = aviso.conteudo.includes('youtube.com') || aviso.conteudo.includes('youtu.be');
+    if (isYT) {
+      const vid = aviso.conteudo.replace('watch?v=','embed/').replace('youtu.be/','youtube.com/embed/');
+      body.innerHTML = `<iframe src="${vid}" style="width:100%;aspect-ratio:16/9;border:none;border-radius:var(--radius-sm)" allowfullscreen></iframe>`;
+    } else {
+      body.innerHTML = `<video src="${aviso.conteudo}" controls style="width:100%;border-radius:var(--radius-sm)"></video>`;
+    }
+  } else {
+    body.innerHTML = `<p class="aviso-body-texto">${aviso.conteudo.replace(/\n/g,'<br>')}</p>`;
+  }
+  document.getElementById('avisoOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharAviso() {
+  document.getElementById('avisoOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   GALERIA DE FOTOS
+   ═══════════════════════════════════════════════════════ */
+let todasFotos = [];
+let filtroGaleriaAtivo = 'todos';
+
+async function carregarGaleria() {
+  const grid = document.getElementById('galeriaGrid');
+  if (!FOTOS_CSV_URL) {
+    grid.innerHTML = `
+      <div class="galeria-empty" style="grid-column:1/-1">
+        <span class="galeria-empty-icon">📷</span>
+        <strong style="display:block;color:var(--cinza-texto);margin-bottom:6px">Galeria em breve</strong>
+        As fotos das pré-conferências serão publicadas aqui conforme os eventos são realizados.
+      </div>`;
+    document.getElementById('galeria-count').textContent = '';
+    return;
+  }
+  try {
+    const csv = await fetchCSV(FOTOS_CSV_URL);
+    const rows = csv.split('\n').filter(l => l.trim()).slice(1)
+      .map(l => splitCSVLine(l))
+      .filter(c => (c[4]||'').trim().toUpperCase() === 'SIM' && (c[3]||'').trim())
+      .map(c => ({
+        confId:  (c[0]||'sem-categoria').trim(),
+        legenda: (c[1]||'').trim(),
+        url:     (c[3]||'').trim(),
+      }));
+
+    if (!rows.length) {
+      grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">📷</span>Nenhuma foto publicada ainda.</div>`;
+      return;
+    }
+
+    todasFotos = rows;
+    document.getElementById('galeria-count').textContent = `${rows.length} foto${rows.length!==1?'s':''}`;
+    renderFiltrosGaleria();
+    renderGaleria('todos');
+
+  } catch(e) {
+    grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">⚠️</span>Não foi possível carregar as fotos.</div>`;
+  }
+}
+
+function renderFiltrosGaleria() {
+  const confs = [...new Set(todasFotos.map(f => f.confId))];
+  const nomesConf = {};
+  PRECONFS.forEach(p => nomesConf[p.id] = p.nome);
+
+  const btns = [
+    `<button class="galeria-filtro-btn ativo" onclick="renderGaleria('todos',this)">Todas (${todasFotos.length})</button>`,
+    ...confs.filter(id => id !== 'sem-categoria').map(id => {
+      const count = todasFotos.filter(f => f.confId === id).length;
+      const nome  = nomesConf[id] || id;
+      return `<button class="galeria-filtro-btn" onclick="renderGaleria('${id}',this)">${nome} (${count})</button>`;
+    }),
+  ];
+  document.getElementById('galeriaFiltros').innerHTML = btns.join('');
+}
+
+function renderGaleria(filtro, btn) {
+  filtroGaleriaAtivo = filtro;
+  // Atualiza botões ativos
+  document.querySelectorAll('.galeria-filtro-btn').forEach(b => b.classList.remove('ativo'));
+  if (btn) btn.classList.add('ativo');
+
+  const lista = filtro === 'todos' ? todasFotos : todasFotos.filter(f => f.confId === filtro);
+  const nomesConf = {}; PRECONFS.forEach(p => nomesConf[p.id] = p.nome);
+  const grid = document.getElementById('galeriaGrid');
+
+  if (!lista.length) {
+    grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">🔍</span>Nenhuma foto para este filtro.</div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map((f,i) => `
+    <div class="galeria-item" onclick="openLightboxFoto('${f.url}','${(f.legenda||nomesConf[f.confId]||'').replace(/'/g,"\\'")}')">
+      <img src="${f.url}" alt="${f.legenda||''}" loading="lazy"
+           onerror="this.parentElement.style.display='none'">
+      <div class="galeria-item-overlay">
+        <div class="galeria-item-legenda">${f.legenda || nomesConf[f.confId] || ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function openLightboxFoto(url, caption) {
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightboxDownload').href = url;
+  document.getElementById('lightboxOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ═══════════════════════════════════════════════════════
+   TABS — alterna entre lista, galeria e educativa
+   ═══════════════════════════════════════════════════════ */
+function switchTab(tab) {
+  // Fecha todos os painéis
+  document.querySelectorAll('.list-panel').forEach(p => p.classList.remove('ativo'));
+  document.querySelectorAll('.list-tab').forEach(b => b.classList.remove('ativo'));
+  // Fecha também a grid de confs
+  const confsSection = document.querySelector('.confs-section');
+
+  if (tab === 'confs') {
+    confsSection.style.display = '';
+    document.getElementById('listTabs').querySelectorAll('.list-tab')[0].classList.add('ativo');
+  } else {
+    confsSection.style.display = 'none';
+    const panel = document.getElementById(`panel-${tab}`);
+    if (panel) panel.classList.add('ativo');
+    const tabBtn = [...document.querySelectorAll('.list-tab')].find(b => b.getAttribute('onclick') === `switchTab('${tab}')`);
+    if (tabBtn) tabBtn.classList.add('ativo');
+    // Carrega galeria na primeira abertura
+    if (tab === 'galeria' && todasFotos.length === 0) carregarGaleria();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIGHTBOX (flyers)
    ═══════════════════════════════════════════════════════ */
 function openLightbox(url, caption) {
   document.getElementById('lightboxImg').src = url;
@@ -1874,7 +2706,9 @@ function closeLightbox() {
 function closeLightboxOutside(e) {
   if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeLightbox(); closeQR(); fecharAviso(); }
+});
 
 /* ═══════════════════════════════════════════════════════
    SCROLL / PROGRESS BAR
@@ -1891,12 +2725,10 @@ window.addEventListener('scroll', () => {
    SPLASH SCREEN
    ═══════════════════════════════════════════════════════ */
 (function() {
-  const logo = document.getElementById('splashLogo');
-  const bar  = document.getElementById('splashBar');
-  const fill = document.getElementById('splashFill');
-  const splash = document.getElementById('splash');
-
-  // Ativa logo e barra após micro-delay
+  const logo  = document.getElementById('splashLogo');
+  const bar   = document.getElementById('splashBar');
+  const fill  = document.getElementById('splashFill');
+  const splash= document.getElementById('splash');
   requestAnimationFrame(() => {
     setTimeout(() => { logo.classList.add('show'); bar.classList.add('show'); }, 60);
     setTimeout(() => { fill.classList.add('go'); }, 120);
@@ -1908,34 +2740,25 @@ window.addEventListener('scroll', () => {
 })();
 
 /* ═══════════════════════════════════════════════════════
-   INIT — carrega CONFIG da planilha (se URL configurada)
+   INIT — carrega CONFIG + AVISOS e renderiza
    ═══════════════════════════════════════════════════════ */
 async function init() {
-  // Se não tiver URL configurada, renderiza com fallback imediatamente
-  if (!CONFIG_CSV_URL) {
-    renderConfs(PRECONFS);
-    return;
-  }
-
-  // Tenta carregar CONFIG da planilha
-  try {
-    const csv = await fetchCSV(CONFIG_CSV_URL);
-    const lines = csv.split('\n').filter(l => l.trim());
-    // Pula cabeçalho (linha 0)
-    const loaded = lines.slice(1)
-      .map(l => splitCSVLine(l))
-      .filter(cols => cols[0] && cols[0].trim())
-      .map(csvConfigToPreconf);
-
-    if (loaded.length >= 13) {
-      PRECONFS = loaded;
+  // CONFIG
+  if (CONFIG_CSV_URL) {
+    try {
+      const csv = await fetchCSV(CONFIG_CSV_URL);
+      const loaded = csv.split('\n').filter(l => l.trim()).slice(1)
+        .map(l => splitCSVLine(l))
+        .filter(c => c[0] && c[0].trim())
+        .map(csvConfigToPreconf);
+      if (loaded.length >= 13) PRECONFS = loaded;
+    } catch(e) {
+      console.warn('CONFIG não carregada. Usando dados locais.', e);
     }
-  } catch (e) {
-    // Silently falls back — usuário não vê erro, site funciona normalmente
-    console.warn('Não foi possível carregar CONFIG da planilha. Usando dados locais.', e);
   }
 
   renderConfs(PRECONFS);
+  carregarAvisos();   // Avisos — silencioso, dispara popup se houver aviso ativo
 }
 
 init();
