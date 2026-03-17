@@ -1,0 +1,1007 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *  PLANILHA 11ª CMS MONTES CLAROS — SCRIPT UNIFICADO
+ *
+ *  Módulos:
+ *  1. AutoDoc — geração de documentos em massa
+ *  2. Formatação de Texto — maiúsculas, title case
+ *  3. Conselheiros — completar dados via base externa
+ *  4. Broadcast — envio de documentos por e-mail
+ *  5. Gestor de Pré-Conferências — aba CONFIG + painel HTML
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+// ── CONSTANTES GLOBAIS ────────────────────────────────────────────
+const CONFIG_SHEET_NAME       = "_Config_Automações";   // AutoDoc (mantido)
+const PRECONFS_SHEET_NAME     = "CONFIG";               // Gestor Pré-Conferências
+const FOTOS_SHEET_NAME        = "FOTOS";                // Galeria de fotos
+const DELEGADOS_SHEET_NAME    = "DELEGADOS";            // Delegados eleitos
+const PASTA_FOTOS_ID          = "1xid6p6C-TC39hC1jZFVdx7QbyJJA7XNe"; // Pasta Drive das fotos
+
+// ═══════════════════════════════════════════════════════════════════
+//  MENU ÚNICO — une todos os módulos
+// ═══════════════════════════════════════════════════════════════════
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('🧠 CMS Inteligente')
+    .addItem('🚀 Abrir AutoDoc', 'showSidebar')
+    .addSeparator()
+    .addItem('👤 Completar Dados do Conselheiro', 'completarDadosConselheiro')
+    .addSeparator()
+    .addSubMenu(ui.createMenu('📝 Formatação de Texto')
+        .addItem('🔠 TUDO MAIÚSCULO', 'formatSelectedToUpper')
+        .addItem('Abc Primeira Letra (Nome Próprio)', 'formatSelectedToTitleCase'))
+    .addSeparator()
+    .addSubMenu(ui.createMenu('🏥 Pré-Conferências')
+        .addItem('📊 Abrir Painel de Gestão', 'abrirPainelPreConfs')
+        .addItem('🔄 Atualizar cores de status', 'atualizarCoresPreConfs')
+        .addItem('📤 Exportar JSON para o site', 'exportarJSONPreConfs')
+        .addSeparator()
+        .addItem('➕ Adicionar colunas Aviso/Ata/QR', 'atualizarConfigComNovasColunas')
+        .addItem('⚙️ Criar/Reconfigurar aba CONFIG', 'configurarPlanilhaPreConfs'))
+    .addSeparator()
+    .addSubMenu(ui.createMenu('🖼️ Galeria de Fotos')
+        .addItem('🔄 Importar fotos da pasta Drive', 'importarFotosDrive')
+        .addItem('⚙️ Criar aba FOTOS', 'criarAbaFotos'))
+    .addSeparator()
+    .addSubMenu(ui.createMenu('🏅 Delegados')
+        .addItem('⚙️ Criar aba DELEGADOS', 'criarAbaDelegados')
+        .addItem('📋 Abrir aba DELEGADOS', 'abrirAbaDelegados'))
+    .addSeparator()
+    .addSubMenu(ui.createMenu('🚨 Avisos Urgentes')
+        .addItem('⚙️ Criar aba AVISOS', 'criarAbaAvisos')
+        .addItem('📋 Abrir aba AVISOS', 'abrirAbaAvisos'))
+    .addToUi();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 1 — AUTODOC
+// ═══════════════════════════════════════════════════════════════════
+function showSidebar() {
+  const html = HtmlService.createHtmlOutputFromFile('Sidebar')
+    .setTitle('Gerador de Documentos')
+    .setWidth(450);
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+// ── Formatação de Texto ───────────────────────────────────────────
+function formatSelectedToUpper() {
+  const range = SpreadsheetApp.getActiveSheet().getActiveRange();
+  range.setValues(range.getValues().map(row =>
+    row.map(cell => typeof cell === 'string' ? cell.toUpperCase() : cell)
+  ));
+}
+
+function formatSelectedToTitleCase() {
+  const range = SpreadsheetApp.getActiveSheet().getActiveRange();
+  const exceptions = ['da','de','do','das','dos','e','em','na','no','nas','nos'];
+  range.setValues(range.getValues().map(row =>
+    row.map(cell => {
+      if (typeof cell !== 'string' || cell === '') return cell;
+      return cell.toLowerCase().split(' ').map((w, i) =>
+        (i === 0 || !exceptions.includes(w))
+          ? w.charAt(0).toUpperCase() + w.slice(1)
+          : w
+      ).join(' ');
+    })
+  ));
+}
+
+// ── Busca no Drive ────────────────────────────────────────────────
+function searchDriveFiles(query) {
+  const files = [];
+  const iter = DriveApp.searchFiles(
+    `title contains '${query}' and mimeType = 'application/vnd.google-apps.document' and trashed = false`
+  );
+  let limit = 10;
+  while (iter.hasNext() && limit-- > 0) {
+    const f = iter.next();
+    files.push({ id: f.getId(), name: f.getName(), url: f.getUrl() });
+  }
+  return files;
+}
+
+function searchDriveFilesBroadcast(query) {
+  const files = [];
+  const iter = DriveApp.searchFiles(
+    `title contains '${query}' and mimeType != 'application/vnd.google-apps.folder' and trashed = false`
+  );
+  let limit = 15;
+  while (iter.hasNext() && limit-- > 0) {
+    const f = iter.next();
+    files.push({ id: f.getId(), name: f.getName(), url: f.getUrl() });
+  }
+  return files;
+}
+
+function searchDriveFolders(query) {
+  const folders = [];
+  const iter = DriveApp.searchFolders(
+    `title contains '${query}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
+  );
+  let limit = 10;
+  while (iter.hasNext() && limit-- > 0) {
+    const f = iter.next();
+    folders.push({ id: f.getId(), name: f.getName(), url: f.getUrl() });
+  }
+  return folders;
+}
+
+// ── Configuração AutoDoc ──────────────────────────────────────────
+function getSheetHeaders() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].filter(h => h !== '');
+}
+
+function getTemplateTags(docId) {
+  try {
+    const text = DocumentApp.openById(docId).getBody().getText();
+    const tags = new Set();
+    let m;
+    const re = /{{(.*?)}}/g;
+    while ((m = re.exec(text)) !== null) tags.add(m[1].trim());
+    return Array.from(tags);
+  } catch (e) {
+    throw new Error('Erro ao ler Template. Verifique o ID.');
+  }
+}
+
+function saveConfiguration(configData) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getActiveSheet();
+  let configSheet = ss.getSheetByName(CONFIG_SHEET_NAME);
+  if (!configSheet) {
+    configSheet = ss.insertSheet(CONFIG_SHEET_NAME);
+    configSheet.hideSheet();
+    configSheet.appendRow(['Nome Automação', 'Config JSON']);
+  }
+  const data = configSheet.getDataRange().getValues();
+  let found = false;
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === configData.name) {
+      configSheet.getRange(i + 1, 2).setValue(JSON.stringify(configData));
+      found = true;
+      break;
+    }
+  }
+  if (!found) configSheet.appendRow([configData.name, JSON.stringify(configData)]);
+
+  let msgExtra = '';
+  if (configData.sendEmail) {
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (findEmailColumn(headers) === -1) {
+      const newCol = sheet.getLastColumn() + 1;
+      sheet.getRange(1, newCol).setValue('Email para Envio').setBackground('#fff2cc');
+      msgExtra = " ATENÇÃO: Coluna 'Email para Envio' criada. Preencha antes de rodar!";
+    }
+  }
+  return 'Configuração salva! ' + msgExtra;
+}
+
+function deleteConfiguration(name) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME);
+  if (!sheet) return;
+  const data = sheet.getDataRange().getValues();
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (data[i][0] === name) { sheet.deleteRow(i + 1); return 'Excluído.'; }
+  }
+  throw new Error('Não encontrado.');
+}
+
+function getSavedAutomations() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG_SHEET_NAME);
+  if (!sheet) return [];
+  return sheet.getDataRange().getValues().slice(1)
+    .filter(r => r[0]).map(r => JSON.parse(r[1]));
+}
+
+// ── Motor de Execução AutoDoc ─────────────────────────────────────
+function runAutomationProcess(config) {
+  if (!config || typeof config !== 'object') {
+    throw new Error('Configuração inválida ou não fornecida. Verifique o AutoDoc e tente novamente.');
+  }
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getActiveSheet();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const headerMap = {};
+  headers.forEach((h, i) => { if (h) headerMap[h.trim()] = i; });
+
+  const colStatus = ensureColumn(sheet, headers, 'Status Doc');
+  const colLink   = ensureColumn(sheet, headers, 'Link Arquivo');
+  let colEmailStatus = -1, emailColIndex = -1;
+  if (config.sendEmail) {
+    colEmailStatus = ensureColumn(sheet, headers, 'Status Email');
+    emailColIndex  = findEmailColumn(headers);
+  }
+
+  const templateFile    = DriveApp.getFileById(config.templateId);
+  const destFolder      = DriveApp.getFolderById(config.folderId);
+  const data            = sheet.getDataRange().getValues();
+  let processedCount    = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row        = data[i];
+    const statusCell = sheet.getRange(i + 1, colStatus + 1);
+    if (statusCell.getValue().toString().includes('Sucesso')) continue;
+
+    try {
+      const fileName = replaceTags(config.fileNamePattern, row, headerMap);
+      const copyFile = templateFile.makeCopy(fileName, destFolder);
+      const copyBody = DocumentApp.openById(copyFile.getId()).getBody();
+
+      for (const [header, colIndex] of Object.entries(headerMap)) {
+        let val = row[colIndex];
+        if (val instanceof Date) val = Utilities.formatDate(val, ss.getSpreadsheetTimeZone(), 'dd/MM/yyyy');
+        copyBody.replaceText('{{' + header + '}}', val === undefined ? '' : val);
+      }
+      DocumentApp.openById(copyFile.getId()).saveAndClose();
+
+      let finalFileUrl = copyFile.getUrl(), finalFile = copyFile;
+      if (config.format === 'pdf') {
+        const pdfFile = destFolder.createFile(copyFile.getAs(MimeType.PDF)).setName(fileName);
+        finalFileUrl  = pdfFile.getUrl();
+        finalFile     = pdfFile;
+        copyFile.setTrashed(true);
+      }
+
+      let emailResult = 'N/A';
+      if (config.sendEmail && emailColIndex > -1 && row[emailColIndex]) {
+        try {
+          MailApp.sendEmail({
+            to: row[emailColIndex],
+            subject: replaceTags(config.emailSubject, row, headerMap),
+            body:    replaceTags(config.emailBody,    row, headerMap),
+            attachments: [finalFile.getAs(MimeType.PDF)]
+          });
+          emailResult = 'Enviado';
+        } catch (e) { emailResult = 'Erro: ' + e.message; }
+      } else if (config.sendEmail) {
+        emailResult = 'Email vazio';
+      }
+
+      statusCell.setValue('Sucesso');
+      sheet.getRange(i + 1, colLink + 1).setValue(finalFileUrl);
+      if (config.sendEmail) sheet.getRange(i + 1, colEmailStatus + 1).setValue(emailResult);
+      processedCount++;
+    } catch (err) {
+      statusCell.setValue('Erro: ' + err.message);
+    }
+  }
+  return `Concluído! ${processedCount} processados.`;
+}
+
+function ensureColumn(sheet, headers, colName) {
+  const index = headers.indexOf(colName);
+  if (index === -1) {
+    const lastCol = sheet.getLastColumn();
+    sheet.insertColumnAfter(lastCol);
+    sheet.getRange(1, lastCol + 1).setValue(colName);
+    return lastCol;
+  }
+  return index;
+}
+
+function findEmailColumn(headersArray) {
+  return headersArray.findIndex(h => {
+    const l = h.toString().toLowerCase();
+    return l.includes('e-mail') || l.includes('email');
+  });
+}
+
+function replaceTags(text, row, headerMap) {
+  let result = text;
+  for (const [header, colIndex] of Object.entries(headerMap)) {
+    result = result.replace(
+      new RegExp('{{' + header + '}}', 'gi'),
+      row[colIndex] === undefined ? '' : row[colIndex]
+    );
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 2 — CONSELHEIROS
+// ═══════════════════════════════════════════════════════════════════
+function completarDadosConselheiro() {
+  const ss          = SpreadsheetApp.getActiveSpreadsheet();
+  const activeSheet = ss.getActiveSheet();
+  const DATABASE_ID = '1Ajo5FevRxnPebvUZ-Psko3XuRQuteTvpX1aGkCyKF20';
+
+  let conselheirosSheet;
+  try {
+    const dbExternal = SpreadsheetApp.openById(DATABASE_ID);
+    conselheirosSheet = dbExternal.getSheets()
+      .find(s => s.getName().trim().toUpperCase() === 'CONSELHEIROS');
+  } catch (e) {
+    SpreadsheetApp.getUi().alert('Erro: Sem acesso à planilha externa. Verifique permissões.');
+    return;
+  }
+  if (!conselheirosSheet) {
+    SpreadsheetApp.getUi().alert("Erro: Aba 'CONSELHEIROS' não encontrada na planilha externa.");
+    return;
+  }
+
+  const range        = activeSheet.getActiveRange();
+  const values       = range.getValues();
+  const baseData     = conselheirosSheet.getDataRange().getValues();
+  const baseHeaders  = baseData[0].map(h => h.toString().toLowerCase().trim());
+  const activeHeaders = activeSheet
+    .getRange(1, 1, 1, activeSheet.getLastColumn()).getValues()[0]
+    .map(h => h.toString().toLowerCase().trim());
+  const idxNomeBase  = 4;
+  let countSuccess   = 0;
+  const notFound     = [];
+
+  for (let i = 0; i < values.length; i++) {
+    for (let j = 0; j < values[i].length; j++) {
+      const busca = values[i][j].toString().toLowerCase().trim();
+      if (!busca) continue;
+      let achou = false;
+      for (let k = 1; k < baseData.length; k++) {
+        if (baseData[k][idxNomeBase].toString().toLowerCase().includes(busca)) {
+          const rowActive = range.getRow() + i;
+          const colActive = range.getColumn() + j;
+          activeSheet.getRange(rowActive, colActive).setValue(baseData[k][idxNomeBase]);
+          baseHeaders.forEach((header, idxBase) => {
+            const colDest = activeHeaders.indexOf(header);
+            if (colDest !== -1 && (colDest + 1) !== colActive)
+              activeSheet.getRange(rowActive, colDest + 1).setValue(baseData[k][idxBase]);
+          });
+          achou = true;
+          countSuccess++;
+          break;
+        }
+      }
+      if (!achou) notFound.push(values[i][j]);
+    }
+  }
+
+  if (countSuccess > 0) {
+    if (notFound.length > 0)
+      SpreadsheetApp.getUi().alert(`Parcialmente concluído: ${countSuccess} preenchidos.\nNão encontrados: ${notFound.join(', ')}`);
+    else
+      ss.toast(`Sucesso! ${countSuccess} conselheiro(s) atualizado(s).`, 'CMS Inteligente');
+  } else if (notFound.length > 0) {
+    SpreadsheetApp.getUi().alert('Nenhum conselheiro localizado com: ' + notFound.join(', '));
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 3 — BROADCAST
+// ═══════════════════════════════════════════════════════════════════
+function executarBroadcast(config) {
+  try {
+    const sheet   = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const data    = sheet.getDataRange().getValues();
+    const headers = data[0];
+
+    let statusCol = headers.indexOf('Status Broadcast');
+    let dataCol   = headers.indexOf('Data do Envio');
+    if (statusCol === -1) {
+      statusCol = headers.length;
+      sheet.getRange(1, statusCol + 1).setValue('Status Broadcast').setFontWeight('bold');
+    }
+    if (dataCol === -1) {
+      dataCol = headers.length + 1;
+      sheet.getRange(1, dataCol + 1).setValue('Data do Envio').setFontWeight('bold');
+    }
+
+    const attachment      = DriveApp.getFileById(config.fileId).getBlob();
+    let enviosComSucesso  = 0;
+
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[1] || row[statusCol] === 'Sucesso') continue;
+      try {
+        MailApp.sendEmail({
+          to:       row[1],
+          subject:  config.subject.replace(/{{Nome}}/gi, row[0]),
+          htmlBody: config.body.replace(/{{Nome}}/gi, row[0]).replace(/\n/g, '<br>'),
+          attachments: [attachment]
+        });
+        const ts = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm:ss');
+        sheet.getRange(i + 1, statusCol + 1).setValue('Sucesso');
+        sheet.getRange(i + 1, dataCol   + 1).setValue(ts);
+        enviosComSucesso++;
+      } catch (err) {
+        sheet.getRange(i + 1, statusCol + 1).setValue('Erro: ' + err.message);
+      }
+    }
+    return `Processo finalizado! ${enviosComSucesso} e-mail(s) enviado(s) com sucesso.`;
+  } catch (error) {
+    throw new Error('Falha geral no sistema: ' + error.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 4 — GESTOR DE PRÉ-CONFERÊNCIAS
+// ═══════════════════════════════════════════════════════════════════
+
+const PRECONFS_MASTER = [
+  { id:'saude-mulher',         nome:'Saúde da Mulher',                 data:'10/03/2026', hora:'07:30–11:30', local:'CIMAMS',                                          endereco:'Av. Gov. Magalhães Pinto, 4000 – A' },
+  { id:'prestadores-pcds',     nome:'Prestadores de Serviço e PCDs',   data:'11/03/2026', hora:'07:30–11:30', local:'Câmara Municipal',                                 endereco:'Rua Urbino Viana, 600 - Vila Guilhermina' },
+  { id:'grande-renascenca',    nome:'Grande Renascença',               data:'12/03/2026', hora:'07:30–11:30', local:'Salão Paroquial – Paróquia Menino Jesus de Praga', endereco:'Praça Ernestina Ferreira Nunes, s/n, Alice Maia' },
+  { id:'grande-santos-reis',   nome:'Grande Santos Reis',              data:'13/03/2026', hora:'07:30–11:30', local:'Hospital das Clínicas Mário Ribeiro',              endereco:'R. Plínio Ribeiro, 539 - Jardim Brasil' },
+  { id:'grande-delfino',       nome:'Grande Delfino',                  data:'17/03/2026', hora:'07:30–11:30', local:'Colégio das Irmãs Imaculada Conceição',            endereco:'A Confirmar' },
+  { id:'grande-independencia', nome:'Grande Independência',            data:'18/03/2026', hora:'07:30–11:30', local:'Assembleia de Deus Madureira (Sede)',               endereco:'Rua Marquesa dos Santos, 612, Independência' },
+  { id:'grande-major-prates',  nome:'Grande Major Prates',             data:'19/03/2026', hora:'07:30–11:30', local:'UBS Major Prates',                                 endereco:'Av. Olímpio Prates, s/n – Praça do Major Prates' },
+  { id:'grande-maracana',      nome:'Grande Maracanã',                 data:'20/03/2026', hora:'07:30–11:30', local:'CAIC (a confirmar)',                                endereco:'Aguardando confirmação' },
+  { id:'zona-rural',           nome:'Zona Rural',                      data:'23/03/2026', hora:'07:30–11:30', local:'Sindicato dos Trabalhadores Rurais',                endereco:'Rua Iolanda de Almeida, 222 – Cidade Nova' },
+  { id:'pop-rua',              nome:'População em Situação de Rua',    data:'24/03/2026', hora:'07:30–11:00', local:'Centro POP (Canelas II)',                           endereco:'Av. Viriato Ribeiro de Aquino, 90 – Canelas II' },
+  { id:'igualdade-racial',     nome:'Igualdade Racial',                data:'25/03/2026', hora:'07:30–11:30', local:'Casa da Cidadania',                                 endereco:'Praça Raul Soares, s/n – Centro' },
+  { id:'lgbtqia',              nome:'População LGBTQIA+',              data:'26/03/2026', hora:'07:30–11:30', local:'Casa da Cidadania',                                 endereco:'Praça Raul Soares, s/n – Centro' },
+  { id:'servidores-publicos',  nome:'Servidores Públicos Municipais',  data:'27/03/2026', hora:'07:30–11:30', local:'CIMAMS',                                           endereco:'Av. Gov. Magalhães Pinto, 4000 – A' },
+];
+
+const PC_HEADER = [
+  'ID','Nome','Data','Horário','Local','Endereço',
+  'Status',          // aguardando | formulario_ativo | encerrada
+  'Link Formulário', // URL do Google Forms ativo
+  'CSV Presença',    // URL do CSV publicado (aba de respostas)
+  'Flyer URL',       // URL da imagem do flyer
+  'Obs / Notas',     // campo livre
+  'Última atualização'
+];
+
+// ── Instalar aba CONFIG ───────────────────────────────────────────
+function configurarPlanilhaPreConfs() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(PRECONFS_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(PRECONFS_SHEET_NAME, 0);
+  else { sheet.clearContents(); sheet.clearFormats(); }
+
+  // Cabeçalho
+  const hRange = sheet.getRange(1, 1, 1, PC_HEADER.length);
+  hRange.setValues([PC_HEADER])
+        .setBackground('#1A5EA8').setFontColor('#fff')
+        .setFontWeight('bold').setFontSize(11)
+        .setHorizontalAlignment('center');
+  sheet.setFrozenRows(1);
+
+  // Dados
+  const now  = new Date().toLocaleString('pt-BR');
+  const rows = PRECONFS_MASTER.map(p => [
+    p.id, p.nome, p.data, p.hora, p.local, p.endereco,
+    'aguardando', '', '', '', '', now
+  ]);
+  sheet.getRange(2, 1, rows.length, PC_HEADER.length).setValues(rows);
+
+  // Dropdown Status
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['aguardando','formulario_ativo','encerrada'])
+    .setAllowInvalid(false).build();
+  sheet.getRange(2, 7, rows.length, 1).setDataValidation(rule);
+
+  // Cores alternadas e status
+  for (let i = 0; i < rows.length; i++)
+    sheet.getRange(i+2, 1, 1, PC_HEADER.length)
+         .setBackground(i % 2 === 0 ? '#EAF4FB' : '#FFFFFF');
+  _aplicarCoresStatusPC(sheet, rows.length);
+
+  // Larguras
+  [160,220,100,100,220,240,130,300,300,250,200,150]
+    .forEach((w, i) => sheet.setColumnWidth(i + 1, w));
+
+  // Proteção suave nas colunas fixas A–F
+  sheet.getRange(2, 1, rows.length, 6).protect()
+       .setDescription('Dados fixos — não editar manualmente')
+       .setWarningOnly(true);
+
+  SpreadsheetApp.getUi().alert(
+    '✅ Aba CONFIG criada!',
+    'As 13 pré-conferências foram carregadas.\n\nUse o menu "CMS Inteligente" → "Abrir Painel de Gestão" para gerenciar.',
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+// ── Funções chamadas pelo painel HTML (google.script.run) ─────────
+function getDadosPreConfs() {
+  const sheet = _getPreConfsSheet();
+  const rows  = sheet.getDataRange().getValues();
+  const heads = rows[0];
+  return rows.slice(1).map(row => {
+    const obj = {};
+    heads.forEach((h, i) => obj[h] = row[i]);
+    return obj;
+  });
+}
+
+function salvarConfPC(id, campos) {
+  const sheet = _getPreConfsSheet();
+  const rows  = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][0] === id) {
+      const ln = i + 1;
+      if (campos.status      !== undefined) sheet.getRange(ln, 7).setValue(campos.status);
+      if (campos.linkForm    !== undefined) sheet.getRange(ln, 8).setValue(campos.linkForm);
+      if (campos.csvPresenca !== undefined) sheet.getRange(ln, 9).setValue(campos.csvPresenca);
+      if (campos.flyerUrl    !== undefined) sheet.getRange(ln, 10).setValue(campos.flyerUrl);
+      if (campos.obs         !== undefined) sheet.getRange(ln, 11).setValue(campos.obs);
+      sheet.getRange(ln, 12).setValue(new Date().toLocaleString('pt-BR'));
+      _aplicarCoresStatusPC(sheet, rows.length - 1);
+      return { ok: true };
+    }
+  }
+  return { ok: false, erro: 'ID não encontrado: ' + id };
+}
+
+function exportarJSONPreConfs() {
+  const dados = getDadosPreConfs();
+  const json  = JSON.stringify(dados.map(d => ({
+    id:       d['ID'],
+    nome:     d['Nome'],
+    data:     d['Data'],
+    hora:     d['Horário'],
+    local:    d['Local'],
+    endereco: d['Endereço'],
+    status:   d['Status'],
+    linkForm: d['Link Formulário'],
+    csvUrl:   d['CSV Presença'],
+    flyer:    d['Flyer URL'],
+    obs:      d['Obs / Notas'],
+  })), null, 2);
+
+  const htmlOut = HtmlService.createHtmlOutput(`
+    <style>
+      body{font-family:monospace;font-size:11px;padding:12px}
+      textarea{width:100%;height:340px;font-family:monospace;font-size:10px;border:1px solid #ccc;padding:8px;border-radius:4px}
+      button{margin-top:8px;padding:8px 16px;background:#1A5EA8;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px}
+    </style>
+    <p style="font-weight:bold;color:#1A5EA8">JSON para o site — copie e use na função de importação:</p>
+    <textarea id="j">${json.replace(/</g,'&lt;')}</textarea>
+    <button onclick="document.getElementById('j').select();document.execCommand('copy');this.textContent='✅ Copiado!'">📋 Copiar tudo</button>
+  `).setWidth(620).setHeight(480);
+  SpreadsheetApp.getUi().showModalDialog(htmlOut, 'Exportar JSON');
+}
+
+function atualizarCoresPreConfs() {
+  const sheet = _getPreConfsSheet();
+  _aplicarCoresStatusPC(sheet, sheet.getLastRow() - 1);
+  SpreadsheetApp.getUi().alert('✅ Cores atualizadas!');
+}
+
+// ── Abrir painel HTML ─────────────────────────────────────────────
+function abrirPainelPreConfs() {
+  const html = HtmlService.createHtmlOutput(_getPainelPreConfsHTML())
+    .setTitle('Gestão · Pré-Conferências')
+    .setWidth(500);
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+// ── Helpers internos ──────────────────────────────────────────────
+function _getPreConfsSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(PRECONFS_SHEET_NAME);
+  if (!sheet) throw new Error('Aba CONFIG não encontrada. Execute "Criar/Reconfigurar aba CONFIG" primeiro.');
+  return sheet;
+}
+
+function _aplicarCoresStatusPC(sheet, nRows) {
+  for (let i = 0; i < nRows; i++) {
+    const cell = sheet.getRange(i + 2, 7);
+    switch (cell.getValue()) {
+      case 'formulario_ativo': cell.setBackground('#D4EDDA').setFontColor('#155724').setFontWeight('bold');   break;
+      case 'encerrada':        cell.setBackground('#F8D7DA').setFontColor('#721C24').setFontWeight('normal'); break;
+      default:                 cell.setBackground('#FFF3CD').setFontColor('#856404').setFontWeight('normal');
+    }
+  }
+}
+
+// ── HTML do Painel ────────────────────────────────────────────────
+function _getPainelPreConfsHTML() {
+  return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Google Sans',Arial,sans-serif;font-size:13px;background:#F4F7FB;color:#2C3E50;min-height:100vh}
+.header{background:linear-gradient(135deg,#0D3D6B,#1A5EA8);padding:14px 16px;color:#fff}
+.header h1{font-size:15px;font-weight:700}
+.header p{font-size:11px;opacity:.6;margin-top:2px}
+.prog-wrap{padding:10px 16px;background:#fff;border-bottom:1px solid #D6E4F0}
+.prog-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7F96;margin-bottom:5px;display:flex;justify-content:space-between}
+.prog-bar{height:6px;background:#D6E4F0;border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#1A5EA8,#3AAA35);border-radius:4px;transition:width .5s}
+.pills{display:flex;gap:6px;padding:10px 16px;background:#fff;border-bottom:1px solid #D6E4F0;flex-wrap:wrap}
+.pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase}
+.pw{background:#FFF3CD;color:#856404}.pa{background:#D4EDDA;color:#155724}.pe{background:#F8D7DA;color:#721C24}
+.list{padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.card{background:#fff;border-radius:10px;border:1.5px solid #D6E4F0;overflow:hidden;transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 16px rgba(26,94,168,.12)}
+.card-head{padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.date-box{background:linear-gradient(135deg,#0D3D6B,#1A5EA8);border-radius:6px;padding:5px 8px;text-align:center;flex-shrink:0;min-width:38px}
+.date-dd{font-size:15px;font-weight:900;color:#fff;line-height:1}
+.date-mm{font-size:8px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase}
+.card-info{flex:1;min-width:0}
+.card-nome{font-size:12px;font-weight:800;color:#2C3E50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-local{font-size:10px;color:#6B7F96;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:9px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.bw{background:#FFF3CD;color:#856404}.ba{background:#D4EDDA;color:#155724}.be{background:#F8D7DA;color:#721C24}
+.chev{font-size:10px;color:#6B7F96;transition:transform .2s;flex-shrink:0;margin-left:4px}
+.card.open .chev{transform:rotate(180deg)}
+.card-body{display:none;padding:0 12px 12px;border-top:1px solid #D6E4F0}
+.card.open .card-body{display:block}
+.field{margin-top:10px}
+.field label{display:block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6B7F96;margin-bottom:4px}
+.field select,.field input,.field textarea{width:100%;font-family:inherit;font-size:12px;color:#2C3E50;border:1.5px solid #D6E4F0;border-radius:6px;padding:7px 10px;background:#F4F7FB;outline:none;transition:border-color .2s}
+.field select:focus,.field input:focus,.field textarea:focus{border-color:#1A5EA8;background:#fff}
+.field textarea{resize:vertical;min-height:52px}
+.hint{font-size:10px;color:#6B7F96;margin-top:3px;line-height:1.4}
+.btn-row{display:flex;gap:6px;margin-top:12px}
+.btn{flex:1;padding:8px;border:none;border-radius:6px;font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;transition:all .2s}
+.bp{background:#1A5EA8;color:#fff}.bp:hover{background:#0D3D6B}.bp:disabled{opacity:.5;cursor:not-allowed}
+.bs{background:#F4F7FB;color:#2C3E50;border:1.5px solid #D6E4F0}.bs:hover{background:#D6E4F0}
+.saved{font-size:10px;color:#3AAA35;font-weight:700;display:none;align-items:center;gap:4px;margin-top:6px}
+.saved.show{display:flex}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(60px);background:#0D3D6B;color:#fff;font-size:12px;font-weight:700;padding:8px 18px;border-radius:99px;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:transform .3s;pointer-events:none;white-space:nowrap;z-index:999}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.loading{text-align:center;padding:40px 20px;color:#6B7F96;font-size:12px}
+.spin{display:inline-block;width:24px;height:24px;border:3px solid #D6E4F0;border-top-color:#1A5EA8;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.link-chip{display:inline-flex;align-items:center;gap:5px;background:#EAF4FB;border:1px solid #D6E4F0;color:#1A5EA8;font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;text-decoration:none;margin-top:4px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🏥 Gestão · Pré-Conferências</h1>
+  <p>11ª Conferência Municipal de Saúde · Montes Claros</p>
+</div>
+<div class="prog-wrap">
+  <div class="prog-lbl"><span>Progresso geral</span><span id="progLabel">—</span></div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+</div>
+<div class="pills" id="pillsArea"><div style="color:#6B7F96;font-size:11px">carregando…</div></div>
+<div id="listArea"><div class="loading"><div class="spin"></div><br>Carregando dados…</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+let dados = [], openId = null;
+document.addEventListener('DOMContentLoaded', () => {
+  google.script.run
+    .withSuccessHandler(d => { dados = d; render(); })
+    .withFailureHandler(e => {
+      document.getElementById('listArea').innerHTML =
+        '<div class="loading" style="color:#721C24">❌ ' + e.message + '</div>';
+    })
+    .getDadosPreConfs();
+});
+
+function render() {
+  // Progress
+  const enc = dados.filter(d => d['Status']==='encerrada').length;
+  const pct = Math.round(enc/dados.length*100);
+  document.getElementById('progLabel').textContent = enc + ' de ' + dados.length + ' encerradas';
+  document.getElementById('progFill').style.width  = pct + '%';
+  // Pills
+  const ag = dados.filter(d=>d['Status']==='aguardando').length;
+  const at = dados.filter(d=>d['Status']==='formulario_ativo').length;
+  document.getElementById('pillsArea').innerHTML =
+    '<span class="pill pw">⏳ '+ag+' aguardando</span>' +
+    '<span class="pill pa">🟢 '+at+' ativo</span>' +
+    '<span class="pill pe">✅ '+enc+' encerrada'+(enc!==1?'s':'')+'</span>';
+  // Cards
+  const meses = ['','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+  document.getElementById('listArea').innerHTML = '<div class="list">' +
+    dados.map(d => {
+      const id  = d['ID'];
+      const st  = d['Status']||'aguardando';
+      const [dd,,mm] = (d['Data']||'--/--/----').split('/');
+      const mes = meses[parseInt(mm)]||mm;
+      const bc  = st==='formulario_ativo'?'ba':st==='encerrada'?'be':'bw';
+      const bl  = st==='formulario_ativo'?'🟢 Ativo':st==='encerrada'?'✅ Encerrada':'⏳ Aguard.';
+      const lf  = d['Link Formulário']||'';
+      const cs  = d['CSV Presença']||'';
+      return '<div class="card" id="card-'+id+'">'+
+        '<div class="card-head" onclick="toggle(\''+id+'\')">'+
+          '<div class="date-box"><div class="date-dd">'+dd+'</div><div class="date-mm">'+mes+'</div></div>'+
+          '<div class="card-info">'+
+            '<div class="card-nome">'+d['Nome']+'</div>'+
+            '<div class="card-local">'+d['Local']+'</div>'+
+            (lf?'<a class="link-chip" href="'+esc(lf)+'" target="_blank">🔗 Formulário</a>':'')+
+            (cs?'<a class="link-chip" href="'+esc(cs)+'" target="_blank">📊 CSV</a>':'')+
+          '</div>'+
+          '<span class="badge '+bc+'">'+bl+'</span>'+
+          '<span class="chev">▼</span>'+
+        '</div>'+
+        '<div class="card-body">'+
+          '<div class="field"><label>Status</label>'+
+            '<select id="status-'+id+'">'+
+              '<option value="aguardando"'+(st==='aguardando'?' selected':'')+'>⏳ Aguardando</option>'+
+              '<option value="formulario_ativo"'+(st==='formulario_ativo'?' selected':'')+'>🟢 Formulário ativo</option>'+
+              '<option value="encerrada"'+(st==='encerrada'?' selected':'')+'>✅ Encerrada</option>'+
+            '</select></div>'+
+          '<div class="field"><label>Link do Formulário</label>'+
+            '<input type="url" id="form-'+id+'" value="'+esc(lf)+'" placeholder="https://forms.gle/...">'+
+            '<div class="hint">Cole o link do Forms enquanto o evento estiver ativo.</div></div>'+
+          '<div class="field"><label>CSV de Presença</label>'+
+            '<input type="url" id="csv-'+id+'" value="'+esc(cs)+'" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">'+
+            '<div class="hint">Após encerrar, cole a URL do CSV publicado.</div></div>'+
+          '<div class="field"><label>URL do Flyer</label>'+
+            '<input type="url" id="flyer-'+id+'" value="'+esc(d['Flyer URL']||'')+'" placeholder="https://i.ibb.co/..."></div>'+
+          '<div class="field"><label>Observações internas</label>'+
+            '<textarea id="obs-'+id+'">'+esc(d['Obs / Notas']||'')+'</textarea></div>'+
+          '<div class="btn-row">'+
+            '<button class="btn bs" onclick="toggle(\''+id+'\')">Cancelar</button>'+
+            '<button class="btn bp" id="btnSave-'+id+'" onclick="salvar(\''+id+'\')">💾 Salvar</button>'+
+          '</div>'+
+          '<div class="saved" id="saved-'+id+'">✅ Salvo com sucesso</div>'+
+        '</div>'+
+      '</div>';
+    }).join('') + '</div>';
+  if (openId) { const el = document.getElementById('card-'+openId); if(el) el.classList.add('open'); }
+}
+
+function toggle(id) {
+  const card = document.getElementById('card-'+id);
+  const was  = card.classList.contains('open');
+  document.querySelectorAll('.card.open').forEach(c=>c.classList.remove('open'));
+  openId = null;
+  if (!was) { card.classList.add('open'); openId = id; }
+}
+
+function salvar(id) {
+  const btn = document.getElementById('btnSave-'+id);
+  btn.disabled = true; btn.textContent = 'Salvando…';
+  const campos = {
+    status:      document.getElementById('status-'+id).value,
+    linkForm:    document.getElementById('form-'+id).value.trim(),
+    csvPresenca: document.getElementById('csv-'+id).value.trim(),
+    flyerUrl:    document.getElementById('flyer-'+id).value.trim(),
+    obs:         document.getElementById('obs-'+id).value.trim(),
+  };
+  google.script.run
+    .withSuccessHandler(res => {
+      btn.disabled = false; btn.textContent = '💾 Salvar';
+      if (res.ok) {
+        const d = dados.find(x=>x['ID']===id);
+        if (d) { d['Status']=campos.status; d['Link Formulário']=campos.linkForm; d['CSV Presença']=campos.csvPresenca; d['Flyer URL']=campos.flyerUrl; d['Obs / Notas']=campos.obs; }
+        render();
+        const saved = document.getElementById('saved-'+id);
+        if(saved){ saved.classList.add('show'); setTimeout(()=>saved.classList.remove('show'),3000); }
+        toast('✅ Salvo!');
+      } else { toast('❌ '+res.erro); }
+    })
+    .withFailureHandler(err => { btn.disabled=false; btn.textContent='💾 Salvar'; toast('❌ '+err.message); })
+    .salvarConfPC(id, campos);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
+function esc(s){ return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+<\/script>
+</body>
+</html>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 5 — GALERIA DE FOTOS
+//  Lê pasta do Drive e popula aba FOTOS com links diretos
+// ═══════════════════════════════════════════════════════════════════
+
+function criarAbaFotos() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(FOTOS_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(FOTOS_SHEET_NAME);
+  else { sheet.clearContents(); sheet.clearFormats(); }
+
+  const header = ['ID_Conferencia','Legenda','URL_Drive_Original','URL_Direta','Incluir no Site','Importado em'];
+  sheet.getRange(1,1,1,header.length).setValues([header])
+       .setBackground('#1A5EA8').setFontColor('#fff').setFontWeight('bold').setFontSize(11);
+  sheet.setFrozenRows(1);
+  [140,250,320,320,120,160].forEach((w,i) => sheet.setColumnWidth(i+1,w));
+  SpreadsheetApp.getUi().alert('✅ Aba FOTOS criada!',
+    'Use "Importar fotos da pasta Drive" para popular automaticamente.',
+    SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+function importarFotosDrive() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(FOTOS_SHEET_NAME);
+  if (!sheet) { criarAbaFotos(); sheet = ss.getSheetByName(FOTOS_SHEET_NAME); }
+
+  let folder;
+  try { folder = DriveApp.getFolderById(PASTA_FOTOS_ID); }
+  catch(e) {
+    SpreadsheetApp.getUi().alert('Erro ao acessar pasta Drive.\nID: ' + PASTA_FOTOS_ID);
+    return;
+  }
+
+  const keyMap = [
+    {keys:['mulher','feminino'],           id:'saude-mulher'},
+    {keys:['pcd','prestador'],             id:'prestadores-pcds'},
+    {keys:['renascenca','renascença'],      id:'grande-renascenca'},
+    {keys:['santos','reis'],               id:'grande-santos-reis'},
+    {keys:['delfino'],                     id:'grande-delfino'},
+    {keys:['independencia','independência'],id:'grande-independencia'},
+    {keys:['major','prates'],              id:'grande-major-prates'},
+    {keys:['maracana','maracanã'],         id:'grande-maracana'},
+    {keys:['rural','campo'],               id:'zona-rural'},
+    {keys:['rua','pop'],                   id:'pop-rua'},
+    {keys:['racial','negro'],              id:'igualdade-racial'},
+    {keys:['lgbt'],                        id:'lgbtqia'},
+    {keys:['servidor'],                    id:'servidores-publicos'},
+  ];
+
+  function detectarConf(nome) {
+    const n = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    for (const e of keyMap) if (e.keys.some(k => n.includes(k))) return e.id;
+    return 'sem-categoria';
+  }
+
+  const imagens = [];
+  const tipos   = ['image/jpeg','image/png','image/webp','image/gif'];
+  const iter    = folder.getFiles();
+  while (iter.hasNext()) {
+    const f = iter.next();
+    if (!tipos.includes(f.getMimeType())) continue;
+    const fid = f.getId();
+    const ts  = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm');
+    imagens.push([
+      detectarConf(f.getName()),
+      f.getName(),
+      f.getUrl(),
+      'https://drive.google.com/uc?export=view&id=' + fid,
+      'SIM',
+      ts
+    ]);
+  }
+
+  if (!imagens.length) {
+    SpreadsheetApp.getUi().alert('Nenhuma imagem encontrada na pasta.');
+    return;
+  }
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 1) sheet.getRange(2,1,lastRow-1,6).clearContent();
+  sheet.getRange(2,1,imagens.length,6).setValues(imagens);
+
+  const ruleIncluir = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['SIM','NÃO']).setAllowInvalid(false).build();
+  sheet.getRange(2,5,imagens.length,1).setDataValidation(ruleIncluir);
+
+  for (let i=0; i<imagens.length; i++)
+    sheet.getRange(i+2,1,1,6).setBackground(i%2===0?'#EAF4FB':'#FFFFFF');
+
+  ss.toast('✅ ' + imagens.length + ' foto(s) importada(s)!', 'Galeria de Fotos');
+  ss.setActiveSheet(sheet);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 6 — DELEGADOS ELEITOS
+// ═══════════════════════════════════════════════════════════════════
+
+function criarAbaDelegados() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(DELEGADOS_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(DELEGADOS_SHEET_NAME);
+  else { sheet.clearContents(); sheet.clearFormats(); }
+
+  const header = ['ID_Conferencia','Nome_Conferencia','Nome_Delegado','Segmento','Tipo','Observações'];
+  sheet.getRange(1,1,1,header.length).setValues([header])
+       .setBackground('#1E8A4A').setFontColor('#fff').setFontWeight('bold').setFontSize(11);
+  sheet.setFrozenRows(1);
+
+  const ruleSegmento = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Usuários','Trabalhadores de Saúde','Gestores','Prestadores de Serviço','Outro'])
+    .setAllowInvalid(false).build();
+  const ruleTipo = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['Titular','Suplente']).setAllowInvalid(false).build();
+
+  sheet.getRange(2,4,200,1).setDataValidation(ruleSegmento);
+  sheet.getRange(2,5,200,1).setDataValidation(ruleTipo);
+  [160,220,250,180,100,200].forEach((w,i) => sheet.setColumnWidth(i+1,w));
+
+  SpreadsheetApp.getUi().alert('✅ Aba DELEGADOS criada!',
+    'Preencha os delegados conforme forem eleitos em cada pré-conferência.\n\n' +
+    'Após preencher, publique o CSV e cole a URL em DELEGADOS_CSV_URL no HTML do site.',
+    SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+function abrirAbaDelegados() {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(DELEGADOS_SHEET_NAME);
+  if (!sheet) {
+    const resp = SpreadsheetApp.getUi().alert('Aba DELEGADOS não encontrada',
+      'Deseja criar agora?', SpreadsheetApp.getUi().ButtonSet.YES_NO);
+    if (resp === SpreadsheetApp.getUi().Button.YES) criarAbaDelegados();
+  } else {
+    ss.setActiveSheet(sheet);
+  }
+}
+
+// Atualiza aba CONFIG com novas colunas: Aviso, Tipo_Aviso, Ata_URL
+function atualizarConfigComNovasColunas() {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(PRECONFS_SHEET_NAME);
+  if (!sheet) { SpreadsheetApp.getUi().alert('Aba CONFIG não encontrada. Crie-a primeiro.'); return; }
+
+  const headers = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
+  const novas   = ['Ata URL','QR Code URL','Aviso','Tipo Aviso'];
+
+  novas.forEach(col => {
+    if (!headers.includes(col)) {
+      const newCol = sheet.getLastColumn() + 1;
+      sheet.getRange(1, newCol).setValue(col)
+           .setBackground('#1A5EA8').setFontColor('#fff').setFontWeight('bold');
+      sheet.setColumnWidth(newCol, col === 'Aviso' ? 280 : 180);
+    }
+  });
+
+  // Dropdown Tipo Aviso na coluna recém-criada
+  const tipoCol = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0].indexOf('Tipo Aviso') + 1;
+  if (tipoCol > 0) {
+    const ruleTipo = SpreadsheetApp.newDataValidation()
+      .requireValueInList(['texto','imagem','video','']).setAllowInvalid(true).build();
+    sheet.getRange(2, tipoCol, sheet.getLastRow()-1, 1).setDataValidation(ruleTipo);
+  }
+
+  ss.toast('✅ Colunas adicionadas à aba CONFIG!', 'Atualização');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MÓDULO 7 — AVISOS URGENTES (aba separada)
+// ═══════════════════════════════════════════════════════════════════
+const AVISOS_SHEET_NAME = "AVISOS";
+
+function criarAbaAvisos() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(AVISOS_SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(AVISOS_SHEET_NAME);
+  else { sheet.clearContents(); sheet.clearFormats(); }
+
+  const header = ['Ativo','Título','Tipo','Conteúdo','Conferência (ID ou vazio=global)','Criado em'];
+  sheet.getRange(1,1,1,header.length).setValues([header])
+       .setBackground('#B71C1C').setFontColor('#fff').setFontWeight('bold').setFontSize(11);
+  sheet.setFrozenRows(1);
+
+  // Dropdowns
+  const ruleAtivo = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['SIM','NÃO']).setAllowInvalid(false).build();
+  const ruleTipo = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['texto','imagem','video']).setAllowInvalid(false).build();
+
+  sheet.getRange(2,1,50,1).setDataValidation(ruleAtivo);
+  sheet.getRange(2,3,50,1).setDataValidation(ruleTipo);
+
+  // Linha de exemplo
+  const ts = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'dd/MM/yyyy HH:mm');
+  sheet.getRange(2,1,1,6).setValues([[
+    'NÃO',
+    'Mudança de local — Grande Santos Reis',
+    'texto',
+    'Atenção: o local da pré-conferência Grande Santos Reis foi alterado para o Ginásio Municipal. A data e horário permanecem os mesmos.',
+    'grande-santos-reis',
+    ts
+  ]]);
+  sheet.getRange(2,1,1,6).setBackground('#FFF3CD');
+
+  [60,260,80,400,200,140].forEach((w,i) => sheet.setColumnWidth(i+1,w));
+
+  SpreadsheetApp.getUi().alert(
+    '✅ Aba AVISOS criada!',
+    'Instruções de uso:\n\n' +
+    '• Ativo = SIM → aviso será exibido no site ao carregar\n' +
+    '• Ativo = NÃO → aviso ignorado\n' +
+    '• Tipo: texto | imagem (URL) | video (URL YouTube ou direto)\n' +
+    '• Conferência: deixe vazio para aviso global (aparece sempre)\n' +
+    '  ou coloque o ID da conferência (ex: grande-santos-reis)\n\n' +
+    'Após preencher, publique o CSV desta aba e cole a URL em AVISOS_CSV_URL no HTML.',
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+  ss.setActiveSheet(sheet);
+}
+
+function abrirAbaAvisos() {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(AVISOS_SHEET_NAME);
+  if (!sheet) {
+    const resp = SpreadsheetApp.getUi().alert('Aba AVISOS não encontrada',
+      'Deseja criar agora?', SpreadsheetApp.getUi().ButtonSet.YES_NO);
+    if (resp === SpreadsheetApp.getUi().Button.YES) criarAbaAvisos();
+  } else {
+    ss.setActiveSheet(sheet);
+  }
+}
