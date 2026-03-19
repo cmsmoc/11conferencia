@@ -1091,8 +1091,8 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">↑</button>
 
 <!-- ══════════════════════════════════════════════════════════
-     JAVASCRIPT — Camada de Apresentação
-     (SEM regras de negócio — apenas consome a API)
+     JAVASCRIPT — Camada de Apresentação v3
+     Cache bicamada: localStorage (browser) + CacheService (GAS)
      ══════════════════════════════════════════════════════════ -->
 <script>
 'use strict';
@@ -1100,28 +1100,184 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 // ── CONFIGURAÇÃO ──────────────────────────────────────────────────
 const API_URL = 'https://script.google.com/macros/s/AKfycbzPh29ncgWef_k2yiTK_Btl4IARJQFoPHOfxc0VENMK9r97MRq7Xy562htX7E-pu0VczQ/exec';
 
+// ── CACHE DO BROWSER (localStorage) ──────────────────────────────
+// TTLs em ms. Espelham os do servidor, mas ligeiramente menores
+// para garantir que o browser busque dados frescos antes do server.
+const BROWSER_CACHE_TTL = {
+  config:    4   * 60 * 1000,   // 4 min  (server: 5 min)
+  avisos:    90  * 1000,        // 90 s   (server: 2 min)
+  presenca:  2   * 60 * 1000,   // 2 min  (server: 3 min)
+  delegados: 8   * 60 * 1000,   // 8 min  (server: 10 min)
+  fotos:     12  * 60 * 1000,   // 12 min (server: 15 min)
+};
+const CACHE_PREFIX = 'cms11_v3_';
+
+const BrowserCache = {
+  /**
+   * Lê do localStorage. Retorna os dados ou null se expirado/inexistente.
+   * Nunca lança exceção — localStorage pode estar desabilitado.
+   */
+  get(key) {
+    try {
+      const raw = localStorage.getItem(CACHE_PREFIX + key);
+      if (!raw) return null;
+      const entry = JSON.parse(raw);
+      if (Date.now() > entry.exp) {
+        localStorage.removeItem(CACHE_PREFIX + key);
+        return null;
+      }
+      return entry.val;
+    } catch { return null; }
+  },
+
+  /** Grava no localStorage com expiração. Silencia erros de quota. */
+  set(key, val, ttlMs) {
+    try {
+      localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({
+        val,
+        exp: Date.now() + ttlMs,
+        ts:  Date.now(),
+      }));
+    } catch { /* quota excedida ou modo privado — ignora */ }
+  },
+
+  /** Remove uma entrada específica. */
+  remove(key) {
+    try { localStorage.removeItem(CACHE_PREFIX + key); } catch {}
+  },
+
+  /** Remove todas as entradas deste app (prefixo cms11_v3_). */
+  clear() {
+    try {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith(CACHE_PREFIX))
+        .forEach(k => localStorage.removeItem(k));
+    } catch {}
+  },
+
+  /** Retorna quantos ms faltam para expirar a chave (0 = expirado/inexistente). */
+  ttlRestante(key) {
+    try {
+      const raw = localStorage.getItem(CACHE_PREFIX + key);
+      if (!raw) return 0;
+      const entry = JSON.parse(raw);
+      return Math.max(0, entry.exp - Date.now());
+    } catch { return 0; }
+  },
+};
+
 // ── ESTADO DA APLICAÇÃO ───────────────────────────────────────────
-let EVENTOS   = [];       // Lista completa de eventos (da API)
-let EVENTO_ATUAL = null;  // Evento em exibição no detalhe
-let PRESENCA  = [];       // Lista de presença carregada
-let FOTOS     = [];       // Fotos carregadas
-let AVISOS    = [];       // Avisos carregados
-let TAB_ATIVA = 'confs';  // Tab atual
+let EVENTOS      = [];
+let EVENTO_ATUAL = null;
+let PRESENCA     = [];
+let FOTOS        = [];
+let AVISOS       = [];
+let TAB_ATIVA    = 'confs';
+
+// ── FILA DE PREFETCH ─────────────────────────────────────────────
+// Guarda IDs cujos dados devem ser pré-carregados em background.
+const _prefetchQueue = new Set();
+let   _prefetchTimer = null;
 
 // ═══════════════════════════════════════════════════════════════════
-//  UTILITÁRIOS
+//  UTILITÁRIOS — FETCH COM CACHE BICAMADA
 // ═══════════════════════════════════════════════════════════════════
-function apiGet(action, params = {}) {
-  const qs = new URLSearchParams({ action, ...params });
-  return fetch(`${API_URL}?${qs}`)
-    .then(r => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then(json => {
-      if (!json.success) throw new Error(json.error || 'API retornou erro');
-      return json;
-    });
+
+/**
+ * Monta uma chave de cache consistente para cada combinação action+id.
+ */
+function _cacheKey(action, params = {}) {
+  const id = params.id || '';
+  return id ? `${action}:${id}` : action;
+}
+
+/**
+ * Faz a requisição real à API, sem cache.
+ * Retorna o objeto JSON ou lança Error.
+ */
+async function _fetchApi(action, params = {}) {
+  const qs  = new URLSearchParams({ action, ...params });
+  const res = await fetch(`${API_URL}?${qs}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status} ao buscar "${action}"`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.error || `API erro em "${action}"`);
+  return json;
+}
+
+/**
+ * Ponto central de acesso à API.
+ * Estratégia: Cache-first com stale-while-revalidate.
+ *
+ * 1. Se localStorage tem dados frescos → retorna imediatamente (0 ms).
+ * 2. Se localStorage tem dados expirados → retorna stale + revalida em background.
+ * 3. Se não há cache → busca na rede (aguarda resposta).
+ *
+ * O indicador visual de cache é mostrado no console (não na UI).
+ */
+async function apiGet(action, params = {}, opts = {}) {
+  const key    = _cacheKey(action, params);
+  const ttlKey = action; // chave no TTL map
+  const ttl    = BROWSER_CACHE_TTL[ttlKey] ?? 60_000;
+
+  // 1. Tenta cache fresco
+  const cached = BrowserCache.get(key);
+  if (cached !== null) {
+    console.debug(`[cache HIT] ${key} — ${Math.round(BrowserCache.ttlRestante(key)/1000)}s restantes`);
+    return cached;
+  }
+
+  // 2. Stale check: há dados expirados?
+  //    (Aqui relemos sem filtrar por expiração — precisamos do raw)
+  let staleData = null;
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (raw) staleData = JSON.parse(raw).val;
+  } catch {}
+
+  if (staleData && !opts.forceRefresh) {
+    // Retorna stale imediatamente e dispara revalidação em background
+    console.debug(`[cache STALE] ${key} — revalidando em background`);
+    _fetchApi(action, params)
+      .then(fresh => {
+        BrowserCache.set(key, fresh, ttl);
+        // Se for config, atualiza o estado global em background
+        if (action === 'config') {
+          EVENTOS = fresh.data || [];
+          renderizarGrid(EVENTOS);
+        }
+      })
+      .catch(e => console.warn(`Revalidação background falhou [${key}]:`, e.message));
+    return staleData;
+  }
+
+  // 3. Cache miss total — fetch bloqueante
+  console.debug(`[cache MISS] ${key} — buscando na rede`);
+  const fresh = await _fetchApi(action, params);
+  BrowserCache.set(key, fresh, ttl);
+  return fresh;
+}
+
+/**
+ * Agenda prefetch de dados de um evento em background (baixa prioridade).
+ * Chamado ao hover no card — assim quando o usuário clicar os dados já estão cacheados.
+ */
+function prefetchEvento(id) {
+  if (!id || _prefetchQueue.has(id)) return;
+  _prefetchQueue.add(id);
+  clearTimeout(_prefetchTimer);
+  _prefetchTimer = setTimeout(async () => {
+    for (const eventId of _prefetchQueue) {
+      // Só prefetch se não tiver no cache
+      if (BrowserCache.get(_cacheKey('presenca', { id: eventId })) === null) {
+        try {
+          await apiGet('presenca',  { id: eventId }, { forceRefresh: false });
+          await apiGet('delegados', { id: eventId }, { forceRefresh: false });
+          console.debug(`[prefetch] ${eventId} concluído`);
+        } catch {}
+      }
+    }
+    _prefetchQueue.clear();
+  }, 300); // debounce de 300ms
 }
 
 function mostrarView(id) {
@@ -1169,22 +1325,25 @@ function badgeSegmento(seg) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  CARREGAMENTO INICIAL
+//  CARREGAMENTO INICIAL — paralelo com cache-warming
 // ═══════════════════════════════════════════════════════════════════
 async function init() {
-  // Avisos são independentes — carregam em paralelo com os eventos
-  carregarAvisos();
-  carregarEventos();
+  // Dispara ambas as requisições em paralelo.
+  // Se houver cache no browser, ambas retornam em < 1ms.
+  // Se não houver, chegam da rede simultaneamente (não sequencial).
+  await Promise.allSettled([
+    carregarEventos(),
+    carregarAvisos(),
+  ]);
 }
 
 async function carregarEventos() {
   const grid = document.getElementById('confsGrid');
   try {
-    const resp   = await apiGet('config');
-    EVENTOS      = resp.data || [];
-    const meta   = resp.meta || {};
+    const resp = await apiGet('config');
+    EVENTOS    = resp.data || [];
+    const meta = resp.meta || {};
 
-    // Atualiza stat da toolbar
     document.getElementById('toolbarLabel').textContent =
       `${EVENTOS.length} Pré-Conferências` +
       (meta.encerradas ? ` · ${meta.encerradas} encerradas` : '');
@@ -1196,25 +1355,23 @@ async function carregarEventos() {
       <div class="error-state">
         <h3>⚠️ Não foi possível carregar os eventos</h3>
         <p>${escHtml(err.message)}</p>
-        <button class="btn-retry" onclick="carregarEventos()">🔄 Tentar novamente</button>
+        <button class="btn-retry" onclick="BrowserCache.remove('config');carregarEventos()">🔄 Tentar novamente</button>
       </div>`;
   }
 }
 
 async function carregarAvisos() {
   try {
+    // Avisos têm TTL curto (90s) — não forçamos refresh aqui.
+    // O servidor já usa TTL de 2min no CacheService.
     const resp = await apiGet('avisos');
     AVISOS = resp.data || [];
 
     const urgentes = AVISOS.filter(a => a.nivel === 'urgente' && !a.conferencia);
     const normais  = AVISOS.filter(a => a.nivel === 'normal');
 
-    // Exibe popup para o primeiro aviso urgente global
     if (urgentes.length > 0) exibirPopupAviso(urgentes[0]);
-
-    // Exibe barra de notícias normais
     renderizarAvisosNormais(normais);
-
   } catch (err) {
     console.warn('Avisos indisponíveis:', err.message);
   }
@@ -1251,7 +1408,8 @@ function exibirPopupAviso(aviso) {
 function fecharAviso() {
   document.getElementById('avisoOverlay').classList.remove('active');
   document.body.style.overflow = '';
-  // Exibe barra vermelha persistente
+  // Invalida cache de avisos no browser para forçar releitura na próxima visita
+  BrowserCache.remove('avisos');
   if (window._avisoUrgenteTitulo) {
     document.getElementById('barra-urgente-texto').textContent = '🚨 ' + window._avisoUrgenteTitulo;
     document.getElementById('barra-urgente').classList.add('show');
@@ -1292,7 +1450,7 @@ function criarCardEvento(e) {
   const statusCls   = 'status-' + e.status;
 
   return `
-  <div class="conf-card${e.temDados ? '' : ' sem-dados'}" onclick="abrirDetalhe('${escHtml(e.id)}')">
+  <div class="conf-card${e.temDados ? '' : ' sem-dados'}" onclick="abrirDetalhe('${escHtml(e.id)}')" onmouseenter="prefetchEvento('${escHtml(e.id)}')" ontouchstart="prefetchEvento('${escHtml(e.id)}')"  >
     <div class="conf-card-accent"></div>
     <div class="conf-card-body">
       <div class="conf-card-header">
@@ -1576,7 +1734,9 @@ function filtrarPresenca() {
 //  GALERIA
 // ═══════════════════════════════════════════════════════════════════
 async function carregarGaleria() {
-  if (FOTOS.length > 0) return; // Já carregou
+  // Se há cache fresco de fotos, o apiGet retorna imediatamente — não recarrega o DOM
+  if (FOTOS.length > 0 && BrowserCache.get('fotos') !== null) return;
+
   const grid = document.getElementById('galeriaGrid');
   grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><div class="loading-spinner" style="margin:0 auto 12px"></div>Carregando…</div>`;
 
@@ -1716,6 +1876,13 @@ document.addEventListener('keydown', e => {
 
 // Exibe rodapé somente na view-list
 document.getElementById('site-footer').style.display = 'block';
+
+// Log de versão e status do cache no console
+console.info(
+  '%c11ª CMS Montes Claros — v3.0 (Cache bicamada) ',
+  'background:#1A5EA8;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px'
+);
+console.info('BrowserCache keys:', Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)));
 
 // Inicializa a aplicação
 init();
