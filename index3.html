@@ -805,8 +805,7 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
   </div>
   <div class="nav-title" id="navTitle">Pré-Conferências</div>
   <div class="nav-actions">
-     <::before></::before>
-   <button class="back-btn" onclick="voltarLista()">HUB PRINCIPAL</button>
+    <button class="back-btn" onclick="voltarLista()">Hub Principal</button>
   </div>
 </nav>
 
@@ -842,12 +841,12 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
   </section>
 
   <!-- AVISOS NORMAIS (últimas notícias) -->
-  <div style="max-width:960px;margin:-36px auto 16px;padding:0 32px;position:relative;z-index:6;">
+  <div style="max-width:960px;margin:-28px auto 0;padding:0 32px;position:relative;z-index:6;">
     <div id="avisos-normais"></div>
   </div>
 
   <!-- TABS -->
-  <div class="list-tabs" id="listTabs">
+  <div class="list-tabs" id="listTabs" style="margin-top:24px;position:relative;z-index:5;">
     <button class="list-tab ativo" onclick="switchTab('confs',this)">📋 Pré-Conferências</button>
     <button class="list-tab" onclick="switchTab('galeria',this)">📷 Galeria</button>
     <button class="list-tab" onclick="switchTab('educativa',this)">📚 Guia do Delegado</button>
@@ -1111,7 +1110,9 @@ const BROWSER_CACHE_TTL = {
   delegados: 8   * 60 * 1000,   // 8 min  (server: 10 min)
   fotos:     12  * 60 * 1000,   // 12 min (server: 15 min)
 };
-const CACHE_PREFIX = 'cms11_v3_';
+// Incrementar este sufixo invalida TODO o cache do browser automaticamente
+// em todos os dispositivos na próxima visita.
+const CACHE_PREFIX = 'cms11_v3b_';
 
 const BrowserCache = {
   /**
@@ -1303,10 +1304,30 @@ function escHtml(str) {
 }
 
 function extrairDiaMes(data) {
-  const partes = String(data).split('/');
-  if (partes.length < 2) return { dd: '--', mm: '--' };
+  // Normaliza qualquer formato para string limpa
+  let s = String(data ?? '').trim();
+
+  // Caso: objeto Date serializado como ISO "2026-03-10T03:00:00.000Z"
+  if (s.includes('T') || s.includes('-')) {
+    // Tenta parse como data ISO e converte para dd/mm/yyyy
+    try {
+      const d = new Date(s);
+      if (!isNaN(d)) {
+        const dd = String(d.getUTCDate()).padStart(2, '0');
+        const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
+        s = `${dd}/${mm}/${d.getUTCFullYear()}`;
+      }
+    } catch {}
+  }
+
+  const partes = s.split('/');
+  if (partes.length < 2 || !partes[0] || !partes[1]) return { dd: '??', mm: '???' };
   const meses = ['','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
-  return { dd: partes[0], mm: meses[parseInt(partes[1])] || partes[1] };
+  const mmNum = parseInt(partes[1], 10);
+  return {
+    dd: partes[0].padStart(2, '0'),
+    mm: meses[mmNum] || partes[1],
+  };
 }
 
 function nomePorStatus(status) {
@@ -1883,6 +1904,15 @@ console.info(
   '%c11ª CMS Montes Claros — v3.0 (Cache bicamada) ',
   'background:#1A5EA8;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px'
 );
+
+// Limpa automaticamente entradas de versões anteriores do cache
+try {
+  const prefixosAntigos = ['cms11_v1_', 'cms11_v2_', 'cms11_v3_'];
+  prefixosAntigos.forEach(p => {
+    Object.keys(localStorage).filter(k => k.startsWith(p)).forEach(k => localStorage.removeItem(k));
+  });
+} catch {}
+
 console.info('BrowserCache keys:', Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)));
 
 // Inicializa a aplicação
