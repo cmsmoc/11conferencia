@@ -173,11 +173,9 @@ a { color: var(--azul-medio); text-decoration: none; }
    AVISOS RÁPIDOS (últimas notícias)
    ══════════════════════════════════ */
 #avisos-normais {
-  max-width: 960px; margin: 0 auto 16px;
-  padding: 0 32px;
-  display: none; flex-direction: column; gap: 8px;
+  display: flex; flex-direction: column; gap: 8px;
 }
-#avisos-normais.show { display: flex; }
+#avisos-normais-wrap { display: none; }
 .aviso-normal-item {
   background: linear-gradient(135deg, #EAF4FB, #E8F5FF);
   border: 1.5px solid #C4DDF5;
@@ -221,7 +219,7 @@ a { color: var(--azul-medio); text-decoration: none; }
    GRID DE CONFERÊNCIAS
    ══════════════════════════════════ */
 .confs-section {
-  max-width: 960px; margin: -36px auto 80px;
+  max-width: 960px; margin: 0 auto 80px;
   padding: 0 32px; position: relative; z-index: 5;
 }
 .confs-toolbar {
@@ -823,7 +821,7 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
   </div>
   <div class="nav-title" id="navTitle">Pré-Conferências</div>
   <div class="nav-actions">
-    <button class="back-btn" onclick="voltarLista()">Hub principal</button>
+    <a href="hub-controle-social-11cms.html" class="nav-back">Hub Principal</a>
   </div>
 </nav>
 
@@ -858,13 +856,13 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
     </div>
   </section>
 
-  <!-- AVISOS NORMAIS (últimas notícias) -->
-  <div style="max-width:960px;margin:-28px auto 0;padding:0 32px;position:relative;z-index:6;">
+  <!-- AVISOS NORMAIS (últimas notícias) — aparece entre hero e tabs -->
+  <div id="avisos-normais-wrap" style="max-width:960px;margin:20px auto 0;padding:0 32px;">
     <div id="avisos-normais"></div>
   </div>
 
   <!-- TABS -->
-  <div class="list-tabs" id="listTabs" style="margin-top:24px;position:relative;z-index:5;">
+  <div class="list-tabs" id="listTabs" style="margin-top:20px;">
     <button class="list-tab ativo" onclick="switchTab('confs',this)">📋 Pré-Conferências</button>
     <button class="list-tab" onclick="switchTab('galeria',this)">📷 Galeria</button>
     <button class="list-tab" onclick="switchTab('educativa',this)">📚 Guia do Delegado</button>
@@ -1402,18 +1400,20 @@ async function carregarEventos() {
 
 async function carregarAvisos() {
   try {
-    // Avisos têm TTL curto (90s) — não forçamos refresh aqui.
-    // O servidor já usa TTL de 2min no CacheService.
     const resp = await apiGet('avisos');
     AVISOS = resp.data || [];
+
+    console.log('[avisos] total recebido:', AVISOS.length, AVISOS);
 
     const urgentes = AVISOS.filter(a => a.nivel === 'urgente' && !a.conferencia);
     const normais  = AVISOS.filter(a => a.nivel === 'normal');
 
+    console.log('[avisos] urgentes globais:', urgentes.length, 'normais:', normais.length);
+
     if (urgentes.length > 0) exibirPopupAviso(urgentes[0]);
     renderizarAvisosNormais(normais);
   } catch (err) {
-    console.warn('Avisos indisponíveis:', err.message);
+    console.warn('[avisos] erro ao carregar:', err.message);
   }
 }
 
@@ -1422,8 +1422,16 @@ async function carregarAvisos() {
 // ═══════════════════════════════════════════════════════════════════
 function exibirPopupAviso(aviso) {
   document.getElementById('avisoTitulo').textContent = aviso.titulo;
-  const body = document.getElementById('avisoBody');
 
+  // Adapta o cabeçalho conforme o nível
+  const header = document.querySelector('.aviso-header');
+  if (aviso.nivel === 'normal') {
+    header.style.background = 'linear-gradient(135deg, #0D3D6B, #1A5EA8)';
+  } else {
+    header.style.background = 'linear-gradient(135deg, #7B1C1C, #B71C1C)';
+  }
+
+  const body = document.getElementById('avisoBody');
   if (aviso.tipo === 'imagem') {
     body.innerHTML = `<img src="${escHtml(aviso.conteudo)}" alt="${escHtml(aviso.titulo)}">`;
   } else if (aviso.tipo === 'video') {
@@ -1435,14 +1443,16 @@ function exibirPopupAviso(aviso) {
       body.innerHTML = `<video src="${escHtml(aviso.conteudo)}" controls style="width:100%;border-radius:var(--radius-sm)"></video>`;
     }
   } else {
-    body.innerHTML = `<p class="aviso-body-texto">${escHtml(aviso.conteudo).replace(/\n/g,'<br>')}</p>`;
+    body.innerHTML = `<p class="aviso-body-texto">${escHtml(aviso.conteudo || '').replace(/\n/g,'<br>')}</p>`;
   }
 
   document.getElementById('avisoOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 
-  // Guarda referência para a barra persistente
-  window._avisoUrgenteTitulo = aviso.titulo;
+  // Só guarda referência para a barra vermelha se for urgente
+  if (aviso.nivel === 'urgente') {
+    window._avisoUrgenteTitulo = aviso.titulo;
+  }
 }
 
 function fecharAviso() {
@@ -1461,15 +1471,23 @@ function fecharBarraUrgente() {
 }
 
 function renderizarAvisosNormais(avisos) {
-  if (!avisos.length) return;
+  const wrap = document.getElementById('avisos-normais-wrap');
   const cont = document.getElementById('avisos-normais');
+  if (!avisos.length) {
+    cont.innerHTML = '';
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'block';
   cont.innerHTML = avisos.map(a => `
-    <div class="aviso-normal-item" onclick="toast('${escHtml(a.titulo)}')">
+    <div class="aviso-normal-item" onclick="exibirPopupAviso(${JSON.stringify(a).replace(/"/g,'&quot;')})">
       <span class="aviso-normal-icon">📌</span>
-      <span class="aviso-normal-texto">${escHtml(a.titulo)}${a.conteudo ? ' — ' + escHtml(a.conteudo.substring(0,80)) + (a.conteudo.length > 80 ? '…' : '') : ''}</span>
+      <span class="aviso-normal-texto">
+        <strong>${escHtml(a.titulo)}</strong>
+        ${a.conteudo ? ' — ' + escHtml(a.conteudo.substring(0, 100)) + (a.conteudo.length > 100 ? '…' : '') : ''}
+      </span>
       <span class="aviso-normal-chip">Novo</span>
     </div>`).join('');
-  cont.classList.add('show');
 }
 
 // ═══════════════════════════════════════════════════════════════════
