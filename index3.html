@@ -491,7 +491,25 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 .seg-prestadores   { background: #F3E8FF; color: #6B21A8; }
 .seg-outro         { background: #F4F7FB; color: #6B7F96; }
 
-/* ── Sem dados de presença ── */
+/* ── BADGE DECLARAÇÃO ── */
+.badge-decl {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 800; padding: 3px 10px;
+  border-radius: var(--radius-pill); text-decoration: none;
+  letter-spacing: .05em; text-transform: uppercase;
+  transition: all .2s; white-space: nowrap;
+}
+.badge-decl.ok {
+  background: var(--green-lite, #E8F8EC); color: #1B7A30;
+  border: 1px solid #B7DFC5;
+}
+.badge-decl.ok:hover { background: #1B7A30; color: #fff; }
+.badge-decl.pendente {
+  background: var(--cinza-off); color: var(--cinza-medio);
+  border: 1px solid var(--cinza-borda);
+}
+.badge-email-ok   { font-size: 11px; color: #1B7A30; }
+.badge-email-vazio { font-size: 11px; color: var(--cinza-medio); }
 .sem-dados-wrap {
   background: #fff; border-radius: var(--radius); border: 1.5px dashed var(--cinza-borda);
   padding: 48px 28px; text-align: center;
@@ -805,7 +823,7 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
   </div>
   <div class="nav-title" id="navTitle">Pré-Conferências</div>
   <div class="nav-actions">
-    <button class="back-btn" onclick="voltarLista()">Hub Principal</button>
+    <a href="hub-controle-social-11cms.html" class="nav-back">Hub Principal</a>
   </div>
 </nav>
 
@@ -1024,9 +1042,9 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
           <tr>
             <th>#</th>
             <th>Nome</th>
-            <th>Segmento</th>
-            <th>Tipo</th>
             <th>Horário</th>
+            <th>Declaração</th>
+            <th>E-mail</th>
           </tr>
         </thead>
         <tbody id="presencaTbody"></tbody>
@@ -1703,17 +1721,27 @@ async function abrirPresenca(id) {
 
   document.getElementById('presencaNome').textContent = evento.nome;
   document.getElementById('presencaSub').textContent = `Lista de participantes · ${evento.data}`;
-  document.getElementById('presencaStats').innerHTML = `<div class="p-stat"><span class="p-stat-num" id="totalPresentes">…</span><div class="p-stat-lbl">Participantes</div></div>`;
-  document.getElementById('presencaTbody').innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--cinza-medio)"><div class="loading-spinner" style="margin:0 auto 10px"></div>Carregando…</td></tr>`;
+  document.getElementById('presencaStats').innerHTML = `
+    <div class="p-stat"><span class="p-stat-num" id="totalPresentes">…</span><div class="p-stat-lbl">Participantes</div></div>
+    <div class="p-stat"><span class="p-stat-num" id="totalDecl">…</span><div class="p-stat-lbl">Com declaração</div></div>`;
+  document.getElementById('presencaTbody').innerHTML =
+    `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--cinza-medio)">
+      <div class="loading-spinner" style="margin:0 auto 10px"></div>Carregando…
+    </td></tr>`;
   document.getElementById('presencaBackBtn').onclick = () => abrirDetalhe(id);
 
   mostrarView('view-presenca');
 
   try {
     const resp = await apiGet('presenca', { id });
-    PRESENCA = resp.data || [];
-    document.getElementById('totalPresentes').textContent = PRESENCA.length;
-    document.getElementById('presencaCount').textContent = `${PRESENCA.length} pessoa${PRESENCA.length !== 1 ? 's' : ''}`;
+    PRESENCA   = resp.data || [];
+    const meta = resp.meta || {};
+
+    document.getElementById('totalPresentes').textContent = meta.total ?? PRESENCA.length;
+    document.getElementById('totalDecl').textContent      = meta.comDeclaracao ?? 0;
+    document.getElementById('presencaCount').textContent  =
+      `${PRESENCA.length} pessoa${PRESENCA.length !== 1 ? 's' : ''}`;
+
     renderizarPresenca(PRESENCA);
   } catch (err) {
     document.getElementById('presencaTbody').innerHTML = `
@@ -1730,25 +1758,49 @@ async function abrirPresenca(id) {
 function renderizarPresenca(lista) {
   const tbody = document.getElementById('presencaTbody');
   if (!lista.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="sem-dados-wrap"><span class="sem-dados-icon">📋</span><h3>Nenhum registro</h3><p>A lista de presença ainda não possui dados.</p></div></td></tr>`;
+    tbody.innerHTML = `
+      <tr><td colspan="5">
+        <div class="sem-dados-wrap">
+          <span class="sem-dados-icon">📋</span>
+          <h3>Nenhum registro</h3>
+          <p>A lista de presença ainda não possui dados para este evento.</p>
+        </div>
+      </td></tr>`;
     return;
   }
-  tbody.innerHTML = lista.map((p, i) => `
+
+  tbody.innerHTML = lista.map((p, i) => {
+    // Badge de declaração: link se tiver, pendente se não tiver
+    const declBadge = p.linkArquivo
+      ? `<a class="badge-decl ok" href="${escHtml(p.linkArquivo)}" target="_blank" rel="noopener">
+           📄 Ver declaração
+         </a>`
+      : `<span class="badge-decl pendente">—</span>`;
+
+    // E-mail: mostra ✔ se enviado, vazio se não
+    const emailStatus = p.statusEmail === 'Enviado'
+      ? `<span class="badge-email-ok" title="E-mail enviado">✔</span>`
+      : `<span class="badge-email-vazio">—</span>`;
+
+    return `
     <tr>
-      <td class="td-num">${i+1}</td>
+      <td class="td-num">${i + 1}</td>
       <td class="td-nome">${escHtml(p.nome)}</td>
-      <td>${badgeSegmento(p.segmento)}</td>
-      <td style="font-size:12px;color:var(--cinza-medio)">${escHtml(p.tipo || 'Participante')}</td>
-      <td style="font-size:12px;color:var(--cinza-medio)">${escHtml(p.hora || '—')}</td>
-    </tr>`).join('');
+      <td style="font-size:12px;color:var(--cinza-medio);white-space:nowrap">${escHtml(p.timestamp || '—')}</td>
+      <td>${declBadge}</td>
+      <td style="text-align:center">${emailStatus}</td>
+    </tr>`;
+  }).join('');
 }
 
 function filtrarPresenca() {
-  const q = document.getElementById('searchPresenca').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const q = document.getElementById('searchPresenca').value
+    .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const filtrados = PRESENCA.filter(p =>
-    (p.nome + p.segmento).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
+    (p.nome + (p.email || '')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
   );
-  document.getElementById('presencaCount').textContent = `${filtrados.length} resultado${filtrados.length !== 1 ? 's' : ''}`;
+  document.getElementById('presencaCount').textContent =
+    `${filtrados.length} resultado${filtrados.length !== 1 ? 's' : ''}`;
   renderizarPresenca(filtrados);
 }
 
