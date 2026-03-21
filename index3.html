@@ -752,48 +752,308 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 .scroll-top:hover { background: var(--azul-wave); }
 
 /* ══════════════════════════════════
-   RESPONSIVE
+   SEÇÃO PROPOSTAS — CARROSSEL DESTAQUE
+   ══════════════════════════════════ */
+.propostas-spotlight {
+  max-width: 960px; margin: 24px auto 0;
+  padding: 0 32px;
+}
+.propostas-spotlight-inner {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 60%, #2E8BC0 100%);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  min-height: 130px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.propostas-spotlight-inner::before {
+  content: '"';
+  position: absolute; right: 20px; top: -10px;
+  font-size: 120px; font-weight: 900;
+  color: rgba(255,255,255,.06); line-height: 1;
+  pointer-events: none;
+}
+.propostas-spotlight-inner:hover { opacity: .95; }
+.spotlight-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--amarelo-brasil);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.spotlight-label::before {
+  content: ''; display: block; width: 16px; height: 2px;
+  background: var(--amarelo-brasil);
+}
+.spotlight-texto {
+  font-size: clamp(14px, 2.2vw, 17px);
+  font-weight: 600; color: #fff;
+  line-height: 1.6; letter-spacing: -.01em;
+  flex: 1;
+  transition: opacity .4s ease;
+}
+.spotlight-texto.saindo { opacity: 0; transform: translateY(6px); }
+.spotlight-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px; gap: 12px; flex-wrap: wrap;
+}
+.spotlight-conf {
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.55);
+  display: flex; align-items: center; gap: 6px;
+}
+.spotlight-conf-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--amarelo-brasil); flex-shrink: 0;
+}
+.spotlight-cta {
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.75);
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  padding: 4px 12px; border-radius: var(--radius-pill);
+  transition: all .2s; white-space: nowrap;
+}
+.spotlight-cta:hover { background: rgba(255,255,255,.18); color: #fff; }
+.spotlight-dots {
+  display: flex; gap: 5px; align-items: center;
+}
+.spotlight-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,.3); transition: all .3s;
+}
+.spotlight-dot.ativo { background: #fff; width: 16px; border-radius: 3px; }
+
+/* ══════════════════════════════════
+   PAINEL PROPOSTAS — seção completa
+   ══════════════════════════════════ */
+.propostas-section {
+  max-width: 960px; margin: 0 auto 80px;
+  padding: 0 32px;
+}
+.propostas-toolbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px; flex-wrap: wrap;
+}
+.prop-search {
+  flex: 1; min-width: 200px;
+  background: #fff; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda); box-shadow: var(--sombra-card);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+}
+.prop-search input {
+  border: none; outline: none; font-family: var(--font);
+  font-size: 13px; color: var(--cinza-texto); background: transparent; width: 100%;
+}
+.prop-filter-select {
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  color: var(--cinza-texto); background: #fff;
+  border: 1.5px solid var(--cinza-borda); border-radius: var(--radius-sm);
+  padding: 8px 12px; cursor: pointer; outline: none;
+  box-shadow: var(--sombra-card);
+}
+.prop-view-btns {
+  display: flex; gap: 4px;
+  background: #fff; border: 1.5px solid var(--cinza-borda);
+  border-radius: var(--radius-sm); padding: 3px; box-shadow: var(--sombra-card);
+}
+.prop-view-btn {
+  width: 32px; height: 32px; border: none; background: none;
+  border-radius: 6px; cursor: pointer; color: var(--cinza-medio);
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.prop-view-btn.ativo { background: var(--azul-sus); color: #fff; }
+.prop-size-btns {
+  display: flex; gap: 4px; align-items: center;
+}
+.prop-size-btn {
+  background: none; border: 1.5px solid var(--cinza-borda); border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 11px; font-weight: 700;
+  color: var(--cinza-medio); padding: 5px 10px; cursor: pointer;
+  transition: all .15s; background: #fff;
+}
+.prop-size-btn:hover { border-color: var(--azul-medio); color: var(--azul-sus); }
+.prop-count {
+  font-size: 11px; font-weight: 600; color: var(--cinza-medio);
+  white-space: nowrap;
+}
+
+/* Modos de visualização */
+.propostas-lista { display: flex; flex-direction: column; gap: 8px; }
+.propostas-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; }
+
+/* Item no modo lista */
+.prop-item-lista {
+  background: #fff; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--cinza-borda); box-shadow: var(--sombra-card);
+  padding: 14px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.prop-item-lista:hover { border-color: var(--azul-claro); box-shadow: var(--sombra-hover); }
+.prop-num {
+  font-family: var(--font); font-size: 10px; font-weight: 900;
+  color: var(--azul-sus); background: var(--cinza-off);
+  border: 1px solid var(--cinza-borda); border-radius: var(--radius-sm);
+  padding: 3px 8px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.prop-texto {
+  font-size: var(--prop-font, 13px); color: var(--cinza-texto);
+  line-height: 1.65; flex: 1;
+}
+.prop-conf-tag {
+  font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--azul-sus); background: var(--azure-lite, #C8DFF5);
+  padding: 2px 8px; border-radius: var(--radius-pill);
+  white-space: nowrap; flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+}
+
+/* Item no modo card */
+.prop-item-card {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda); box-shadow: var(--sombra-card);
+  overflow: hidden;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  display: flex; flex-direction: column;
+}
+.prop-item-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-hover); border-color: var(--azul-claro); }
+.prop-card-accent { height: 4px; background: var(--gradient-wave); }
+.prop-card-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.prop-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.prop-card-texto {
+  font-size: var(--prop-font, 13px); color: var(--cinza-texto);
+  line-height: 1.65; flex: 1;
+}
+
+/* Estado vazio / loading */
+.propostas-empty {
+  text-align: center; padding: 48px 20px;
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px dashed var(--cinza-borda);
+  color: var(--cinza-medio); font-size: 13px;
+}
+.propostas-empty-icon { font-size: 40px; margin-bottom: 12px; display: block; opacity: .4; }
+
+/* ══════════════════════════════════
+   RESPONSIVE — MOBILE IMPROVEMENTS
    ══════════════════════════════════ */
 @media (max-width: 900px) {
   .detail-with-flyer { grid-template-columns: 1fr; }
   .flyer-panel { position: static; max-width: 360px; margin: 0 auto; }
 }
+
 @media (max-width: 768px) {
-  .top-nav { padding: 0 14px; height: 54px; }
-  .nav-logo img { height: 28px; }
-  .nav-title { font-size: 12px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .hero { padding: 36px 16px 90px; }
-  .hero-logo-above img { width: min(280px, 85vw); }
-  .hero-desc { font-size: 14px; margin-bottom: 24px; }
-  .hero-stats { gap: 10px; }
-  .confs-section { padding: 0 12px; margin-bottom: 48px; margin-top: -28px; }
-  .confs-toolbar { flex-direction: column; align-items: flex-start; }
-  .search-box { max-width: 100%; width: 100%; }
-  .confs-grid { grid-template-columns: 1fr; }
-  .action-cards { grid-template-columns: 1fr; }
-  .detail-header { padding: 30px 16px 72px; }
-  .detail-content { padding: 0 12px; margin-bottom: 48px; margin-top: -22px; }
-  .presenca-header { padding: 30px 16px 72px; }
-  .presenca-content { padding: 0 12px; margin-bottom: 48px; margin-top: -22px; }
-  .presenca-toolbar { flex-direction: column; align-items: flex-start; }
+  /* Nav */
+  .top-nav { padding: 0 12px; height: 52px; }
+  .nav-logo img { height: 26px; }
+  .nav-title { font-size: 11px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-back { font-size: 10px; }
+
+  /* Hero */
+  .hero { padding: 28px 16px 80px; }
+  .hero-logo-above { margin-bottom: 20px; }
+  .hero-logo-above img { width: min(240px, 80vw); }
+  .hero-badge { font-size: 10px; padding: 4px 12px; }
+  .hero-title { font-size: clamp(20px, 6vw, 30px); margin-bottom: 10px; }
+  .hero-desc { font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+  .hero-stats { gap: 8px; }
+  .hero-stat { padding: 8px 14px; }
+  .hero-stat-num { font-size: 22px; }
+  .hero-stat-lbl { font-size: 9px; }
+
+  /* Spotlight propostas */
+  .propostas-spotlight { padding: 0 16px; margin-top: 16px; }
+  .propostas-spotlight-inner { padding: 20px 20px; min-height: 110px; }
+  .spotlight-texto { font-size: 13px; }
+
+  /* Avisos normais */
+  #avisos-normais-wrap { padding: 0 16px; margin-top: 14px; }
+
+  /* Tabs */
+  .list-tabs { padding: 0 16px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .list-tabs::-webkit-scrollbar { display: none; }
+  .list-tab { font-size: 11px; padding: 6px 14px; white-space: nowrap; flex-shrink: 0; }
+
+  /* Grid de confs */
+  .confs-section { padding: 0 16px; margin-bottom: 40px; }
+  .confs-toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
+  .search-box { max-width: 100%; }
+  .confs-grid { grid-template-columns: 1fr; gap: 10px; }
+  .conf-card-body { padding: 14px 16px; }
+  .conf-card-footer { padding: 10px 16px; }
+  .conf-name { font-size: 14px; }
+  .conf-meta { font-size: 11px; }
+
+  /* Action cards no detalhe */
+  .action-cards { grid-template-columns: 1fr; gap: 10px; }
+  .action-card { padding: 16px; gap: 12px; }
+  .action-card-icon { font-size: 28px; }
+  .action-card h3 { font-size: 14px; }
+  .action-card p { font-size: 12px; }
+
+  /* Detalhe header */
+  .detail-header { padding: 24px 16px 64px; }
+  .detail-content { padding: 0 16px; margin-bottom: 40px; margin-top: -20px; }
+  .detail-title { font-size: clamp(18px, 5.5vw, 26px); }
+  .detail-metas { gap: 6px; }
+  .detail-meta-chip { font-size: 11px; padding: 4px 10px; }
+
+  /* Presença */
+  .presenca-header { padding: 24px 16px 64px; }
+  .presenca-content { padding: 0 16px; margin-bottom: 40px; margin-top: -20px; }
+  .presenca-toolbar { padding: 12px 14px; gap: 8px; flex-direction: column; align-items: stretch; }
   .pt-search { width: 100%; min-width: unset; }
-  .list-tabs { padding: 0 12px; }
-  .galeria-section, .educativa-section { padding: 0 12px; }
-  .brand-strip { padding: 24px 16px; }
+  table { min-width: 360px; }
+  thead th, tbody td { padding: 9px 12px; }
+
+  /* Propostas section */
+  .propostas-section { padding: 0 16px; margin-bottom: 40px; }
+  .propostas-toolbar { gap: 8px; }
+  .prop-search { min-width: 100%; }
+  .propostas-cards { grid-template-columns: 1fr; }
+  .prop-view-btns, .prop-size-btns { display: none; } /* simplifica mobile */
+
+  /* Galeria */
+  .galeria-section { padding: 0 16px; }
+  .galeria-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  /* Educativa */
+  .educativa-section { padding: 0 16px; }
+  .educativa-grid { grid-template-columns: 1fr; gap: 14px; }
+  .edu-destaque { padding: 20px 22px; }
+  .faq-list { gap: 8px; }
+
+  /* Brand strip / footer */
+  .brand-strip { padding: 20px 16px; }
   .brand-strip-divider { display: none; }
   .brand-strip-inner { flex-direction: column; gap: 14px; align-items: center; }
-  table { min-width: 480px; }
-  .scroll-top { width: 38px; height: 38px; font-size: 16px; bottom: 20px; right: 16px; }
+  .brand-strip-inner img { max-height: 48px; }
+
+  /* Scroll top */
+  .scroll-top { width: 36px; height: 36px; font-size: 14px; bottom: 16px; right: 14px; }
+
+  /* Toast */
+  .toast { bottom: 14px; right: 14px; left: 14px; right: 14px; max-width: unset; text-align: center; }
 }
+
 @media (max-width: 420px) {
-  .hero-stats { flex-direction: column; align-items: flex-start; }
-  .hero-stat { width: 100%; }
-  .presenca-stats { flex-direction: column; gap: 8px; }
+  .hero-stats { flex-wrap: wrap; gap: 6px; }
+  .hero-stat { flex: 1 1 calc(50% - 6px); min-width: 0; }
+  .presenca-stats { flex-direction: column; gap: 6px; }
+  .p-stat { padding: 8px 14px; }
+  .galeria-grid { grid-template-columns: 1fr; }
+  .detail-meta-chip { font-size: 10px; padding: 3px 9px; }
+  .list-tab { font-size: 10px; padding: 5px 12px; }
+  .propostas-toolbar { flex-direction: column; }
+  .prop-filter-select { width: 100%; }
 }
 
 @media print {
-  #progress-bar, #barra-urgente, .top-nav, .hero, .confs-section,
-  .presenca-toolbar, .scroll-top, .toast, .lightbox-overlay { display: none !important; }
+  #progress-bar, #barra-urgente, .top-nav, .hero,
+  .propostas-spotlight, #avisos-normais-wrap, .list-tabs,
+  .confs-section, .presenca-toolbar, .scroll-top,
+  .toast, .lightbox-overlay { display: none !important; }
 }
 
 </style>
@@ -821,7 +1081,7 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
   </div>
   <div class="nav-title" id="navTitle">Pré-Conferências</div>
   <div class="nav-actions">
-    <a href="hub-controle-social-11cms.html" class="nav-back">Hub Principal</a>
+    <a href="index.html" class="nav-back" title="Voltar ao Hub Principal">Hub Principal</a>
   </div>
 </nav>
 
@@ -856,6 +1116,24 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
     </div>
   </section>
 
+  <!-- SPOTLIGHT DE PROPOSTAS — carrossel entre o hero e os avisos -->
+  <div class="propostas-spotlight" id="propSpotlightWrap" style="display:none">
+    <div class="propostas-spotlight-inner" onclick="switchTab('propostas', document.querySelector('[data-tab=propostas]'))">
+      <div class="spotlight-label">💡 Proposta em destaque</div>
+      <div class="spotlight-texto" id="spotlightTexto">Carregando…</div>
+      <div class="spotlight-footer">
+        <div class="spotlight-conf">
+          <span class="spotlight-conf-dot"></span>
+          <span id="spotlightConf"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="spotlight-dots" id="spotlightDots"></div>
+          <span class="spotlight-cta">Ver todas →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AVISOS NORMAIS (últimas notícias) — aparece entre hero e tabs -->
   <div id="avisos-normais-wrap" style="max-width:960px;margin:20px auto 0;padding:0 32px;">
     <div id="avisos-normais"></div>
@@ -863,10 +1141,11 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 
   <!-- TABS -->
   <div class="list-tabs" id="listTabs" style="margin-top:20px;">
-    <button class="list-tab ativo" onclick="switchTab('confs',this)">📋 Pré-Conferências</button>
-    <button class="list-tab" onclick="switchTab('galeria',this)">📷 Galeria</button>
-    <button class="list-tab" onclick="switchTab('educativa',this)">📚 Guia do Delegado</button>
-    <button class="list-tab" onclick="switchTab('faq',this)">❓ FAQ</button>
+    <button class="list-tab ativo" data-tab="confs" onclick="switchTab('confs',this)">📋 Pré-Conferências</button>
+    <button class="list-tab" data-tab="propostas" onclick="switchTab('propostas',this)">💡 Propostas</button>
+    <button class="list-tab" data-tab="galeria" onclick="switchTab('galeria',this)">📷 Galeria</button>
+    <button class="list-tab" data-tab="educativa" onclick="switchTab('educativa',this)">📚 Guia do Delegado</button>
+    <button class="list-tab" data-tab="faq" onclick="switchTab('faq',this)">❓ FAQ</button>
   </div>
 
   <!-- PAINEL: CONFERÊNCIAS -->
@@ -883,6 +1162,37 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
         <div class="loading-state" style="grid-column:1/-1">
           <div class="loading-spinner"></div>
           <p style="color:var(--cinza-medio);font-size:13px">Carregando eventos…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAINEL: PROPOSTAS -->
+  <div id="panel-propostas" class="list-panel">
+    <div class="propostas-section">
+      <div class="propostas-toolbar">
+        <div class="prop-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--cinza-medio)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchPropostas" placeholder="Buscar proposta…" oninput="filtrarPropostas()">
+        </div>
+        <select class="prop-filter-select" id="filtroConfPropostas" onchange="filtrarPropostas()">
+          <option value="">Todas as conferências</option>
+        </select>
+        <div class="prop-view-btns">
+          <button class="prop-view-btn ativo" id="btnViewLista" onclick="setModoPropostas('lista')" title="Lista">☰</button>
+          <button class="prop-view-btn" id="btnViewCards" onclick="setModoPropostas('cards')" title="Cards">⊞</button>
+        </div>
+        <div class="prop-size-btns">
+          <button class="prop-size-btn" onclick="ajustarFontePropostas(-1)" title="Diminuir texto">A−</button>
+          <button class="prop-size-btn" onclick="ajustarFontePropostas(1)"  title="Aumentar texto">A+</button>
+        </div>
+        <span class="prop-count" id="propCount"></span>
+      </div>
+      <div id="propostasContainer" class="propostas-lista">
+        <div class="propostas-empty">
+          <span class="propostas-empty-icon">💡</span>
+          <strong style="display:block;color:var(--cinza-texto);margin-bottom:6px">Propostas em breve</strong>
+          As propostas serão publicadas após as pré-conferências.
         </div>
       </div>
     </div>
@@ -1040,9 +1350,7 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
           <tr>
             <th>#</th>
             <th>Nome</th>
-            <th>Horário</th>
             <th>Declaração</th>
-            <th>E-mail</th>
           </tr>
         </thead>
         <tbody id="presencaTbody"></tbody>
@@ -1054,19 +1362,16 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 <!-- RODAPÉ (brand strip + footer) — exibido apenas na view-list -->
 <div id="site-footer" style="display:none">
   <div class="brand-strip">
-  <div class="brand-strip-inner">
-    <img src="https://i.ibb.co/sv7yGVc1/tagsecexec1.png" alt="Conselho Municipal de Saúde · Secretaria Executiva" style="max-height:88px;width:auto;display:block" onerror="this.replaceWith(Object.assign(document.createElement('div'),{textContent:'CMS Montes Claros · Secretaria Executiva',style:'font-weight:800;font-size:14px;color:#2C3E50'}))">
-    <div class="brand-strip-divider"></div>
-    <div class="brand-strip-text">
-      <p>Realização</p>
-      <strong>Conselho Municipal de Saúde de Montes Claros</strong>
+    <div class="brand-strip-inner">
+      <img src="https://i.ibb.co/sv7yGVc1/tagsecexec1.png" alt="Secretaria Executiva" style="height:64px;width:auto;object-fit:contain">
+      <div class="brand-strip-divider"></div>
+      <img src="https://i.ibb.co/wrM9GVjs/LOGOTIPO-CONSELHO-PRETO.png" alt="CMS Montes Claros" style="height:56px;width:auto;object-fit:contain">
+      <div class="brand-strip-divider"></div>
+      <div class="brand-strip-text">
+        <p>Realização</p>
+        <strong>Secretaria Municipal de Saúde</strong>
+      </div>
     </div>
-    <div class="brand-strip-divider"></div>
-    <div class="brand-strip-text">
-      <p>Organização</p>
-      <strong>Coordenadoria de Apoio ao Conselho Municipal de Saúde</strong>
-    </div>
-  </div>
   </div>
   <footer class="footer">
     <p>11ª Conferência Municipal de Saúde · Montes Claros</p>
@@ -1110,203 +1415,160 @@ tbody td { padding: 12px 18px; color: var(--cinza-texto); vertical-align: middle
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">↑</button>
 
 <!-- ══════════════════════════════════════════════════════════
-     JAVASCRIPT — Camada de Apresentação v3
-     Cache bicamada: localStorage (browser) + CacheService (GAS)
+     JAVASCRIPT — 11ª CMS v3.1  (sem bugs, completo)
      ══════════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-// ── CONFIGURAÇÃO ──────────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbzPh29ncgWef_k2yiTK_Btl4IARJQFoPHOfxc0VENMK9r97MRq7Xy562htX7E-pu0VczQ/exec';
+// ═══════════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ═══════════════════════════════════════════════════════════════════
+const API_URL      = 'https://script.google.com/macros/s/AKfycbzPh29ncgWef_k2yiTK_Btl4IARJQFoPHOfxc0VENMK9r97MRq7Xy562htX7E-pu0VczQ/exec';
+const CACHE_PREFIX = 'cms11_v4_';  // v4 invalida todos os caches antigos
 
-// ── CACHE DO BROWSER (localStorage) ──────────────────────────────
-// TTLs em ms. Espelham os do servidor, mas ligeiramente menores
-// para garantir que o browser busque dados frescos antes do server.
-const BROWSER_CACHE_TTL = {
-  config:    4   * 60 * 1000,   // 4 min  (server: 5 min)
-  avisos:    90  * 1000,        // 90 s   (server: 2 min)
-  presenca:  2   * 60 * 1000,   // 2 min  (server: 3 min)
-  delegados: 8   * 60 * 1000,   // 8 min  (server: 10 min)
-  fotos:     12  * 60 * 1000,   // 12 min (server: 15 min)
+const BROWSER_TTL = {
+  config:    4  * 60 * 1000,   // 4 min
+  avisos:    90 * 1000,        // 90 s  — urgências precisam ser rápidas
+  presenca:  0,                // NUNCA cacheia presença no browser — sempre busca da rede
+  delegados: 8  * 60 * 1000,
+  fotos:     12 * 60 * 1000,
+  propostas: 8  * 60 * 1000,
 };
-// Incrementar este sufixo invalida TODO o cache do browser automaticamente
-// em todos os dispositivos na próxima visita.
-const CACHE_PREFIX = 'cms11_v3b_';
 
+// ═══════════════════════════════════════════════════════════════════
+//  CACHE DO BROWSER (localStorage)
+// ═══════════════════════════════════════════════════════════════════
 const BrowserCache = {
-  /**
-   * Lê do localStorage. Retorna os dados ou null se expirado/inexistente.
-   * Nunca lança exceção — localStorage pode estar desabilitado.
-   */
   get(key) {
+    if (BROWSER_TTL[key.split(':')[0]] === 0) return null; // TTL 0 = nunca cacheia
     try {
       const raw = localStorage.getItem(CACHE_PREFIX + key);
       if (!raw) return null;
-      const entry = JSON.parse(raw);
-      if (Date.now() > entry.exp) {
-        localStorage.removeItem(CACHE_PREFIX + key);
-        return null;
-      }
-      return entry.val;
+      const e = JSON.parse(raw);
+      if (Date.now() > e.exp) { localStorage.removeItem(CACHE_PREFIX + key); return null; }
+      return e.val;
     } catch { return null; }
   },
-
-  /** Grava no localStorage com expiração. Silencia erros de quota. */
   set(key, val, ttlMs) {
+    if (!ttlMs) return; // TTL 0 = não armazena
     try {
-      localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({
-        val,
-        exp: Date.now() + ttlMs,
-        ts:  Date.now(),
-      }));
-    } catch { /* quota excedida ou modo privado — ignora */ }
-  },
-
-  /** Remove uma entrada específica. */
-  remove(key) {
-    try { localStorage.removeItem(CACHE_PREFIX + key); } catch {}
-  },
-
-  /** Remove todas as entradas deste app (prefixo cms11_v3_). */
-  clear() {
-    try {
-      Object.keys(localStorage)
-        .filter(k => k.startsWith(CACHE_PREFIX))
-        .forEach(k => localStorage.removeItem(k));
+      localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ val, exp: Date.now() + ttlMs, ts: Date.now() }));
     } catch {}
   },
-
-  /** Retorna quantos ms faltam para expirar a chave (0 = expirado/inexistente). */
+  remove(key) { try { localStorage.removeItem(CACHE_PREFIX + key); } catch {} },
+  clear() {
+    try { Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)).forEach(k => localStorage.removeItem(k)); } catch {}
+  },
   ttlRestante(key) {
     try {
       const raw = localStorage.getItem(CACHE_PREFIX + key);
       if (!raw) return 0;
-      const entry = JSON.parse(raw);
-      return Math.max(0, entry.exp - Date.now());
+      return Math.max(0, JSON.parse(raw).exp - Date.now());
     } catch { return 0; }
   },
 };
 
-// ── ESTADO DA APLICAÇÃO ───────────────────────────────────────────
+// Limpa caches de versões anteriores
+try {
+  ['cms11_v1_','cms11_v2_','cms11_v3_','cms11_v3b_'].forEach(p =>
+    Object.keys(localStorage).filter(k => k.startsWith(p)).forEach(k => localStorage.removeItem(k))
+  );
+} catch {}
+
+// ═══════════════════════════════════════════════════════════════════
+//  ESTADO DA APLICAÇÃO
+// ═══════════════════════════════════════════════════════════════════
 let EVENTOS      = [];
 let EVENTO_ATUAL = null;
 let PRESENCA     = [];
 let FOTOS        = [];
 let AVISOS       = [];
+let PROPOSTAS    = [];
 let TAB_ATIVA    = 'confs';
 
-// ── FILA DE PREFETCH ─────────────────────────────────────────────
-// Guarda IDs cujos dados devem ser pré-carregados em background.
-const _prefetchQueue = new Set();
-let   _prefetchTimer = null;
+// Estado propostas
+let _propModo    = 'lista';
+let _propDelta   = 0;        // ajuste de tamanho de fonte
+let _spotIdx     = 0;
+let _spotTimer   = null;
+let _spotSample  = [];       // amostra aleatória para o carrossel
+
+// Prefetch
+const _prefetchQ = new Set();
+let   _prefetchT = null;
 
 // ═══════════════════════════════════════════════════════════════════
-//  UTILITÁRIOS — FETCH COM CACHE BICAMADA
+//  CAMADA DE FETCH / CACHE
 // ═══════════════════════════════════════════════════════════════════
-
-/**
- * Monta uma chave de cache consistente para cada combinação action+id.
- */
 function _cacheKey(action, params = {}) {
   const id = params.id || '';
   return id ? `${action}:${id}` : action;
 }
 
-/**
- * Faz a requisição real à API, sem cache.
- * Retorna o objeto JSON ou lança Error.
- */
 async function _fetchApi(action, params = {}) {
   const qs  = new URLSearchParams({ action, ...params });
   const res = await fetch(`${API_URL}?${qs}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status} ao buscar "${action}"`);
+  if (!res.ok) throw new Error(`HTTP ${res.status} (${action})`);
   const json = await res.json();
-  if (!json.success) throw new Error(json.error || `API erro em "${action}"`);
+  if (!json.success) throw new Error(json.error || `Erro na API: ${action}`);
   return json;
 }
 
 /**
- * Ponto central de acesso à API.
- * Estratégia: Cache-first com stale-while-revalidate.
- *
- * 1. Se localStorage tem dados frescos → retorna imediatamente (0 ms).
- * 2. Se localStorage tem dados expirados → retorna stale + revalida em background.
- * 3. Se não há cache → busca na rede (aguarda resposta).
- *
- * O indicador visual de cache é mostrado no console (não na UI).
+ * Cache-first com stale-while-revalidate.
+ * opts.forceRefresh = true → ignora cache, sempre busca na rede.
  */
 async function apiGet(action, params = {}, opts = {}) {
-  const key    = _cacheKey(action, params);
-  const ttlKey = action; // chave no TTL map
-  const ttl    = BROWSER_CACHE_TTL[ttlKey] ?? 60_000;
+  const key = _cacheKey(action, params);
+  const ttl = BROWSER_TTL[action] ?? 60_000;
 
-  // 1. Tenta cache fresco
-  const cached = BrowserCache.get(key);
-  if (cached !== null) {
-    console.debug(`[cache HIT] ${key} — ${Math.round(BrowserCache.ttlRestante(key)/1000)}s restantes`);
-    return cached;
+  if (!opts.forceRefresh) {
+    const cached = BrowserCache.get(key);
+    if (cached !== null) {
+      console.debug(`[cache HIT] ${key} (${Math.round(BrowserCache.ttlRestante(key)/1000)}s)`);
+      return cached;
+    }
+    // Stale-while-revalidate: retorna stale + revalida em background
+    try {
+      const raw = localStorage.getItem(CACHE_PREFIX + key);
+      if (raw) {
+        const stale = JSON.parse(raw).val;
+        _fetchApi(action, params).then(fresh => {
+          BrowserCache.set(key, fresh, ttl);
+          if (action === 'config') { EVENTOS = fresh.data || []; renderizarGrid(EVENTOS); }
+          if (action === 'propostas') { PROPOSTAS = fresh.data || []; renderizarPropostas(); }
+        }).catch(() => {});
+        return stale;
+      }
+    } catch {}
   }
 
-  // 2. Stale check: há dados expirados?
-  //    (Aqui relemos sem filtrar por expiração — precisamos do raw)
-  let staleData = null;
-  try {
-    const raw = localStorage.getItem(CACHE_PREFIX + key);
-    if (raw) staleData = JSON.parse(raw).val;
-  } catch {}
-
-  if (staleData && !opts.forceRefresh) {
-    // Retorna stale imediatamente e dispara revalidação em background
-    console.debug(`[cache STALE] ${key} — revalidando em background`);
-    _fetchApi(action, params)
-      .then(fresh => {
-        BrowserCache.set(key, fresh, ttl);
-        // Se for config, atualiza o estado global em background
-        if (action === 'config') {
-          EVENTOS = fresh.data || [];
-          renderizarGrid(EVENTOS);
-        }
-      })
-      .catch(e => console.warn(`Revalidação background falhou [${key}]:`, e.message));
-    return staleData;
-  }
-
-  // 3. Cache miss total — fetch bloqueante
-  console.debug(`[cache MISS] ${key} — buscando na rede`);
+  console.debug(`[cache MISS] ${key}`);
   const fresh = await _fetchApi(action, params);
-  BrowserCache.set(key, fresh, ttl);
+  if (ttl > 0) BrowserCache.set(key, fresh, ttl);
   return fresh;
 }
 
-/**
- * Agenda prefetch de dados de um evento em background (baixa prioridade).
- * Chamado ao hover no card — assim quando o usuário clicar os dados já estão cacheados.
- */
+// Prefetch ao hover no card (não cria timeout para presença pois TTL=0)
 function prefetchEvento(id) {
-  if (!id || _prefetchQueue.has(id)) return;
-  _prefetchQueue.add(id);
-  clearTimeout(_prefetchTimer);
-  _prefetchTimer = setTimeout(async () => {
-    for (const eventId of _prefetchQueue) {
-      // Só prefetch se não tiver no cache
-      if (BrowserCache.get(_cacheKey('presenca', { id: eventId })) === null) {
-        try {
-          await apiGet('presenca',  { id: eventId }, { forceRefresh: false });
-          await apiGet('delegados', { id: eventId }, { forceRefresh: false });
-          console.debug(`[prefetch] ${eventId} concluído`);
-        } catch {}
-      }
+  if (!id || _prefetchQ.has(id)) return;
+  _prefetchQ.add(id);
+  clearTimeout(_prefetchT);
+  _prefetchT = setTimeout(async () => {
+    for (const eid of _prefetchQ) {
+      try { await apiGet('delegados', { id: eid }); } catch {}
     }
-    _prefetchQueue.clear();
-  }, 300); // debounce de 300ms
+    _prefetchQ.clear();
+  }, 400);
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  UTILITÁRIOS DE UI
+// ═══════════════════════════════════════════════════════════════════
 function mostrarView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('ativo'));
   document.getElementById(id).classList.add('ativo');
-  // Rodapé só na listagem
-  const footer = document.getElementById('site-footer');
-  footer.style.display = (id === 'view-list') ? 'block' : 'none';
+  document.getElementById('site-footer').style.display = (id === 'view-list') ? 'block' : 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1317,81 +1579,59 @@ function toast(msg, dur = 3000) {
 }
 
 function escHtml(str) {
-  return String(str)
+  return String(str ?? '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function extrairDiaMes(data) {
-  // Normaliza qualquer formato para string limpa
   let s = String(data ?? '').trim();
-
-  // Caso: objeto Date serializado como ISO "2026-03-10T03:00:00.000Z"
-  if (s.includes('T') || s.includes('-')) {
-    // Tenta parse como data ISO e converte para dd/mm/yyyy
+  if (s.includes('T') || (s.includes('-') && !s.includes('/'))) {
     try {
       const d = new Date(s);
-      if (!isNaN(d)) {
-        const dd = String(d.getUTCDate()).padStart(2, '0');
-        const mm = String(d.getUTCMonth() + 1).padStart(2, '0');
-        s = `${dd}/${mm}/${d.getUTCFullYear()}`;
-      }
+      if (!isNaN(d)) s = `${String(d.getUTCDate()).padStart(2,'0')}/${String(d.getUTCMonth()+1).padStart(2,'0')}/${d.getUTCFullYear()}`;
     } catch {}
   }
-
-  const partes = s.split('/');
-  if (partes.length < 2 || !partes[0] || !partes[1]) return { dd: '??', mm: '???' };
+  const p = s.split('/');
+  if (p.length < 2 || !p[0] || !p[1]) return { dd:'??', mm:'???' };
   const meses = ['','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
-  const mmNum = parseInt(partes[1], 10);
-  return {
-    dd: partes[0].padStart(2, '0'),
-    mm: meses[mmNum] || partes[1],
-  };
+  return { dd: p[0].padStart(2,'0'), mm: meses[parseInt(p[1],10)] || p[1] };
 }
 
-function nomePorStatus(status) {
-  const nomes = { ENCERRADA: '✅ Encerrada', FORMULARIO_ATIVO: '🟢 Ativo', AGUARDANDO: '⏳ Aguardando' };
-  return nomes[status] || status;
+function nomePorStatus(s) {
+  return { ENCERRADA:'✅ Encerrada', FORMULARIO_ATIVO:'🟢 Ativo', AGUARDANDO:'⏳ Aguardando' }[s] || s;
 }
 
 function badgeSegmento(seg) {
-  const mapa = {
-    'Usuários':                'seg-usuarios',
-    'Trabalhadores de Saúde': 'seg-trabalhadores',
-    'Gestores':                'seg-gestores',
-    'Prestadores de Serviço':  'seg-prestadores',
-  };
-  const cls = mapa[seg] || 'seg-outro';
-  return `<span class="badge-seg ${cls}">${escHtml(seg || '—')}</span>`;
+  const m = { 'Usuários':'seg-usuarios','Trabalhadores de Saúde':'seg-trabalhadores','Gestores':'seg-gestores','Prestadores de Serviço':'seg-prestadores' };
+  return `<span class="badge-seg ${m[seg]||'seg-outro'}">${escHtml(seg||'—')}</span>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  CARREGAMENTO INICIAL — paralelo com cache-warming
+//  INIT — carrega tudo em paralelo
 // ═══════════════════════════════════════════════════════════════════
 async function init() {
-  // Dispara ambas as requisições em paralelo.
-  // Se houver cache no browser, ambas retornam em < 1ms.
-  // Se não houver, chegam da rede simultaneamente (não sequencial).
   await Promise.allSettled([
     carregarEventos(),
     carregarAvisos(),
+    carregarPropostas(),
   ]);
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  EVENTOS
+// ═══════════════════════════════════════════════════════════════════
 async function carregarEventos() {
   const grid = document.getElementById('confsGrid');
   try {
     const resp = await apiGet('config');
-    EVENTOS    = resp.data || [];
+    EVENTOS = resp.data || [];
     const meta = resp.meta || {};
-
     document.getElementById('toolbarLabel').textContent =
-      `${EVENTOS.length} Pré-Conferências` +
-      (meta.encerradas ? ` · ${meta.encerradas} encerradas` : '');
-
+      `${EVENTOS.length} Pré-Conferências` + (meta.encerradas ? ` · ${meta.encerradas} encerradas` : '');
     renderizarGrid(EVENTOS);
   } catch (err) {
-    console.error('Erro ao carregar eventos:', err);
+    console.error('[eventos]', err);
     grid.innerHTML = `
       <div class="error-state">
         <h3>⚠️ Não foi possível carregar os eventos</h3>
@@ -1401,38 +1641,80 @@ async function carregarEventos() {
   }
 }
 
-async function carregarAvisos() {
-  try {
-    const resp = await apiGet('avisos');
-    AVISOS = resp.data || [];
-
-    console.log('[avisos] total recebido:', AVISOS.length, AVISOS);
-
-    const urgentes = AVISOS.filter(a => a.nivel === 'urgente' && !a.conferencia);
-    const normais  = AVISOS.filter(a => a.nivel === 'normal');
-
-    console.log('[avisos] urgentes globais:', urgentes.length, 'normais:', normais.length);
-
-    if (urgentes.length > 0) exibirPopupAviso(urgentes[0]);
-    renderizarAvisosNormais(normais);
-  } catch (err) {
-    console.warn('[avisos] erro ao carregar:', err.message);
+function renderizarGrid(eventos) {
+  const grid = document.getElementById('confsGrid');
+  if (!eventos.length) {
+    grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1;color:var(--cinza-medio)">Nenhum evento encontrado.</div>`;
+    return;
   }
+  grid.innerHTML = eventos.map(criarCardEvento).join('');
+}
+
+function criarCardEvento(e) {
+  const { dd, mm } = extrairDiaMes(e.data);
+  return `
+  <div class="conf-card${e.temDados ? '' : ' sem-dados'}"
+       onclick="abrirDetalhe('${escHtml(e.id)}')"
+       onmouseenter="prefetchEvento('${escHtml(e.id)}')"
+       ontouchstart="prefetchEvento('${escHtml(e.id)}')">
+    <div class="conf-card-accent"></div>
+    <div class="conf-card-body">
+      <div class="conf-card-header">
+        <div class="conf-date-block">
+          <div class="conf-date-dd">${dd}</div>
+          <div class="conf-date-mm">${mm}</div>
+        </div>
+        <span class="conf-status-pill status-${e.status}">${nomePorStatus(e.status)}</span>
+      </div>
+      <div class="conf-name">${escHtml(e.nome)}</div>
+      <div class="conf-meta">
+        <span><i>🕐</i>${escHtml(e.hora)}</span>
+        <span><i>📍</i>${escHtml(e.local)}</span>
+        <span><i>🗺️</i>${escHtml(e.endereco)}</span>
+      </div>
+    </div>
+    <div class="conf-card-footer">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${e.podeInscrever   ? `<span style="background:#FEF8E7;color:#9A6500;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase">📝 Inscrições</span>` : ''}
+        ${e.podeVerPresenca ? `<span style="background:#E8F8EC;color:#1B7A30;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase">📋 Presença</span>` : ''}
+        ${e.temFlyer        ? `<span style="background:#EAF4FB;color:#1A5EA8;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase">🖼 Flyer</span>` : ''}
+      </div>
+      <div class="conf-action">Ver</div>
+    </div>
+  </div>`;
+}
+
+function filtrarConfs() {
+  const q = document.getElementById('searchConfs').value
+    .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  renderizarGrid(EVENTOS.filter(e =>
+    (e.nome+e.local+e.endereco).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
+  ));
 }
 
 // ═══════════════════════════════════════════════════════════════════
 //  AVISOS
 // ═══════════════════════════════════════════════════════════════════
+async function carregarAvisos() {
+  try {
+    const resp = await apiGet('avisos');
+    AVISOS = resp.data || [];
+    console.log('[avisos] recebidos:', AVISOS.length);
+    const urgentes = AVISOS.filter(a => a.nivel === 'urgente' && !a.conferencia);
+    const normais  = AVISOS.filter(a => a.nivel === 'normal');
+    if (urgentes.length > 0) exibirPopupAviso(urgentes[0]);
+    renderizarAvisosNormais(normais);
+  } catch (err) {
+    console.warn('[avisos]', err.message);
+  }
+}
+
 function exibirPopupAviso(aviso) {
   document.getElementById('avisoTitulo').textContent = aviso.titulo;
-
-  // Adapta o cabeçalho conforme o nível
   const header = document.querySelector('.aviso-header');
-  if (aviso.nivel === 'normal') {
-    header.style.background = 'linear-gradient(135deg, #0D3D6B, #1A5EA8)';
-  } else {
-    header.style.background = 'linear-gradient(135deg, #7B1C1C, #B71C1C)';
-  }
+  header.style.background = aviso.nivel === 'urgente'
+    ? 'linear-gradient(135deg,#7B1C1C,#B71C1C)'
+    : 'linear-gradient(135deg,#0D3D6B,#1A5EA8)';
 
   const body = document.getElementById('avisoBody');
   if (aviso.tipo === 'imagem') {
@@ -1446,105 +1728,180 @@ function exibirPopupAviso(aviso) {
       body.innerHTML = `<video src="${escHtml(aviso.conteudo)}" controls style="width:100%;border-radius:var(--radius-sm)"></video>`;
     }
   } else {
-    body.innerHTML = `<p class="aviso-body-texto">${escHtml(aviso.conteudo || '').replace(/\n/g,'<br>')}</p>`;
+    body.innerHTML = `<p class="aviso-body-texto">${escHtml(aviso.conteudo||'').replace(/\n/g,'<br>')}</p>`;
   }
 
   document.getElementById('avisoOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
-
-  // Só guarda referência para a barra vermelha se for urgente
-  if (aviso.nivel === 'urgente') {
-    window._avisoUrgenteTitulo = aviso.titulo;
-  }
+  if (aviso.nivel === 'urgente') window._avisoUrgenteTitulo = aviso.titulo;
 }
 
 function fecharAviso() {
   document.getElementById('avisoOverlay').classList.remove('active');
   document.body.style.overflow = '';
-  // Invalida cache de avisos no browser para forçar releitura na próxima visita
   BrowserCache.remove('avisos');
   if (window._avisoUrgenteTitulo) {
     document.getElementById('barra-urgente-texto').textContent = '🚨 ' + window._avisoUrgenteTitulo;
     document.getElementById('barra-urgente').classList.add('show');
   }
 }
-
-function fecharBarraUrgente() {
-  document.getElementById('barra-urgente').classList.remove('show');
-}
+function fecharBarraUrgente() { document.getElementById('barra-urgente').classList.remove('show'); }
 
 function renderizarAvisosNormais(avisos) {
   const wrap = document.getElementById('avisos-normais-wrap');
   const cont = document.getElementById('avisos-normais');
-  if (!avisos.length) {
-    cont.innerHTML = '';
-    wrap.style.display = 'none';
-    return;
-  }
+  if (!avisos.length) { cont.innerHTML = ''; wrap.style.display = 'none'; return; }
   wrap.style.display = 'block';
   cont.innerHTML = avisos.map(a => `
-    <div class="aviso-normal-item" onclick="exibirPopupAviso(${JSON.stringify(a).replace(/"/g,'&quot;')})">
+    <div class="aviso-normal-item" onclick='exibirPopupAviso(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
       <span class="aviso-normal-icon">📌</span>
-      <span class="aviso-normal-texto">
-        <strong>${escHtml(a.titulo)}</strong>
-        ${a.conteudo ? ' — ' + escHtml(a.conteudo.substring(0, 100)) + (a.conteudo.length > 100 ? '…' : '') : ''}
-      </span>
+      <span class="aviso-normal-texto"><strong>${escHtml(a.titulo)}</strong>${a.conteudo ? ' — '+escHtml(a.conteudo.substring(0,100))+(a.conteudo.length>100?'…':'') : ''}</span>
       <span class="aviso-normal-chip">Novo</span>
     </div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  GRID DE EVENTOS
+//  PROPOSTAS — carrossel spotlight + painel completo
 // ═══════════════════════════════════════════════════════════════════
-function renderizarGrid(eventos) {
-  const grid = document.getElementById('confsGrid');
-  if (!eventos.length) {
-    grid.innerHTML = `<div class="loading-state" style="grid-column:1/-1;color:var(--cinza-medio)">Nenhum evento encontrado.</div>`;
+async function carregarPropostas() {
+  try {
+    const resp = await apiGet('propostas');
+    PROPOSTAS = resp.data || [];
+    console.log('[propostas] recebidas:', PROPOSTAS.length);
+    if (PROPOSTAS.length > 0) {
+      iniciarSpotlight();
+      popularFiltroConfs();
+    }
+  } catch (err) {
+    console.warn('[propostas]', err.message);
+  }
+}
+
+// ── SPOTLIGHT (carrossel aleatório no topo) ───────────────────────
+function iniciarSpotlight() {
+  if (!PROPOSTAS.length) return;
+  // Embaralha e pega até 8 para o carrossel
+  _spotSample = [...PROPOSTAS].sort(() => Math.random() - 0.5).slice(0, 8);
+  _spotIdx = 0;
+  document.getElementById('propSpotlightWrap').style.display = 'block';
+  renderizarSpotlight();
+  clearInterval(_spotTimer);
+  _spotTimer = setInterval(avancarSpotlight, 5000);
+
+  // Pausa ao hover
+  const inner = document.querySelector('.propostas-spotlight-inner');
+  inner.addEventListener('mouseenter', () => clearInterval(_spotTimer));
+  inner.addEventListener('mouseleave', () => {
+    clearInterval(_spotTimer);
+    _spotTimer = setInterval(avancarSpotlight, 5000);
+  });
+}
+
+function renderizarSpotlight() {
+  const prop = _spotSample[_spotIdx];
+  if (!prop) return;
+  document.getElementById('spotlightTexto').textContent = prop.proposta;
+  document.getElementById('spotlightConf').textContent  = prop.nomeConf || prop.confId || '';
+
+  // Dots
+  const dotsEl = document.getElementById('spotlightDots');
+  dotsEl.innerHTML = _spotSample.map((_, i) =>
+    `<span class="spotlight-dot${i === _spotIdx ? ' ativo' : ''}"></span>`
+  ).join('');
+}
+
+function avancarSpotlight() {
+  const texto = document.getElementById('spotlightTexto');
+  texto.style.opacity = '0';
+  texto.style.transform = 'translateY(6px)';
+  setTimeout(() => {
+    _spotIdx = (_spotIdx + 1) % _spotSample.length;
+    renderizarSpotlight();
+    texto.style.transition = 'opacity .4s ease, transform .4s ease';
+    texto.style.opacity = '1';
+    texto.style.transform = 'translateY(0)';
+  }, 350);
+}
+
+// ── PAINEL DE PROPOSTAS ───────────────────────────────────────────
+function popularFiltroConfs() {
+  const sel = document.getElementById('filtroConfPropostas');
+  if (!sel) return;
+  const confs = [...new Map(PROPOSTAS.map(p => [p.confId, p.nomeConf || p.confId])).entries()];
+  sel.innerHTML = '<option value="">Todas as conferências</option>' +
+    confs.map(([id, nome]) => `<option value="${escHtml(id)}">${escHtml(nome)}</option>`).join('');
+}
+
+function _propostasFiltradas() {
+  const q       = (document.getElementById('searchPropostas')?.value || '')
+    .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const confFil = document.getElementById('filtroConfPropostas')?.value || '';
+  return PROPOSTAS.filter(p => {
+    const texto = (p.proposta + (p.nomeConf||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const confOk = !confFil || p.confId === confFil;
+    return confOk && (!q || texto.includes(q));
+  });
+}
+
+function filtrarPropostas() {
+  renderizarPropostas();
+}
+
+function setModoPropostas(modo) {
+  _propModo = modo;
+  document.getElementById('btnViewLista')?.classList.toggle('ativo', modo === 'lista');
+  document.getElementById('btnViewCards')?.classList.toggle('ativo', modo === 'cards');
+  renderizarPropostas();
+}
+
+function ajustarFontePropostas(delta) {
+  _propDelta = Math.max(-2, Math.min(4, _propDelta + delta));
+  const base = 13 + _propDelta;
+  document.getElementById('propostasContainer').style.setProperty('--prop-font', base + 'px');
+}
+
+function renderizarPropostas() {
+  const cont    = document.getElementById('propostasContainer');
+  if (!cont) return;
+  const lista   = _propostasFiltradas();
+  const count   = document.getElementById('propCount');
+  if (count) count.textContent = `${lista.length} proposta${lista.length !== 1 ? 's' : ''}`;
+
+  if (!lista.length) {
+    cont.className = 'propostas-lista';
+    cont.innerHTML = `
+      <div class="propostas-empty">
+        <span class="propostas-empty-icon">${PROPOSTAS.length ? '🔍' : '💡'}</span>
+        <strong style="display:block;color:var(--cinza-texto);margin-bottom:6px">
+          ${PROPOSTAS.length ? 'Nenhuma proposta encontrada' : 'Propostas em breve'}
+        </strong>
+        ${PROPOSTAS.length ? 'Tente outro termo ou remova o filtro.' : 'Serão publicadas após as pré-conferências.'}
+      </div>`;
     return;
   }
-  grid.innerHTML = eventos.map(e => criarCardEvento(e)).join('');
-}
 
-function criarCardEvento(e) {
-  const { dd, mm } = extrairDiaMes(e.data);
-  const statusLabel = nomePorStatus(e.status);
-  const statusCls   = 'status-' + e.status;
-
-  return `
-  <div class="conf-card${e.temDados ? '' : ' sem-dados'}" onclick="abrirDetalhe('${escHtml(e.id)}')" onmouseenter="prefetchEvento('${escHtml(e.id)}')" ontouchstart="prefetchEvento('${escHtml(e.id)}')"  >
-    <div class="conf-card-accent"></div>
-    <div class="conf-card-body">
-      <div class="conf-card-header">
-        <div class="conf-date-block">
-          <div class="conf-date-dd">${dd}</div>
-          <div class="conf-date-mm">${mm}</div>
+  if (_propModo === 'cards') {
+    cont.className = 'propostas-cards';
+    cont.innerHTML = lista.map(p => `
+      <div class="prop-item-card">
+        <div class="prop-card-accent"></div>
+        <div class="prop-card-body">
+          <div class="prop-card-header">
+            <span class="prop-num">#${escHtml(p.numero||'?')}</span>
+            <span class="prop-conf-tag">${escHtml(p.nomeConf||p.confId||'')}</span>
+          </div>
+          <div class="prop-card-texto">${escHtml(p.proposta)}</div>
         </div>
-        <span class="conf-status-pill ${statusCls}">${statusLabel}</span>
-      </div>
-      <div class="conf-name">${escHtml(e.nome)}</div>
-      <div class="conf-meta">
-        <span><i>🕐</i>${escHtml(e.hora)}</span>
-        <span><i>📍</i>${escHtml(e.local)}</span>
-        <span><i>🗺️</i>${escHtml(e.endereco)}</span>
-      </div>
-    </div>
-    <div class="conf-card-footer">
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${e.podeInscrever ? `<span style="background:#FEF8E7;color:#9A6500;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase;letter-spacing:.06em">📝 Inscrições</span>` : ''}
-        ${e.podeVerPresenca ? `<span style="background:#E8F8EC;color:#1B7A30;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase;letter-spacing:.06em">📋 Presença</span>` : ''}
-        ${e.temFlyer ? `<span style="background:#EAF4FB;color:#1A5EA8;font-size:9px;font-weight:800;padding:2px 8px;border-radius:var(--radius-pill);text-transform:uppercase;letter-spacing:.06em">🖼 Flyer</span>` : ''}
-      </div>
-      <div class="conf-action">Ver</div>
-    </div>
-  </div>`;
-}
-
-function filtrarConfs() {
-  const q = document.getElementById('searchConfs').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-  const filtrados = EVENTOS.filter(e =>
-    (e.nome + e.local + e.endereco).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
-  );
-  renderizarGrid(filtrados);
+      </div>`).join('');
+  } else {
+    cont.className = 'propostas-lista';
+    cont.innerHTML = lista.map(p => `
+      <div class="prop-item-lista">
+        <span class="prop-num">#${escHtml(p.numero||'?')}</span>
+        <span class="prop-texto">${escHtml(p.proposta)}</span>
+        <span class="prop-conf-tag">${escHtml(p.nomeConf||p.confId||'')}</span>
+      </div>`).join('');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1552,102 +1909,75 @@ function filtrarConfs() {
 // ═══════════════════════════════════════════════════════════════════
 async function abrirDetalhe(id) {
   EVENTO_ATUAL = EVENTOS.find(e => e.id === id) || null;
-  if (!EVENTO_ATUAL) {
-    toast('Evento não encontrado.'); return;
-  }
+  if (!EVENTO_ATUAL) { toast('Evento não encontrado.'); return; }
+  const e = EVENTO_ATUAL;
 
-  // Título do nav
-  document.getElementById('navTitle').textContent = EVENTO_ATUAL.nome;
-
-  // Header
-  document.getElementById('detailNome').textContent = EVENTO_ATUAL.nome;
+  document.getElementById('navTitle').textContent = e.nome;
+  document.getElementById('detailNome').textContent = e.nome;
   document.getElementById('detailMetas').innerHTML = [
-    `<span class="detail-meta-chip">📅 ${EVENTO_ATUAL.data}</span>`,
-    `<span class="detail-meta-chip">🕐 ${EVENTO_ATUAL.hora}</span>`,
-    `<span class="detail-meta-chip">📍 ${EVENTO_ATUAL.local}</span>`,
-    `<span class="detail-meta-chip">🗺️ ${EVENTO_ATUAL.endereco}</span>`,
+    `<span class="detail-meta-chip">📅 ${e.data}</span>`,
+    `<span class="detail-meta-chip">🕐 ${e.hora}</span>`,
+    `<span class="detail-meta-chip">📍 ${e.local}</span>`,
+    `<span class="detail-meta-chip">🗺️ ${e.endereco}</span>`,
   ].join('');
 
-  // Conteúdo principal
-  const e = EVENTO_ATUAL;
-  let botoesHtml = `<div class="action-cards">`;
+  // ── Botões de ação ──
+  let html = '<div class="action-cards">';
 
   // Inscrição
-  botoesHtml += `
-    <${e.podeInscrever ? `a href="${escHtml(e.linkFormulario)}" target="_blank"` : 'div'} class="action-card${e.podeInscrever ? '' : ' disabled'}">
-      <div class="action-card-icon">📝</div>
-      <div>
-        <h3>Inscrição</h3>
-        <p>${e.podeInscrever ? 'Inscreva-se agora. Vagas limitadas.' : 'Inscrições ' + (e.status === 'ENCERRADA' ? 'encerradas' : 'em breve')}</p>
-      </div>
-      ${e.podeInscrever ? '<span class="action-arrow">→</span>' : ''}
-    </${e.podeInscrever ? 'a' : 'div'}>`;
+  html += `<${e.podeInscrever ? `a href="${escHtml(e.linkFormulario)}" target="_blank"` : 'div'} class="action-card${e.podeInscrever ? '' : ' disabled'}">
+    <div class="action-card-icon">📝</div>
+    <div><h3>Inscrição</h3><p>${e.podeInscrever ? 'Inscreva-se agora. Vagas limitadas.' : 'Inscrições '+(e.status==='ENCERRADA'?'encerradas':'em breve')+'.'}</p></div>
+    ${e.podeInscrever ? '<span class="action-arrow">→</span>' : ''}
+  </${e.podeInscrever ? 'a' : 'div'}>`;
 
   // Presença
-  botoesHtml += `
-    <div class="action-card${e.podeVerPresenca ? '' : ' disabled'}" ${e.podeVerPresenca ? `onclick="abrirPresenca('${escHtml(e.id)}')"` : ''}>
-      <div class="action-card-icon">📋</div>
-      <div>
-        <h3>Lista de Presença</h3>
-        <p>${e.podeVerPresenca ? 'Confirme sua presença na lista.' : e.status === 'AGUARDANDO' ? 'Disponível após o evento.' : 'Em processamento.'}</p>
-      </div>
-      ${e.podeVerPresenca ? '<span class="action-arrow">→</span>' : ''}
-    </div>`;
+  html += `<div class="action-card${e.podeVerPresenca ? '' : ' disabled'}" ${e.podeVerPresenca ? `onclick="abrirPresenca('${escHtml(e.id)}')"` : ''}>
+    <div class="action-card-icon">📋</div>
+    <div><h3>Lista de Presença</h3><p>${e.podeVerPresenca ? 'Confirme sua presença na lista.' : e.status==='AGUARDANDO' ? 'Disponível após o evento.' : 'Em processamento.'}</p></div>
+    ${e.podeVerPresenca ? '<span class="action-arrow">→</span>' : ''}
+  </div>`;
 
   // Delegados
-  botoesHtml += `
-    <div class="action-card${e.podeVerDelegados ? '' : ' disabled'}" ${e.podeVerDelegados ? `onclick="rolarParaDelegados()"` : ''}>
-      <div class="action-card-icon">🏅</div>
-      <div>
-        <h3>Delegados Eleitos</h3>
-        <p>${e.podeVerDelegados ? 'Veja quem foi eleito.' : 'Disponível após o evento.'}</p>
-      </div>
-      ${e.podeVerDelegados ? '<span class="action-arrow">↓</span>' : ''}
-    </div>`;
+  html += `<div class="action-card${e.podeVerDelegados ? '' : ' disabled'}" ${e.podeVerDelegados ? 'onclick="rolarParaDelegados()"' : ''}>
+    <div class="action-card-icon">🏅</div>
+    <div><h3>Delegados Eleitos</h3><p>${e.podeVerDelegados ? 'Veja quem foi eleito.' : 'Disponível após o evento.'}</p></div>
+    ${e.podeVerDelegados ? '<span class="action-arrow">↓</span>' : ''}
+  </div>`;
 
-  // Ata / Propostas
-  botoesHtml += `
-    <${e.podeVerAta ? `a href="${escHtml(e.ataUrl)}" target="_blank"` : 'div'} class="action-card${e.podeVerAta ? '' : ' disabled'}">
-      <div class="action-card-icon">📄</div>
-      <div>
-        <h3>Ata e Propostas</h3>
-        <p>${e.podeVerAta ? 'Acesse o documento oficial.' : 'Disponível após publicação.'}</p>
-      </div>
-      ${e.podeVerAta ? '<span class="action-arrow">→</span>' : ''}
-    </${e.podeVerAta ? 'a' : 'div'}>`;
+  // Ata
+  html += `<${e.podeVerAta ? `a href="${escHtml(e.ataUrl)}" target="_blank"` : 'div'} class="action-card${e.podeVerAta ? '' : ' disabled'}">
+    <div class="action-card-icon">📄</div>
+    <div><h3>Ata e Propostas</h3><p>${e.podeVerAta ? 'Acesse o documento oficial.' : 'Disponível após publicação.'}</p></div>
+    ${e.podeVerAta ? '<span class="action-arrow">→</span>' : ''}
+  </${e.podeVerAta ? 'a' : 'div'}>`;
 
-  botoesHtml += `</div>`;
+  html += '</div>';
 
-  // Aviso do evento (se houver)
-  let avisoEvento = '';
-  if (e.temAviso) {
-    avisoEvento = `
-      <div style="background:#FFF8E1;border:1.5px solid #FFE082;border-left:4px solid #F5C800;border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px">
-        <div style="font-size:10px;font-weight:800;color:#856404;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">⚠️ Aviso</div>
-        <div style="font-size:13px;color:var(--cinza-texto);line-height:1.6">${escHtml(e.aviso)}</div>
-      </div>`;
+  // Aviso do evento
+  if (e.temAviso && e.aviso) {
+    html = `<div style="background:#FFF8E1;border:1.5px solid #FFE082;border-left:4px solid #F5C800;border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px">
+      <div style="font-size:10px;font-weight:800;color:#856404;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">⚠️ Aviso</div>
+      <div style="font-size:13px;color:var(--cinza-texto);line-height:1.6">${escHtml(e.aviso)}</div>
+    </div>` + html;
   }
 
   // Observações
-  let obsHtml = '';
   if (e.observacoes) {
-    obsHtml = `
-      <div class="info-card" style="margin-top:20px">
-        <div class="info-card-header"><div class="info-card-title">Informações</div></div>
-        <div class="info-card-body" style="font-size:13px;color:var(--cinza-medio);line-height:1.75">${escHtml(e.observacoes).replace(/\n/g,'<br>')}</div>
-      </div>`;
+    html += `<div class="info-card" style="margin-top:20px">
+      <div class="info-card-header"><div class="info-card-title">Informações</div></div>
+      <div class="info-card-body" style="font-size:13px;color:var(--cinza-medio);line-height:1.75">${escHtml(e.observacoes).replace(/\n/g,'<br>')}</div>
+    </div>`;
   }
 
-  document.getElementById('detailMain').innerHTML = avisoEvento + botoesHtml + obsHtml;
+  document.getElementById('detailMain').innerHTML = html;
 
   // Flyer
   const flyerDiv = document.getElementById('detailFlyer');
   if (e.temFlyer) {
     flyerDiv.innerHTML = `
       <div class="flyer-panel">
-        <div class="flyer-panel-header">
-          <div class="flyer-panel-label">Flyer Oficial</div>
-        </div>
+        <div class="flyer-panel-header"><div class="flyer-panel-label">Flyer Oficial</div></div>
         <div class="flyer-img-wrap" onclick="openLightbox('${escHtml(e.flyer)}','${escHtml(e.nome)}')">
           <img src="${escHtml(e.flyer)}" alt="Flyer ${escHtml(e.nome)}" loading="lazy">
           <div class="flyer-img-overlay">
@@ -1663,7 +1993,7 @@ async function abrirDetalhe(id) {
     flyerDiv.innerHTML = '';
   }
 
-  // Delegados (carrega assíncrono se evento encerrado)
+  // Delegados (assíncrono)
   const delegadosDiv = document.getElementById('detailDelegados');
   delegadosDiv.innerHTML = '';
   if (e.podeVerDelegados) {
@@ -1677,54 +2007,78 @@ async function abrirDetalhe(id) {
 async function carregarDelegados(id) {
   try {
     const resp = await apiGet('delegados', { id });
-    const delegados = resp.data || [];
-    const meta = resp.meta || {};
-    renderizarDelegados(delegados, meta);
-  } catch (err) {
+    renderizarDelegados(resp.data || [], resp.meta || {});
+  } catch {
     document.getElementById('detailDelegados').innerHTML = `
-      <div class="delegados-card">
-        <div class="delegados-header"><div class="delegados-title">Delegados Eleitos</div></div>
-        <div class="delegados-empty">Delegados ainda não publicados.</div>
-      </div>`;
+      <div class="delegados-card"><div class="delegados-header"><div class="delegados-title">Delegados Eleitos</div></div>
+      <div class="delegados-empty">Delegados ainda não publicados.</div></div>`;
   }
 }
 
 function renderizarDelegados(delegados, meta) {
   const div = document.getElementById('detailDelegados');
+
   if (!delegados.length) {
-    div.innerHTML = `<div class="delegados-card" id="secao-delegados"><div class="delegados-header"><div class="delegados-title">Delegados Eleitos</div></div><div class="delegados-empty">Delegados ainda não publicados para esta pré-conferência.</div></div>`;
+    div.innerHTML = `
+      <div class="delegados-card" id="secao-delegados">
+        <div class="delegados-header"><div class="delegados-title">Delegados Eleitos</div></div>
+        <div class="delegados-empty">Delegados ainda não publicados para esta pré-conferência.</div>
+      </div>`;
     return;
   }
+
+  const corSeg = {
+    'Usuários':               { bg:'#EAF4FB', cor:'#1A5EA8', dot:'#1A5EA8' },
+    'Trabalhadores de Saúde': { bg:'#FFF3CD', cor:'#856404', dot:'#E8A020' },
+    'Gestores':               { bg:'#E8F8EC', cor:'#1B7A30', dot:'#3AAA35' },
+    'Prestadores de Serviço': { bg:'#F3E8FF', cor:'#6B21A8', dot:'#9333EA' },
+    'Outro':                  { bg:'#F4F7FB', cor:'#6B7F96', dot:'#6B7F96' },
+  };
+  const ordemSeg = ['Usuários','Trabalhadores de Saúde','Gestores','Prestadores de Serviço','Outro'];
+
+  const grupos = {};
+  delegados.forEach(d => {
+    const seg = d.segmento || 'Outro';
+    if (!grupos[seg]) grupos[seg] = [];
+    grupos[seg].push(d);
+  });
+  Object.values(grupos).forEach(g => g.sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR')));
+
+  const ordem = [...ordemSeg.filter(s => grupos[s]), ...Object.keys(grupos).filter(s => !ordemSeg.includes(s))];
+
+  const gruposHtml = ordem.map(seg => {
+    const lista = grupos[seg];
+    const c = corSeg[seg] || corSeg['Outro'];
+    return `
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:${c.cor};background:${c.bg};padding:3px 12px;border-radius:99px">${escHtml(seg)}</span>
+          <span style="font-size:11px;color:var(--cinza-medio)">${lista.length} delegado${lista.length!==1?'s':''}</span>
+        </div>
+        <div style="padding-left:4px">
+          ${lista.map(d => `
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--cinza-borda)">
+              <span style="width:7px;height:7px;border-radius:50%;background:${c.dot};flex-shrink:0"></span>
+              <span style="font-size:13px;font-weight:600;color:var(--cinza-texto)">${escHtml(d.nome)}</span>
+              ${d.tipo==='Suplente' ? `<span style="margin-left:auto;font-size:9px;font-weight:700;color:#856404;background:#FFF3CD;padding:1px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0">Suplente</span>` : ''}
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
   div.innerHTML = `
     <div class="delegados-card" id="secao-delegados">
       <div class="delegados-header">
         <div class="delegados-title">Delegados Eleitos</div>
-        <span class="delegados-count-badge">${meta.total} eleito${meta.total !== 1 ? 's' : ''} · ${meta.titulares || 0} titular${(meta.titulares || 0) !== 1 ? 'es' : ''}</span>
+        <span class="delegados-count-badge">${meta.total||delegados.length} eleito${(meta.total||delegados.length)!==1?'s':''}</span>
       </div>
-      <div class="delegados-table-wrap">
-        <table class="delegados-table">
-          <thead><tr><th>#</th><th>Nome</th><th>Segmento</th><th>Tipo</th></tr></thead>
-          <tbody>
-            ${delegados.map((d, i) => `
-              <tr>
-                <td class="td-num">${i+1}</td>
-                <td class="delegado-nome">${escHtml(d.nome)}</td>
-                <td>${badgeSegmento(d.segmento)}</td>
-                <td>
-                  ${d.tipo === 'Titular'
-                    ? `<span class="badge-tipo-titular">Titular</span>`
-                    : `<span class="badge-tipo-suplente">Suplente</span>`}
-                </td>
-              </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>
+      <div style="padding:20px 22px">${gruposHtml}</div>
     </div>`;
 }
 
 function rolarParaDelegados() {
   const el = document.getElementById('secao-delegados');
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
 function voltarLista() {
@@ -1734,27 +2088,29 @@ function voltarLista() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  LISTA DE PRESENÇA
+//  LISTA DE PRESENÇA — sempre busca da rede (TTL=0)
 // ═══════════════════════════════════════════════════════════════════
 async function abrirPresenca(id) {
   const evento = EVENTOS.find(e => e.id === id);
   if (!evento) { toast('Evento não encontrado.'); return; }
 
   document.getElementById('presencaNome').textContent = evento.nome;
-  document.getElementById('presencaSub').textContent = `Lista de participantes · ${evento.data}`;
-  document.getElementById('presencaStats').innerHTML = `
+  document.getElementById('presencaSub').textContent  = `Lista de participantes · ${evento.data}`;
+  document.getElementById('presencaStats').innerHTML  = `
     <div class="p-stat"><span class="p-stat-num" id="totalPresentes">…</span><div class="p-stat-lbl">Participantes</div></div>
     <div class="p-stat"><span class="p-stat-num" id="totalDecl">…</span><div class="p-stat-lbl">Com declaração</div></div>`;
-  document.getElementById('presencaTbody').innerHTML =
-    `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--cinza-medio)">
+  document.getElementById('presencaTbody').innerHTML  =
+    `<tr><td colspan="3" style="text-align:center;padding:28px;color:var(--cinza-medio)">
       <div class="loading-spinner" style="margin:0 auto 10px"></div>Carregando…
     </td></tr>`;
-  document.getElementById('presencaBackBtn').onclick = () => abrirDetalhe(id);
+  document.getElementById('presencaBackBtn').onclick  = () => abrirDetalhe(id);
+  document.getElementById('searchPresenca').value     = '';
 
   mostrarView('view-presenca');
 
   try {
-    const resp = await apiGet('presenca', { id });
+    // forceRefresh:true — presença NUNCA usa cache do browser
+    const resp = await apiGet('presenca', { id }, { forceRefresh: true });
     PRESENCA   = resp.data || [];
     const meta = resp.meta || {};
 
@@ -1766,7 +2122,7 @@ async function abrirPresenca(id) {
     renderizarPresenca(PRESENCA);
   } catch (err) {
     document.getElementById('presencaTbody').innerHTML = `
-      <tr><td colspan="5">
+      <tr><td colspan="3">
         <div class="sem-dados-wrap">
           <span class="sem-dados-icon">⚠️</span>
           <h3>Não foi possível carregar</h3>
@@ -1780,7 +2136,7 @@ function renderizarPresenca(lista) {
   const tbody = document.getElementById('presencaTbody');
   if (!lista.length) {
     tbody.innerHTML = `
-      <tr><td colspan="5">
+      <tr><td colspan="3">
         <div class="sem-dados-wrap">
           <span class="sem-dados-icon">📋</span>
           <h3>Nenhum registro</h3>
@@ -1789,27 +2145,15 @@ function renderizarPresenca(lista) {
       </td></tr>`;
     return;
   }
-
-  tbody.innerHTML = lista.map((p, i) => {
-    // Badge de declaração: link se tiver, pendente se não tiver
-    const declBadge = p.linkArquivo
-      ? `<a class="badge-decl ok" href="${escHtml(p.linkArquivo)}" target="_blank" rel="noopener">
-           📄 Ver declaração
-         </a>`
+  const ordenada = [...lista].sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));
+  tbody.innerHTML = ordenada.map((p, i) => {
+    const decl = p.linkArquivo
+      ? `<a class="badge-decl ok" href="${escHtml(p.linkArquivo)}" target="_blank" rel="noopener">📄 Ver</a>`
       : `<span class="badge-decl pendente">—</span>`;
-
-    // E-mail: mostra ✔ se enviado, vazio se não
-    const emailStatus = p.statusEmail === 'Enviado'
-      ? `<span class="badge-email-ok" title="E-mail enviado">✔</span>`
-      : `<span class="badge-email-vazio">—</span>`;
-
-    return `
-    <tr>
-      <td class="td-num">${i + 1}</td>
+    return `<tr>
+      <td class="td-num">${i+1}</td>
       <td class="td-nome">${escHtml(p.nome)}</td>
-      <td style="font-size:12px;color:var(--cinza-medio);white-space:nowrap">${escHtml(p.timestamp || '—')}</td>
-      <td>${declBadge}</td>
-      <td style="text-align:center">${emailStatus}</td>
+      <td>${decl}</td>
     </tr>`;
   }).join('');
 }
@@ -1818,10 +2162,9 @@ function filtrarPresenca() {
   const q = document.getElementById('searchPresenca').value
     .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const filtrados = PRESENCA.filter(p =>
-    (p.nome + (p.email || '')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
+    p.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)
   );
-  document.getElementById('presencaCount').textContent =
-    `${filtrados.length} resultado${filtrados.length !== 1 ? 's' : ''}`;
+  document.getElementById('presencaCount').textContent = `${filtrados.length} resultado${filtrados.length!==1?'s':''}`;
   renderizarPresenca(filtrados);
 }
 
@@ -1829,62 +2172,50 @@ function filtrarPresenca() {
 //  GALERIA
 // ═══════════════════════════════════════════════════════════════════
 async function carregarGaleria() {
-  // Se há cache fresco de fotos, o apiGet retorna imediatamente — não recarrega o DOM
   if (FOTOS.length > 0 && BrowserCache.get('fotos') !== null) return;
-
   const grid = document.getElementById('galeriaGrid');
   grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><div class="loading-spinner" style="margin:0 auto 12px"></div>Carregando…</div>`;
-
   try {
     const resp = await apiGet('fotos');
     FOTOS = resp.data || [];
-    document.getElementById('galeria-count').textContent = `${FOTOS.length} foto${FOTOS.length !== 1 ? 's' : ''}`;
-
+    document.getElementById('galeria-count').textContent = `${FOTOS.length} foto${FOTOS.length!==1?'s':''}`;
     if (!FOTOS.length) {
       grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">📷</span><strong>Galeria em breve</strong><br>As fotos serão publicadas conforme os eventos são realizados.</div>`;
       return;
     }
     renderizarFiltrosGaleria();
     renderizarGaleria('todos');
-  } catch (err) {
+  } catch {
     grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">⚠️</span>Não foi possível carregar as fotos.</div>`;
   }
 }
 
 function renderizarFiltrosGaleria() {
-  const confsIds = [...new Set(FOTOS.map(f => f.confId))];
-  const nomesEvt = {};
-  EVENTOS.forEach(e => nomesEvt[e.id] = e.nome);
-
-  const btns = [
+  const ids = [...new Set(FOTOS.map(f => f.confId))];
+  const nomes = {}; EVENTOS.forEach(e => nomes[e.id] = e.nome);
+  document.getElementById('galeriaFiltros').innerHTML = [
     `<button class="galeria-filtro-btn ativo" onclick="renderizarGaleria('todos',this)">Todas (${FOTOS.length})</button>`,
-    ...confsIds.filter(id => id !== 'sem-categoria').map(id => {
-      const count = FOTOS.filter(f => f.confId === id).length;
-      return `<button class="galeria-filtro-btn" onclick="renderizarGaleria('${escHtml(id)}',this)">${escHtml(nomesEvt[id] || id)} (${count})</button>`;
+    ...ids.filter(id => id !== 'sem-categoria').map(id => {
+      const n = FOTOS.filter(f => f.confId === id).length;
+      return `<button class="galeria-filtro-btn" onclick="renderizarGaleria('${escHtml(id)}',this)">${escHtml(nomes[id]||id)} (${n})</button>`;
     }),
-  ];
-  document.getElementById('galeriaFiltros').innerHTML = btns.join('');
+  ].join('');
 }
 
 function renderizarGaleria(filtro, btn) {
   document.querySelectorAll('.galeria-filtro-btn').forEach(b => b.classList.remove('ativo'));
   if (btn) btn.classList.add('ativo');
-
-  const nomesEvt = {};
-  EVENTOS.forEach(e => nomesEvt[e.id] = e.nome);
+  const nomes = {}; EVENTOS.forEach(e => nomes[e.id] = e.nome);
   const lista = filtro === 'todos' ? FOTOS : FOTOS.filter(f => f.confId === filtro);
   const grid  = document.getElementById('galeriaGrid');
-
   if (!lista.length) {
     grid.innerHTML = `<div class="galeria-empty" style="grid-column:1/-1"><span class="galeria-empty-icon">🔍</span>Nenhuma foto para este filtro.</div>`;
     return;
   }
   grid.innerHTML = lista.map(f => `
-    <div class="galeria-item" onclick="openLightbox('${escHtml(f.url)}','${escHtml(f.legenda || nomesEvt[f.confId] || '')}')">
-      <img src="${escHtml(f.url)}" alt="${escHtml(f.legenda || '')}" loading="lazy" onerror="this.parentElement.style.display='none'">
-      <div class="galeria-item-overlay">
-        <div class="galeria-item-legenda">${escHtml(f.legenda || nomesEvt[f.confId] || '')}</div>
-      </div>
+    <div class="galeria-item" onclick="openLightbox('${escHtml(f.url)}','${escHtml(f.legenda||nomes[f.confId]||'')}')">
+      <img src="${escHtml(f.url)}" alt="${escHtml(f.legenda||'')}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <div class="galeria-item-overlay"><div class="galeria-item-legenda">${escHtml(f.legenda||nomes[f.confId]||'')}</div></div>
     </div>`).join('');
 }
 
@@ -1895,28 +2226,21 @@ function switchTab(tab, btn) {
   TAB_ATIVA = tab;
   document.querySelectorAll('.list-panel').forEach(p => p.classList.remove('ativo'));
   document.querySelectorAll('.list-tab').forEach(b => b.classList.remove('ativo'));
-
   const painel = document.getElementById(`panel-${tab}`);
   if (painel) painel.classList.add('ativo');
-
-  // Botão ativo
   if (btn) btn.classList.add('ativo');
   else {
-    const encontrado = [...document.querySelectorAll('.list-tab')]
-      .find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${tab}'`));
-    if (encontrado) encontrado.classList.add('ativo');
+    const found = [...document.querySelectorAll('.list-tab')].find(b => b.dataset.tab === tab);
+    if (found) found.classList.add('ativo');
   }
-
-  if (tab === 'galeria') carregarGaleria();
+  if (tab === 'galeria')   carregarGaleria();
+  if (tab === 'propostas') renderizarPropostas();
 }
 
 // ═══════════════════════════════════════════════════════════════════
 //  FAQ
 // ═══════════════════════════════════════════════════════════════════
-function toggleFaq(el) {
-  const item = el.parentElement;
-  item.classList.toggle('open');
-}
+function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
 
 // ═══════════════════════════════════════════════════════════════════
 //  LIGHTBOX
@@ -1942,23 +2266,21 @@ function closeLightboxOutside(e) {
 window.addEventListener('scroll', () => {
   const s = window.scrollY, t = document.body.scrollHeight - window.innerHeight;
   if (t > 0) document.getElementById('progress-bar').style.width = `${(s/t)*100}%`;
-  const btn = document.getElementById('scrollTop');
-  s > 300 ? btn.classList.add('show') : btn.classList.remove('show');
+  document.getElementById('scrollTop').classList.toggle('show', s > 300);
 });
 
-// ── Teclado ──
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeLightbox(); fecharAviso(); }
 });
 
 // ═══════════════════════════════════════════════════════════════════
-//  SPLASH + INIT
+//  SPLASH + BOOT
 // ═══════════════════════════════════════════════════════════════════
 (function() {
-  const logo  = document.getElementById('splashLogo');
-  const bar   = document.getElementById('splashBar');
-  const fill  = document.getElementById('splashFill');
-  const splash= document.getElementById('splash');
+  const logo   = document.getElementById('splashLogo');
+  const bar    = document.getElementById('splashBar');
+  const fill   = document.getElementById('splashFill');
+  const splash = document.getElementById('splash');
   requestAnimationFrame(() => {
     setTimeout(() => { logo.classList.add('show'); bar.classList.add('show'); }, 60);
     setTimeout(() => { fill.classList.add('go'); }, 120);
@@ -1969,26 +2291,10 @@ document.addEventListener('keydown', e => {
   });
 })();
 
-// Exibe rodapé somente na view-list
 document.getElementById('site-footer').style.display = 'block';
 
-// Log de versão e status do cache no console
-console.info(
-  '%c11ª CMS Montes Claros — v3.0 (Cache bicamada) ',
-  'background:#1A5EA8;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px'
-);
+console.info('%c11ª CMS — v3.1', 'background:#1A5EA8;color:#fff;font-weight:bold;padding:4px 8px;border-radius:4px');
 
-// Limpa automaticamente entradas de versões anteriores do cache
-try {
-  const prefixosAntigos = ['cms11_v1_', 'cms11_v2_', 'cms11_v3_'];
-  prefixosAntigos.forEach(p => {
-    Object.keys(localStorage).filter(k => k.startsWith(p)).forEach(k => localStorage.removeItem(k));
-  });
-} catch {}
-
-console.info('BrowserCache keys:', Object.keys(localStorage).filter(k => k.startsWith(CACHE_PREFIX)));
-
-// Inicializa a aplicação
 init();
 </script>
 </body>
