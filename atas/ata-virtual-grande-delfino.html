@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ata Virtual · Grande Delfino · 17 de março de 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+:root{--azul-sus:#1A5EA8;--azul-medio:#2E8BC0;--azul-escuro:#0C345E;--azul-profundo:#001D38;
+--verde-sus:#3AAA35;--amarelo:#F5C800;--cinza-off:#F4F7FB;--cinza-texto:#2C3E50;
+--cinza-medio:#6B7F96;--cinza-borda:#D6E4F0;--branco:#FFFFFF;
+--gwave:linear-gradient(135deg,#1A5EA8 0%,#2E8BC0 40%,#5BBF6A 75%,#F5C800 100%);
+--font:'Georama',sans-serif;--r:14px;--rsm:8px;--pill:999px;
+--sh:0 4px 24px rgba(26,94,168,.09),0 1px 4px rgba(26,94,168,.05);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--cinza-off);color:var(--cinza-texto);font-size:15px;line-height:1.7}
+.wrap{max-width:780px;margin:40px auto 80px;padding:0 20px}
+.ata-header{background:linear-gradient(160deg,#001D38 0%,#0C345E 55%,#2E8BC0 100%);border-radius:var(--r) var(--r) 0 0;padding:32px 40px 28px;position:relative;overflow:hidden}
+.ata-header::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(245,200,0,.13) 0%,transparent 70%);border-radius:50%}
+.ata-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:36px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 36'%3E%3Cpath fill='%23F4F7FB' d='M0,36 C195,4 585,30 780,0 L780,36 Z'/%3E%3C/svg%3E") no-repeat bottom;background-size:cover}
+.header-inner{display:flex;align-items:center;gap:22px;position:relative;z-index:1}
+.header-logo{width:88px;height:88px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.28))}
+.hd-badge{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.8);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 12px;border-radius:var(--pill);margin-bottom:8px}
+.hd-title{font-size:21px;font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:3px}
+.hd-title span{color:var(--amarelo)}
+.hd-tema{font-size:11.5px;color:rgba(255,255,255,.58);font-style:italic}
+.hd-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hd-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.78);font-size:9.5px;font-weight:600;padding:3px 11px;border-radius:var(--pill)}
+.wavebar{height:5px;background:var(--gwave)}
+.id-strip{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:0 0 var(--r) var(--r);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:28px;box-shadow:var(--sh)}
+.id-tipo{font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus);display:flex;align-items:center;gap:6px}
+.id-tipo::before{content:'';width:16px;height:3px;background:var(--gwave);border-radius:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:var(--pill)}
+.pill-a{background:#EAF4FB;color:var(--azul-sus)}.pill-v{background:#E8F8EC;color:#1B7A30}.pill-am{background:#FEF8E7;color:#9A6500}
+.sec{margin-bottom:28px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:9px;border-bottom:1.5px solid var(--cinza-borda)}
+.sec-head::before{content:'';width:18px;height:3px;background:var(--gwave);border-radius:2px;flex-shrink:0}
+.sec-title{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus)}
+.sec-badge{background:#EAF4FB;color:var(--azul-sus);font-size:8.5px;font-weight:800;padding:2px 8px;border-radius:var(--pill)}
+.card{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh)}
+.ficha{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fi{background:var(--cinza-off);border:1px solid var(--cinza-borda);border-radius:var(--rsm);padding:11px 14px}
+.fi-lbl{font-size:7.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:3px}
+.fi-val{font-size:13px;font-weight:600;color:var(--cinza-texto);line-height:1.4}
+.body-p{font-size:14px;color:var(--cinza-texto);line-height:1.8;text-align:justify;margin-bottom:12px}
+.body-p:last-child{margin-bottom:0}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.finput{flex:1;border:1.5px solid var(--cinza-borda);border-radius:var(--rsm);padding:8px 14px;font-family:var(--font);font-size:13px;color:var(--cinza-texto);background:var(--branco);outline:none;transition:border-color .2s}
+.finput:focus{border-color:var(--azul-medio)}
+.fcount{font-size:11px;color:var(--cinza-medio);font-weight:600;white-space:nowrap}
+.prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.prop{display:flex;align-items:flex-start;gap:9px;background:var(--cinza-off);border:1px solid var(--cinza-borda);border-left:3px solid var(--azul-medio);border-radius:0 var(--rsm) var(--rsm) 0;padding:7px 11px;transition:background .15s,border-left-color .15s}
+.prop:hover{background:#EAF4FB;border-left-color:var(--azul-sus)}
+.prop.hidden{display:none}
+.pnum{flex-shrink:0;width:22px;height:22px;background:var(--azul-sus);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;margin-top:1px}
+.ptxt{font-size:13px;color:var(--cinza-texto);line-height:1.5}
+.del-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.del-card{background:var(--branco);border:1.5px solid var(--cinza-borda);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.del-head{padding:10px 14px;display:flex;align-items:center;gap:8px}
+.del-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.del-stitle{font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.del-cnt{margin-left:auto;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:var(--pill)}
+.seg-u .del-head{background:#EAF4FB}.seg-u .del-icon{background:#D6ECF9}.seg-u .del-stitle{color:var(--azul-sus)}.seg-u .del-cnt{background:#D6ECF9;color:var(--azul-sus)}
+.seg-g .del-head{background:#E8F8EC}.seg-g .del-icon{background:#D2F0D5}.seg-g .del-stitle{color:#1B7A30}.seg-g .del-cnt{background:#D2F0D5;color:#1B7A30}
+.seg-t .del-head{background:#FEF8E7}.seg-t .del-icon{background:#FCF0C4}.seg-t .del-stitle{color:#9A6500}.seg-t .del-cnt{background:#FCF0C4;color:#9A6500}
+.del-list{list-style:none;padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.del-item{font-size:12px}
+.del-nome{font-weight:700;color:var(--cinza-texto);display:block;line-height:1.35}
+.del-tel{color:var(--cinza-medio);font-family:'Courier New',monospace;font-size:11px}
+.enc{background:linear-gradient(135deg,#EAF4FB,#F4F7FB);border:1.5px solid var(--cinza-borda);border-left:4px solid var(--verde-sus);border-radius:0 var(--rsm) var(--rsm) 0;padding:14px 18px;font-size:14px;color:var(--cinza-texto);line-height:1.7}
+.doc-footer{border-radius:0 0 var(--r) var(--r);overflow:hidden;margin-top:28px}
+.fw{height:5px;background:var(--gwave)}
+.fi2{background:#0D3D6B;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;border-radius:0 0 var(--r) var(--r)}
+.ft{font-size:10px;color:rgba(255,255,255,.45)}
+.fn{font-size:10px;color:rgba(255,255,255,.28);font-family:'Courier New',monospace;letter-spacing:.05em}
+@media(max-width:640px){.ata-header,.card{padding-left:20px;padding-right:20px}.ficha,.prop-grid{grid-template-columns:1fr}.del-grid{grid-template-columns:1fr}.header-inner{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="ata-header">
+    <div class="header-inner">
+      <img src="https://i.ibb.co/sJNjVQXc/11conflogo.png" alt="Logo 11ª CMS" class="header-logo" referrerpolicy="no-referrer">
+      <div class="header-text">
+        <span class="hd-badge">Conselho Municipal de Saúde · Montes Claros – MG</span>
+        <h1 class="hd-title">11ª Conferência Municipal de Saúde<br><span>Montes Claros</span></h1>
+        <p class="hd-tema">"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do Povo é Cuidar do Brasil"</p>
+        <div class="hd-meta">
+          <span class="hd-chip">✍ Relatoria: Equipe de Apoio da Conferência</span>
+          <span class="hd-chip">⚙ Coord.: Márcio Cardoso Silva</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="wavebar"></div>
+  <div class="id-strip">
+    <span class="id-tipo">Ata Oficial — Pré-Conferência · Grande Delfino</span>
+    <div class="pills">
+      <span class="pill pill-a">📅 17 de março de 2026</span>
+      <span class="pill pill-v">⏰ 07:30h às 11:30h · início: 08h42</span>
+      <span class="pill pill-am">📍 Grande Delfino</span>
+    </div>
+  </div>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Dados do Evento</span></div>
+    <div class="ficha">
+      <div class="fi"><div class="fi-lbl">Tipo de Evento</div><div class="fi-val">Pré-Conferência Municipal de Saúde</div></div>
+      <div class="fi"><div class="fi-lbl">Região</div><div class="fi-val">Grande Delfino</div></div>
+      <div class="fi"><div class="fi-lbl">Local</div><div class="fi-val">Auditório da Obra Social Nossa Senhora de Fátima (Filhas de Jesus)</div></div>
+      <div class="fi"><div class="fi-lbl">Endereço</div><div class="fi-val">Av. Neco Delfino, 363 — Delfino Magalhães — Montes Claros – MG</div></div>
+      <div class="fi"><div class="fi-lbl">Data</div><div class="fi-val">17 de março de 2026</div></div>
+      <div class="fi"><div class="fi-lbl">Horário</div><div class="fi-val">07:30h às 11:30h · início: 08h42</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Registro da Plenária</span></div>
+    <div class="card"><p class="body-p">Aos 17 dias do mês de Março de 2026, às 08h42 no Auditório da Obra Social Nossa Senhora de Fátima (Filhas de Jesus), localizado na Av. Neco Delfino, 363 — Delfino Magalhães, Montes Claros — MG, 39402-181, atendendo à convocação do Conselho Municipal de saúde de Montes Claros, reuniram-se servidores municipais da Secretaria Municipal de Saúde e população da região adjacente do bairro Delfino Magalhães, no propósito de discutir em assembléia a elaboração de propostas e eleição de delegados na etapa de pré-conferência referente à Região do Grande Delfino, para a 11º Conferência Municipal de Saúde: <em>"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do povo é cuidar do Brasil."</em></p>
+<p class="body-p">O evento teve início com assinatura da lista de presença. O Sr. Márcio Cardoso Silva, Coordenador de Apoio ao Conselho Municipal de Saúde, apresentou a dinâmica e os objetivos da plenária, realizando a abertura dos trabalhos e promovendo uma explanação acerca das necessidades de saúde da população nos territórios. Destacou a importância de identificar desafios e potencialidades da Atenção Primária à Saúde no município, bem como de elaborar e sistematizar propostas voltadas ao aprimoramento das políticas públicas de saúde. Foi ressaltado que, no presente ano, o Conselho Municipal de Saúde, em parceria com a Secretaria Municipal de Saúde, promove a realização de 13 pré-conferências, configurando a maior mobilização já registrada no município.</p>
+<p class="body-p">Foram abordados desafios relacionados ao acesso a exames e procedimentos, especialmente diante da defasagem histórica da tabela de financiamento do SUS. Foram relatados casos que evidenciam dificuldades dos usuários no acesso à fisioterapia — demora para início do tratamento, dificuldades no transporte sanitário, falhas no agendamento —, fatores que em alguns casos levaram à desistência do tratamento ou busca por atendimento particular.</p>
+<p class="body-p">O mediador da plenária informou que na data de hoje, além da definição das propostas, serão eleitos 6 delegados representantes de usuários, 10 representantes de trabalhadores e 6 representantes da gestão para participação na 11ª Conferência Municipal de Saúde de Montes Claros que será realizada nos dias 22, 23 e 24 de abril de 2026.</p></div>
+  </section>
+  <section class="sec" id="propostas">
+    <div class="sec-head">
+      <span class="sec-title">Propostas Gerais Deliberadas</span>
+      <span class="sec-badge">37 propostas</span>
+    </div>
+    <div class="filter-row">
+      <input class="finput" id="fi" type="text" placeholder="🔍  Buscar nas propostas..." oninput="filtrar()">
+      <span class="fcount" id="fcnt">Todas as 37</span>
+    </div>
+    <div class="prop-grid" id="pg"></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Delegados Eleitos</span><span class="sec-badge">22 delegados</span></div>
+    <div class="del-grid">
+      <div class="del-card seg-u">
+        <div class="del-head">
+          <div class="del-icon">👥</div>
+          <span class="del-stitle">Usuários</span>
+          <span class="del-cnt">6</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Raquel Edwirges Cruz Ramos</span><span class="del-tel">(38) 99924-0303</span></li><li class="del-item"><span class="del-nome">Camila Izabel Prates Barreto</span><span class="del-tel">(38) 99731-7419</span></li><li class="del-item"><span class="del-nome">Aneliza Borges de Amorim Silva</span><span class="del-tel">(38) 99896-6329</span></li><li class="del-item"><span class="del-nome">Thania Larissa Félix</span><span class="del-tel">(38) 98835-6384</span></li><li class="del-item"><span class="del-nome">Eliane Pereira Souto e Sousa</span><span class="del-tel">(38) 98432-9717</span></li><li class="del-item"><span class="del-nome">Joana A. Rodrigues Almeida</span><span class="del-tel">(38) 99729-9522</span></li></ul>
+      </div>
+      <div class="del-card seg-t">
+        <div class="del-head">
+          <div class="del-icon">🩺</div>
+          <span class="del-stitle">Trabalhadores</span>
+          <span class="del-cnt">10</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Patricia Marques Rodrigues</span><span class="del-tel">(38) 98861-0774</span></li><li class="del-item"><span class="del-nome">Matheus Oliveira Carvalho Silva</span><span class="del-tel">(38) 99120-9656</span></li><li class="del-item"><span class="del-nome">Maria de Fátima Ramos Queiroz</span><span class="del-tel">(38) 99991-0457</span></li><li class="del-item"><span class="del-nome">Reginaldo Carlos da Silva</span><span class="del-tel">(38) 98849-5990</span></li><li class="del-item"><span class="del-nome">Ildarlene Aparecida Oliveira Cruz</span><span class="del-tel">(38) 98417-5262</span></li><li class="del-item"><span class="del-nome">Ruter Cristina S Barbosa</span><span class="del-tel">(38) 99155-7377</span></li><li class="del-item"><span class="del-nome">Maria Anália Silva Campanha</span><span class="del-tel">(38) 98815-2725</span></li><li class="del-item"><span class="del-nome">Nayara Martins Silva</span><span class="del-tel">(38) 99138-5615</span></li><li class="del-item"><span class="del-nome">Amanda de Souza Miranda</span><span class="del-tel">(38) 99850-659</span></li><li class="del-item"><span class="del-nome">Maria Aparecida Soares Fonseca</span><span class="del-tel">(38) 99172-7359</span></li></ul>
+      </div>
+      <div class="del-card seg-g">
+        <div class="del-head">
+          <div class="del-icon">🏛️</div>
+          <span class="del-stitle">Gestão</span>
+          <span class="del-cnt">6</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Renata Mesquita Pimenta</span><span class="del-tel">(38) 98848-1288</span></li><li class="del-item"><span class="del-nome">Érica Renata Nunes de Oliveira Barral</span><span class="del-tel">(38) 98824-7988</span></li><li class="del-item"><span class="del-nome">Sônia Oliveira Braga</span><span class="del-tel">(38) 99993-4710</span></li><li class="del-item"><span class="del-nome">Cleita Pinheiro de Almeida</span><span class="del-tel">(38) 99163-9564</span></li><li class="del-item"><span class="del-nome">Suzyanny Dias Gusmão</span><span class="del-tel">(38) 99937-5934</span></li><li class="del-item"><span class="del-nome">Krisley Francielle Lopes Ramos</span><span class="del-tel">(38) 99747-5836</span></li></ul>
+      </div></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Encerramento</span></div>
+    <div class="enc">Às 11h38, Márcio declara encerrada a pré-conferência, a pré-conferência é declarada encerrada.</div>
+  </section>
+  <div class="doc-footer">
+    <div class="fw"></div>
+    <div class="fi2">
+      <span class="ft">Conselho Municipal de Saúde de Montes Claros · 11ª Conferência Municipal de Saúde · 2026</span>
+      <span class="fn">ATA-PRÉ-CONF · 005/2026 · 17.03.2026</span>
+    </div>
+  </div>
+</div>
+<script>
+const propostas = ["Reduzir o tempo de espera para atendimentos de fisioterapia, por meio da atuação integrada entre fisioterapeutas e educadores físicos das equipes e-multi, com prioridade para casos mais graves.", "Promover atividades físicas e exercícios laborais, adequados às diferentes faixas etárias e níveis de limitação motora, visando à prevenção de agravos e à melhoria da qualidade de vida.", "Ampliar a realização de visitas domiciliares por fisioterapeutas, fortalecendo o cuidado contínuo, especialmente para pacientes com mobilidade reduzida ou em processo de reabilitação.", "Estabelecer parcerias com instituições de ensino para inserção de acadêmicos de fisioterapia em estágio supervisionado na ESF, especialmente nos atendimentos domiciliares, utilizando recursos terapêuticos simples e portáteis.", "Implantar um Hospital Regional de Trauma, com estrutura adequada para atendimento de urgência e emergência, ampliando a capacidade de resposta da rede de saúde.", "Ampliar a oferta de grupos terapêuticos, com foco na melhoria das condições psicológicas e fisiológicas da população, fortalecendo o cuidado integral.", "Reestruturar e ampliar a UBS Santa Lúcia I, garantindo espaço adequado para a realização de atividades laborais e ações coletivas de saúde.", "Ampliar o transporte sanitário, garantindo maior acesso da população aos serviços de saúde, com organização eficiente da demanda e priorização dos usuários em situação de maior vulnerabilidade.", "Ampliar os centros especializados, visando aumentar a capacidade de atendimento e reduzir o tempo de espera para consultas e procedimentos especializados.", "Ampliar a oferta de odontologia hospitalar, por meio da contratação de cirurgiões-dentistas, garantindo assistência integral aos pacientes internados.", "Equipar todas as UBS com aparelhos de radiografias odontológicas adequados, assegurando condições seguras e resolutivas para o atendimento em saúde bucal.", "Implantar laboratórios clínicos municipais, com o objetivo de ampliar o acesso a exames diagnósticos e reduzir o tempo de resposta para os resultados.", "Aprimorar a regionalização e a logística de distribuição de vagas para exames e consultas, visando facilitar o acesso da população e otimizar a utilização dos serviços.", "Agilizar o acesso a exames especializados, com prioridade para exames críticos como cardiológicos, radiografias e ultrassonografias.", "Disponibilizar veículo próprio com motorista para cada Unidade de Saúde da Família, destinado ao deslocamento das equipes nas visitas domiciliares e apoio no transporte de usuários.", "Organizar o agendamento da fisioterapia por território, priorizando o encaminhamento dos pacientes para prestadores mais próximos de suas residências.", "Implantar e garantir a utilização integrada de um sistema único de prontuário eletrônico no município (PEC), abrangendo todos os prestadores de serviços e unidades hospitalares.", "Reformar e ampliar os consultórios das UBS Vila Anália II, Lourdes, Vila Sion, Santo Antônio II e Santa Lúcia, garantindo melhores condições de trabalho e ampliando a capacidade de atendimento.", "Fortalecer os processos de auditoria dos prestadores de serviços, assegurando a qualidade da assistência, a adequada utilização dos recursos e a conformidade com os protocolos estabelecidos.", "Fortalecer a fiscalização e o monitoramento das clínicas prestadoras de serviços ao SUS, avaliando qualidade da assistência, cumprimento de contratos e satisfação dos usuários.", "Implantar equipamentos de raio-X e eletrocardiograma nas Unidades de Saúde, ampliando o acesso a exames e agilizando o diagnóstico.", "Atualizar os sistemas de informação em saúde local, garantindo dados fidedignos por microárea e reduzindo a necessidade do uso de instrumentos manuais.", "Ampliar a contratação de psicólogos para as UBS, fortalecendo o atendimento aos usuários em sofrimento mental e qualificando o cuidado na Atenção Primária.", "Ampliar e adequar os consultórios das UBS, visando aumentar a capacidade de atendimento e garantir condições adequadas de trabalho aos profissionais.", "Fortalecer a fiscalização das UBS quanto às condições ergonômicas de trabalho, assegurando ambientes adequados especialmente em recepções e salas de ACS.", "Ampliar a estrutura física e os recursos humanos dos Centros de Especialidades Odontológicas (CEO), aumentando a oferta e a resolutividade dos atendimentos especializados em saúde bucal.", "Ampliar a oferta de próteses dentárias, garantindo reabilitação oral, melhoria da qualidade de vida e promoção da saúde bucal da população.", "Ampliar o apoio e a assistência às crianças com Transtorno do Espectro Autista, garantindo acesso ao acompanhamento contínuo e aos serviços especializados.", "Promover a equidade de direitos entre profissionais efetivos e contratados, assegurando condições isonômicas de trabalho, incluindo a possibilidade de redução de carga horária.", "Implantar o projeto 'Rede Ativa' na Atenção Primária, integrando práticas de promoção da saúde, prevenção de agravos e cuidado contínuo.", "Implantar centro ambulatorial de Práticas Integrativas e Complementares em Saúde (PICS), com ênfase em abordagens da medicina tradicional chinesa.", "Adquirir equipamentos próprios para realização de exames especializados como endoscopia, mamografia e monitorização ambulatorial (MAPA/Holter), reduzindo a dependência de prestadores externos.", "Reduzir o tempo de espera para consultas e exames especializados, por meio da otimização dos fluxos de regulação e ampliação da oferta.", "Capacitar os profissionais das unidades de saúde para o atendimento às Pessoas com Deficiência (PCDs), promovendo cuidado inclusivo, humanizado e qualificado.", "Implantar a coleta de exames laboratoriais nas próprias UBS ou garantir o agendamento imediato após a consulta.", "Garantir o pagamento de adicional de insalubridade aos profissionais que atuam nas UBS, incluindo recepcionistas, assistentes administrativos, psicólogos, gerentes e apoiadores.", "Estabelecer o pagamento do adicional de insalubridade em grau máximo (40%) para os profissionais das UBS, conforme avaliação técnica das condições de trabalho."];
+const pg = document.getElementById('pg');
+const total = propostas.length;
+propostas.forEach((txt, i) => {
+  const el = document.createElement('div');
+  el.className = 'prop';
+  el.dataset.txt = txt.toLowerCase();
+  el.innerHTML = `<span class="pnum">${i+1}</span><span class="ptxt">${txt}</span>`;
+  pg.appendChild(el);
+});
+function filtrar() {
+  const q = document.getElementById('fi').value.toLowerCase().trim();
+  const items = pg.querySelectorAll('.prop');
+  let n = 0;
+  items.forEach(el => {
+    const ok = !q || el.dataset.txt.includes(q);
+    el.classList.toggle('hidden', !ok);
+    if (ok) n++;
+  });
+  document.getElementById('fcnt').textContent = q ? `${n} de ${total} encontradas` : `Todas as ${total}`;
+}
+</script>
+</body>
+</html>

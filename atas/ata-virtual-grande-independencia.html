@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ata Virtual · Grande Independência · 18 de março de 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+:root{--azul-sus:#1A5EA8;--azul-medio:#2E8BC0;--azul-escuro:#0C345E;--azul-profundo:#001D38;
+--verde-sus:#3AAA35;--amarelo:#F5C800;--cinza-off:#F4F7FB;--cinza-texto:#2C3E50;
+--cinza-medio:#6B7F96;--cinza-borda:#D6E4F0;--branco:#FFFFFF;
+--gwave:linear-gradient(135deg,#1A5EA8 0%,#2E8BC0 40%,#5BBF6A 75%,#F5C800 100%);
+--font:'Georama',sans-serif;--r:14px;--rsm:8px;--pill:999px;
+--sh:0 4px 24px rgba(26,94,168,.09),0 1px 4px rgba(26,94,168,.05);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--cinza-off);color:var(--cinza-texto);font-size:15px;line-height:1.7}
+.wrap{max-width:780px;margin:40px auto 80px;padding:0 20px}
+.ata-header{background:linear-gradient(160deg,#001D38 0%,#0C345E 55%,#2E8BC0 100%);border-radius:var(--r) var(--r) 0 0;padding:32px 40px 28px;position:relative;overflow:hidden}
+.ata-header::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(245,200,0,.13) 0%,transparent 70%);border-radius:50%}
+.ata-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:36px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 36'%3E%3Cpath fill='%23F4F7FB' d='M0,36 C195,4 585,30 780,0 L780,36 Z'/%3E%3C/svg%3E") no-repeat bottom;background-size:cover}
+.header-inner{display:flex;align-items:center;gap:22px;position:relative;z-index:1}
+.header-logo{width:88px;height:88px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.28))}
+.hd-badge{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.8);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 12px;border-radius:var(--pill);margin-bottom:8px}
+.hd-title{font-size:21px;font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:3px}
+.hd-title span{color:var(--amarelo)}
+.hd-tema{font-size:11.5px;color:rgba(255,255,255,.58);font-style:italic}
+.hd-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hd-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.78);font-size:9.5px;font-weight:600;padding:3px 11px;border-radius:var(--pill)}
+.wavebar{height:5px;background:var(--gwave)}
+.id-strip{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:0 0 var(--r) var(--r);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:28px;box-shadow:var(--sh)}
+.id-tipo{font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus);display:flex;align-items:center;gap:6px}
+.id-tipo::before{content:'';width:16px;height:3px;background:var(--gwave);border-radius:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:var(--pill)}
+.pill-a{background:#EAF4FB;color:var(--azul-sus)}.pill-v{background:#E8F8EC;color:#1B7A30}.pill-am{background:#FEF8E7;color:#9A6500}
+.sec{margin-bottom:28px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:9px;border-bottom:1.5px solid var(--cinza-borda)}
+.sec-head::before{content:'';width:18px;height:3px;background:var(--gwave);border-radius:2px;flex-shrink:0}
+.sec-title{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus)}
+.sec-badge{background:#EAF4FB;color:var(--azul-sus);font-size:8.5px;font-weight:800;padding:2px 8px;border-radius:var(--pill)}
+.card{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh)}
+.ficha{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fi{background:var(--cinza-off);border:1px solid var(--cinza-borda);border-radius:var(--rsm);padding:11px 14px}
+.fi-lbl{font-size:7.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:3px}
+.fi-val{font-size:13px;font-weight:600;color:var(--cinza-texto);line-height:1.4}
+.body-p{font-size:14px;color:var(--cinza-texto);line-height:1.8;text-align:justify;margin-bottom:12px}
+.body-p:last-child{margin-bottom:0}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.finput{flex:1;border:1.5px solid var(--cinza-borda);border-radius:var(--rsm);padding:8px 14px;font-family:var(--font);font-size:13px;color:var(--cinza-texto);background:var(--branco);outline:none;transition:border-color .2s}
+.finput:focus{border-color:var(--azul-medio)}
+.fcount{font-size:11px;color:var(--cinza-medio);font-weight:600;white-space:nowrap}
+.prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.prop{display:flex;align-items:flex-start;gap:9px;background:var(--cinza-off);border:1px solid var(--cinza-borda);border-left:3px solid var(--azul-medio);border-radius:0 var(--rsm) var(--rsm) 0;padding:7px 11px;transition:background .15s,border-left-color .15s}
+.prop:hover{background:#EAF4FB;border-left-color:var(--azul-sus)}
+.prop.hidden{display:none}
+.pnum{flex-shrink:0;width:22px;height:22px;background:var(--azul-sus);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;margin-top:1px}
+.ptxt{font-size:13px;color:var(--cinza-texto);line-height:1.5}
+.del-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.del-card{background:var(--branco);border:1.5px solid var(--cinza-borda);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.del-head{padding:10px 14px;display:flex;align-items:center;gap:8px}
+.del-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.del-stitle{font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.del-cnt{margin-left:auto;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:var(--pill)}
+.seg-u .del-head{background:#EAF4FB}.seg-u .del-icon{background:#D6ECF9}.seg-u .del-stitle{color:var(--azul-sus)}.seg-u .del-cnt{background:#D6ECF9;color:var(--azul-sus)}
+.seg-g .del-head{background:#E8F8EC}.seg-g .del-icon{background:#D2F0D5}.seg-g .del-stitle{color:#1B7A30}.seg-g .del-cnt{background:#D2F0D5;color:#1B7A30}
+.seg-t .del-head{background:#FEF8E7}.seg-t .del-icon{background:#FCF0C4}.seg-t .del-stitle{color:#9A6500}.seg-t .del-cnt{background:#FCF0C4;color:#9A6500}
+.del-list{list-style:none;padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.del-item{font-size:12px}
+.del-nome{font-weight:700;color:var(--cinza-texto);display:block;line-height:1.35}
+.del-tel{color:var(--cinza-medio);font-family:'Courier New',monospace;font-size:11px}
+.enc{background:linear-gradient(135deg,#EAF4FB,#F4F7FB);border:1.5px solid var(--cinza-borda);border-left:4px solid var(--verde-sus);border-radius:0 var(--rsm) var(--rsm) 0;padding:14px 18px;font-size:14px;color:var(--cinza-texto);line-height:1.7}
+.doc-footer{border-radius:0 0 var(--r) var(--r);overflow:hidden;margin-top:28px}
+.fw{height:5px;background:var(--gwave)}
+.fi2{background:#0D3D6B;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;border-radius:0 0 var(--r) var(--r)}
+.ft{font-size:10px;color:rgba(255,255,255,.45)}
+.fn{font-size:10px;color:rgba(255,255,255,.28);font-family:'Courier New',monospace;letter-spacing:.05em}
+@media(max-width:640px){.ata-header,.card{padding-left:20px;padding-right:20px}.ficha,.prop-grid{grid-template-columns:1fr}.del-grid{grid-template-columns:1fr}.header-inner{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="ata-header">
+    <div class="header-inner">
+      <img src="https://i.ibb.co/sJNjVQXc/11conflogo.png" alt="Logo 11ª CMS" class="header-logo" referrerpolicy="no-referrer">
+      <div class="header-text">
+        <span class="hd-badge">Conselho Municipal de Saúde · Montes Claros – MG</span>
+        <h1 class="hd-title">11ª Conferência Municipal de Saúde<br><span>Montes Claros</span></h1>
+        <p class="hd-tema">"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do Povo é Cuidar do Brasil"</p>
+        <div class="hd-meta">
+          <span class="hd-chip">✍ Relatoria: Equipe de Apoio da Conferência</span>
+          <span class="hd-chip">⚙ Coord.: Márcio Cardoso Silva</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="wavebar"></div>
+  <div class="id-strip">
+    <span class="id-tipo">Ata Oficial — Pré-Conferência · Grande Independência</span>
+    <div class="pills">
+      <span class="pill pill-a">📅 18 de março de 2026</span>
+      <span class="pill pill-v">⏰ 07:30h às 11:30h · início: 08h00</span>
+      <span class="pill pill-am">📍 Grande Independência</span>
+    </div>
+  </div>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Dados do Evento</span></div>
+    <div class="ficha">
+      <div class="fi"><div class="fi-lbl">Tipo de Evento</div><div class="fi-val">Pré-Conferência Municipal de Saúde</div></div>
+      <div class="fi"><div class="fi-lbl">Região</div><div class="fi-val">Grande Independência</div></div>
+      <div class="fi"><div class="fi-lbl">Local</div><div class="fi-val">Assembleia de Deus Madureira</div></div>
+      <div class="fi"><div class="fi-lbl">Endereço</div><div class="fi-val">Rua Marqueza de Santos, 612 — Independência — Montes Claros – MG</div></div>
+      <div class="fi"><div class="fi-lbl">Data</div><div class="fi-val">18 de março de 2026</div></div>
+      <div class="fi"><div class="fi-lbl">Horário</div><div class="fi-val">07:30h às 11:30h · início: 08h00</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Registro da Plenária</span></div>
+    <div class="card"><p class="body-p">Aos 18 dias do mês de Março de 2026, às 08h00 na Assembleia de Deus Madureira, localizada na Rua Marqueza de Santos, 612 — Independência, Montes Claros — MG, atendendo à convocação do Conselho Municipal de saúde de Montes Claros, reuniram-se servidores municipais da Secretaria Municipal de Saúde e população da região do grande Independência (Independência I, II, III, Jardim Primavera, Interlagos, Esplanada I, II, Vera Cruz, Nova Suíça, Acácias, Carmelo I e II), no propósito de discutir em assembléia a elaboração de propostas e eleição de delegados na etapa de pré-conferência para a 11º Conferência Municipal de Saúde: <em>"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do povo é cuidar do Brasil."</em></p>
+<p class="body-p">O evento teve início com assinatura da lista de presença. O Sr. Márcio Cardoso Silva, Coordenador de Apoio ao Conselho Municipal de Saúde, apresentou a dinâmica e os objetivos da plenária, realizando a abertura dos trabalhos e promovendo uma explanação acerca das necessidades de saúde da população nos territórios. Foi ressaltado que, no presente ano, o Conselho Municipal de Saúde promove a realização de 13 pré-conferências, configurando a maior mobilização já registrada no município.</p>
+<p class="body-p">O mediador da plenária informou que na data de hoje, além da definição das propostas, serão eleitos 6 delegados representantes de usuários, 10 representantes de trabalhadores e 6 representantes da gestão para participação na 11ª Conferência Municipal de Saúde de Montes Claros que será realizada nos dias 22, 23 e 24 de abril de 2026.</p></div>
+  </section>
+  <section class="sec" id="propostas">
+    <div class="sec-head">
+      <span class="sec-title">Propostas Gerais Deliberadas</span>
+      <span class="sec-badge">52 propostas</span>
+    </div>
+    <div class="filter-row">
+      <input class="finput" id="fi" type="text" placeholder="🔍  Buscar nas propostas..." oninput="filtrar()">
+      <span class="fcount" id="fcnt">Todas as 52</span>
+    </div>
+    <div class="prop-grid" id="pg"></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Delegados Eleitos</span><span class="sec-badge">16 delegados</span></div>
+    <div class="del-grid">
+      <div class="del-card seg-u">
+        <div class="del-head">
+          <div class="del-icon">👥</div>
+          <span class="del-stitle">Usuários</span>
+          <span class="del-cnt">5</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Cleber Juliel Teixeira de Figueiredo</span><span class="del-tel">(38) 99999-2811</span></li><li class="del-item"><span class="del-nome">Leda Maria de Jesus</span><span class="del-tel">(38) 99927-5460</span></li><li class="del-item"><span class="del-nome">Ronéria Rodrigues Azevedo</span><span class="del-tel">(38) 99976-4977</span></li><li class="del-item"><span class="del-nome">Edimilson Pereira Rodrigues dos Santos</span><span class="del-tel">(38) 99800-6724</span></li><li class="del-item"><span class="del-nome">Terezinha Ramos Cordeiro</span><span class="del-tel">(38) 99800-6724</span></li></ul>
+      </div>
+      <div class="del-card seg-t">
+        <div class="del-head">
+          <div class="del-icon">🩺</div>
+          <span class="del-stitle">Trabalhadores</span>
+          <span class="del-cnt">8</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Fabriciane Viana de Araujo Fiais</span><span class="del-tel">(38) 99906-0727</span></li><li class="del-item"><span class="del-nome">Bruna Fernanda Soares da Silva</span><span class="del-tel">(38) 99903-5833</span></li><li class="del-item"><span class="del-nome">Meire Damiao Vieira</span><span class="del-tel">(38) 99983-0753</span></li><li class="del-item"><span class="del-nome">Ana de Cássia Silva</span><span class="del-tel">(38) 98822-7886</span></li><li class="del-item"><span class="del-nome">Gleyciele Ferreira Lopes</span><span class="del-tel">(38) 99987-8251</span></li><li class="del-item"><span class="del-nome">Marcos Vinicius Aparecido Soares</span><span class="del-tel">(38) 99225-8657</span></li><li class="del-item"><span class="del-nome">Juliana Patrícia Ramos Pereira</span><span class="del-tel">(38) 99801-9258</span></li><li class="del-item"><span class="del-nome">Clariana de Oliveira Estevam Brito</span><span class="del-tel">(38) 99933-8471</span></li></ul>
+      </div>
+      <div class="del-card seg-g">
+        <div class="del-head">
+          <div class="del-icon">🏛️</div>
+          <span class="del-stitle">Gestão</span>
+          <span class="del-cnt">3</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Maria Fernanda Prais Vieira</span><span class="del-tel">(38) 98829-2483</span></li><li class="del-item"><span class="del-nome">Monik Lopes de Jesus</span><span class="del-tel">(38) 99849-9951</span></li><li class="del-item"><span class="del-nome">Luciane das Neves Martins</span><span class="del-tel">(38) 99822-2801</span></li></ul>
+      </div></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Encerramento</span></div>
+    <div class="enc">Às 12h00, Márcio declara encerrada a pré-conferência, a pré-conferência é declarada encerrada.</div>
+  </section>
+  <div class="doc-footer">
+    <div class="fw"></div>
+    <div class="fi2">
+      <span class="ft">Conselho Municipal de Saúde de Montes Claros · 11ª Conferência Municipal de Saúde · 2026</span>
+      <span class="fn">ATA-PRÉ-CONF · 006/2026 · 18.03.2026</span>
+    </div>
+  </div>
+</div>
+<script>
+const propostas = ["Reestruturação das Unidades Básicas de Saúde (UBS): Substituição de UBS instaladas em imóveis alugados e inadequados por unidades próprias, planejadas e com infraestrutura adequada para garantir qualidade no atendimento à população.", "Climatização das UBS: Implantação de sistemas de climatização em todas as UBS do Grande Independência, assegurando condições adequadas de trabalho para os profissionais e conforto térmico para os usuários.", "Ampliação da estrutura física das UBS: Adequação do número de consultórios, permitindo o atendimento simultâneo de todos os profissionais da equipe multiprofissional.", "Melhoria no acesso a exames e consultas especializadas: Redução do tempo de espera para agendamentos, por meio da ampliação da oferta e da organização dos fluxos assistenciais.", "Adequação estrutural da UBS Acácias: Climatização dos consultórios e demais ambientes, garantindo melhores condições de atendimento e trabalho.", "Necessidade de realização de processo seletivo para Agente Comunitário de Saúde para o Grande Independência, tendo em vista que algumas equipes estão com quantidade insuficiente destes profissionais.", "Necessidade de profissionais administrativos na recepção, considerando a demanda de atendimento das unidades e as necessidades de melhor organização do fluxo de usuários.", "Iluminação no entorno das UBS do grande Independência: Necessidade de melhoria da iluminação pública no entorno e nas ruas próximas à unidade de saúde.", "Reorganização da atuação da Residência na UBS Acácias: Avaliar e realizar a readequação da Residência Multiprofissional na UBS, considerando os impactos na longitudinalidade do cuidado.", "Aumento da oferta de uniformes e protetor solar adequados ao trabalho, entre outros itens necessários para a proteção dos profissionais.", "Descentralização do agendamento de exames laboratoriais: Implantação de pontos de apoio para coleta e/ou agendamento em locais mais próximos aos territórios.", "Revisão e ampliação da lista de exames ofertados: Incluir exames essenciais como ultrassom de parede abdominal, ecocardiograma fetal e ultrassom morfológico.", "Garantia de manutenção dos aparelhos de ar-condicionado nas UBS: Contratar prestadores especializados para manutenção preventiva e corretiva.", "Fortalecimento das equipes e-Multi na Atenção Primária: Ampliar a quantidade de profissionais de educação física, psicólogos, fisioterapeutas e nutricionistas nas equipes de Saúde da Família.", "Implantação de espaço adequado para resíduos de serviços de saúde na UBS Independência II, em conformidade com as normas sanitárias vigentes.", "Redivisão da equipe de Saúde da Família Independência II para melhor distribuição da carga de trabalho e cobertura territorial adequada.", "Saneamento básico nas proximidades da UBS Independência II: Implementar ações urgentes para eliminação de esgoto a céu aberto nas Rua República do Peru, Bolívia e Colômbia.", "Criação de sala de vacina na UBS Independência II.", "Aquisição de mais computadores para as UBS da região do grande Independência.", "Ampliação do acesso à vacinação antirrábica na região do Grande Independência: Descentralizar a oferta da vacina antirrábica com disponibilização em pontos estratégicos mais próximos aos territórios.", "Construção de UBS no bairro Novo Primavera: Implantar nova unidade própria com infraestrutura adequada para atender ao crescimento populacional do bairro.", "Implantação de consultório odontológico e equipe de Saúde Bucal na UBS Jardim Primavera.", "Implantação de Academia de Saúde no bairro Jardim Primavera.", "Informatização de chamada eletrônica nas UBSs: Implantar sistema de chamada eletrônica de pacientes via telas de TV.", "Retorno dos serviços de farmácia e sala de vacina ao horário estendido na UBS Jardim Primavera, Acácias e Independência I, e implementação do horário estendido na odontologia na UBS Jardim Primavera.", "Melhoria no agendamento de exames e consultas especializadas: Reduzir o tempo de espera para exames laboratoriais/diagnósticos e consultas especializadas, incluindo fisioterapia.", "Reforma da UBS Esplanada: Reforma e ampliação da infraestrutura, incluindo climatização, atendimento de plantão noturno, salas de vacina e farmácia e atendimento pediátrico.", "Construção de estrutura física própria para UBS do Interlagos: Substituir a atual casa alugada por uma UBS planejada e adequada.", "Reforço do quadro de profissionais da UBS Esplanada III: ACS, equipe administrativa e substituição temporária da técnica de enfermagem.", "Melhoria da estrutura física da UBS Nova Suíça: Ampliar a Unidade para oferecer condições adequadas de trabalho e recepção de acadêmicos para estágios.", "Reavaliação do programa Saúde na Hora na UBS Nova Suíça, considerando ineficácia, baixa procura após as 18h e questões de segurança para as profissionais.", "Aumento do número de gerentes para as UBS, de modo que cada profissional assuma apenas uma unidade.", "Reavaliação do sistema de avaliação dos ACS: Ajustar os critérios considerando o número de famílias acompanhadas em vez do número de indivíduos.", "Melhoria da estrutura física da UBS Independência I: Adequar e ampliar a Unidade, incluindo instalação de climatização e ventilação adequadas.", "Instalação de bebedouros de qualidade nas UBS da região do Grande Independência.", "Reorganização das equipes na UBS Independência I: Propor que a quarta equipe seja realocada para outra estrutura física.", "Organização do tráfego no entorno da UBS Independência I: Implantar sentido único na via onde está localizada a unidade.", "Implantação de cadeira odontológica e ampliação da equipe de Saúde Bucal na UBS Independência I.", "Melhoria na segurança nas UBS com horário estendido.", "Ampliação das práticas integrativas na Atenção Primária, incluindo a implantação de um Centro voltado para a oferta de práticas integrativas de saúde para a região do Grande Independência.", "Disponibilização de serviços de radiologia odontológica e farmácia na UPA, inclusive aos finais de semana.", "Construção de sede própria para a UBS Carmelo I.", "Melhoria do consultório odontológico da UBS Carmelo I: Garantir espaço adequado, ventilado e equipado.", "Adequação da estrutura interna e equipamentos da UBS Carmelo I: Implantar sala de espera, aumentar o número de computadores e tablets funcionais para os ACS.", "Implantação de serviços essenciais na UBS Carmelo I: Disponibilizar sala de vacina e farmácia.", "Otimização dos agendamentos de exames, consultas especializadas e outros serviços: Estabelecer prazos maiores para avisar os pacientes sobre os agendamentos.", "Aumento da oferta de consultas especializadas como hematologia e reumatologia.", "Higienização das filas de demanda reprimida: As equipes de SF devem realizar revisão e correção periódica das filas no sistema.", "Descentralização do CEO para a região do Grande Independência: Implantar unidades de Média Complexidade em saúde bucal mais próximas à população.", "Infraestrutura da Academia de Saúde Independência: Acesso à internet, bebedouro, reforma com instalação de piso adequado, conserto de infiltrações e pintura.", "Tablet do ACS: Melhorar a informação dos marcadores de condições clínicas para incluir Deficiências e outras condições além das já disponíveis.", "Implementar a informatização do SISAB."];
+const pg = document.getElementById('pg');
+const total = propostas.length;
+propostas.forEach((txt, i) => {
+  const el = document.createElement('div');
+  el.className = 'prop';
+  el.dataset.txt = txt.toLowerCase();
+  el.innerHTML = `<span class="pnum">${i+1}</span><span class="ptxt">${txt}</span>`;
+  pg.appendChild(el);
+});
+function filtrar() {
+  const q = document.getElementById('fi').value.toLowerCase().trim();
+  const items = pg.querySelectorAll('.prop');
+  let n = 0;
+  items.forEach(el => {
+    const ok = !q || el.dataset.txt.includes(q);
+    el.classList.toggle('hidden', !ok);
+    if (ok) n++;
+  });
+  document.getElementById('fcnt').textContent = q ? `${n} de ${total} encontradas` : `Todas as ${total}`;
+}
+</script>
+</body>
+</html>

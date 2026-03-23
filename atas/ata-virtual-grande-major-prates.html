@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ata Virtual · Grande Major Prates · 19 de março de 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+:root{--azul-sus:#1A5EA8;--azul-medio:#2E8BC0;--azul-escuro:#0C345E;--azul-profundo:#001D38;
+--verde-sus:#3AAA35;--amarelo:#F5C800;--cinza-off:#F4F7FB;--cinza-texto:#2C3E50;
+--cinza-medio:#6B7F96;--cinza-borda:#D6E4F0;--branco:#FFFFFF;
+--gwave:linear-gradient(135deg,#1A5EA8 0%,#2E8BC0 40%,#5BBF6A 75%,#F5C800 100%);
+--font:'Georama',sans-serif;--r:14px;--rsm:8px;--pill:999px;
+--sh:0 4px 24px rgba(26,94,168,.09),0 1px 4px rgba(26,94,168,.05);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--cinza-off);color:var(--cinza-texto);font-size:15px;line-height:1.7}
+.wrap{max-width:780px;margin:40px auto 80px;padding:0 20px}
+.ata-header{background:linear-gradient(160deg,#001D38 0%,#0C345E 55%,#2E8BC0 100%);border-radius:var(--r) var(--r) 0 0;padding:32px 40px 28px;position:relative;overflow:hidden}
+.ata-header::before{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(245,200,0,.13) 0%,transparent 70%);border-radius:50%}
+.ata-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:36px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 780 36'%3E%3Cpath fill='%23F4F7FB' d='M0,36 C195,4 585,30 780,0 L780,36 Z'/%3E%3C/svg%3E") no-repeat bottom;background-size:cover}
+.header-inner{display:flex;align-items:center;gap:22px;position:relative;z-index:1}
+.header-logo{width:88px;height:88px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.28))}
+.hd-badge{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.8);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 12px;border-radius:var(--pill);margin-bottom:8px}
+.hd-title{font-size:21px;font-weight:900;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:3px}
+.hd-title span{color:var(--amarelo)}
+.hd-tema{font-size:11.5px;color:rgba(255,255,255,.58);font-style:italic}
+.hd-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hd-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.78);font-size:9.5px;font-weight:600;padding:3px 11px;border-radius:var(--pill)}
+.wavebar{height:5px;background:var(--gwave)}
+.id-strip{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:0 0 var(--r) var(--r);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:28px;box-shadow:var(--sh)}
+.id-tipo{font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus);display:flex;align-items:center;gap:6px}
+.id-tipo::before{content:'';width:16px;height:3px;background:var(--gwave);border-radius:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:9.5px;font-weight:600;padding:3px 10px;border-radius:var(--pill)}
+.pill-a{background:#EAF4FB;color:var(--azul-sus)}.pill-v{background:#E8F8EC;color:#1B7A30}.pill-am{background:#FEF8E7;color:#9A6500}
+.sec{margin-bottom:28px;scroll-margin-top:20px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:9px;border-bottom:1.5px solid var(--cinza-borda)}
+.sec-head::before{content:'';width:18px;height:3px;background:var(--gwave);border-radius:2px;flex-shrink:0}
+.sec-title{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--azul-sus)}
+.sec-badge{background:#EAF4FB;color:var(--azul-sus);font-size:8.5px;font-weight:800;padding:2px 8px;border-radius:var(--pill)}
+.card{background:var(--branco);border:1px solid var(--cinza-borda);border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh)}
+.ficha{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fi{background:var(--cinza-off);border:1px solid var(--cinza-borda);border-radius:var(--rsm);padding:11px 14px}
+.fi-lbl{font-size:7.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cinza-medio);margin-bottom:3px}
+.fi-val{font-size:13px;font-weight:600;color:var(--cinza-texto);line-height:1.4}
+.body-p{font-size:14px;color:var(--cinza-texto);line-height:1.8;text-align:justify;margin-bottom:12px}
+.body-p:last-child{margin-bottom:0}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.finput{flex:1;border:1.5px solid var(--cinza-borda);border-radius:var(--rsm);padding:8px 14px;font-family:var(--font);font-size:13px;color:var(--cinza-texto);background:var(--branco);outline:none;transition:border-color .2s}
+.finput:focus{border-color:var(--azul-medio)}
+.fcount{font-size:11px;color:var(--cinza-medio);font-weight:600;white-space:nowrap}
+.prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.prop{display:flex;align-items:flex-start;gap:9px;background:var(--cinza-off);border:1px solid var(--cinza-borda);border-left:3px solid var(--azul-medio);border-radius:0 var(--rsm) var(--rsm) 0;padding:7px 11px;transition:background .15s,border-left-color .15s}
+.prop:hover{background:#EAF4FB;border-left-color:var(--azul-sus)}
+.prop.hidden{display:none}
+.pnum{flex-shrink:0;width:22px;height:22px;background:var(--azul-sus);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;margin-top:1px}
+.ptxt{font-size:13px;color:var(--cinza-texto);line-height:1.5}
+.del-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.del-card{background:var(--branco);border:1.5px solid var(--cinza-borda);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.del-head{padding:10px 14px;display:flex;align-items:center;gap:8px}
+.del-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.del-stitle{font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.del-cnt{margin-left:auto;font-size:8.5px;font-weight:800;padding:2px 7px;border-radius:var(--pill)}
+.seg-u .del-head{background:#EAF4FB}.seg-u .del-icon{background:#D6ECF9}.seg-u .del-stitle{color:var(--azul-sus)}.seg-u .del-cnt{background:#D6ECF9;color:var(--azul-sus)}
+.seg-g .del-head{background:#E8F8EC}.seg-g .del-icon{background:#D2F0D5}.seg-g .del-stitle{color:#1B7A30}.seg-g .del-cnt{background:#D2F0D5;color:#1B7A30}
+.seg-t .del-head{background:#FEF8E7}.seg-t .del-icon{background:#FCF0C4}.seg-t .del-stitle{color:#9A6500}.seg-t .del-cnt{background:#FCF0C4;color:#9A6500}
+.del-list{list-style:none;padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px}
+.del-item{font-size:12px}
+.del-nome{font-weight:700;color:var(--cinza-texto);display:block;line-height:1.35}
+.del-tel{color:var(--cinza-medio);font-family:'Courier New',monospace;font-size:11px}
+.enc{background:linear-gradient(135deg,#EAF4FB,#F4F7FB);border:1.5px solid var(--cinza-borda);border-left:4px solid var(--verde-sus);border-radius:0 var(--rsm) var(--rsm) 0;padding:14px 18px;font-size:14px;color:var(--cinza-texto);line-height:1.7}
+.doc-footer{border-radius:0 0 var(--r) var(--r);overflow:hidden;margin-top:28px}
+.fw{height:5px;background:var(--gwave)}
+.fi2{background:#0D3D6B;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;border-radius:0 0 var(--r) var(--r)}
+.ft{font-size:10px;color:rgba(255,255,255,.45)}
+.fn{font-size:10px;color:rgba(255,255,255,.28);font-family:'Courier New',monospace;letter-spacing:.05em}
+@media(max-width:640px){.ata-header,.card{padding-left:20px;padding-right:20px}.ficha,.prop-grid{grid-template-columns:1fr}.del-grid{grid-template-columns:1fr}.header-inner{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="ata-header">
+    <div class="header-inner">
+      <img src="https://i.ibb.co/sJNjVQXc/11conflogo.png" alt="Logo 11ª CMS" class="header-logo" referrerpolicy="no-referrer">
+      <div class="header-text">
+        <span class="hd-badge">Conselho Municipal de Saúde · Montes Claros – MG</span>
+        <h1 class="hd-title">11ª Conferência Municipal de Saúde<br><span>Montes Claros</span></h1>
+        <p class="hd-tema">"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do Povo é Cuidar do Brasil"</p>
+        <div class="hd-meta">
+          <span class="hd-chip">✍ Relatoria: Equipe de Apoio da Conferência</span>
+          <span class="hd-chip">⚙ Coord.: Márcio Cardoso Silva</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="wavebar"></div>
+  <div class="id-strip">
+    <span class="id-tipo">Ata Oficial — Pré-Conferência · Grande Major Prates</span>
+    <div class="pills">
+      <span class="pill pill-a">📅 19 de março de 2026</span>
+      <span class="pill pill-v">⏰ 07:30h às 11:30h · início: 08h30</span>
+      <span class="pill pill-am">📍 Grande Major Prates</span>
+    </div>
+  </div>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Dados do Evento</span></div>
+    <div class="ficha">
+      <div class="fi"><div class="fi-lbl">Tipo de Evento</div><div class="fi-val">Pré-Conferência Municipal de Saúde</div></div>
+      <div class="fi"><div class="fi-lbl">Região</div><div class="fi-val">Grande Major Prates</div></div>
+      <div class="fi"><div class="fi-lbl">Local</div><div class="fi-val">USF Major Prates</div></div>
+      <div class="fi"><div class="fi-lbl">Endereço</div><div class="fi-val">Avenida Olímpio Prates, s/n — Major Prates — Montes Claros – MG</div></div>
+      <div class="fi"><div class="fi-lbl">Data</div><div class="fi-val">19 de março de 2026</div></div>
+      <div class="fi"><div class="fi-lbl">Horário</div><div class="fi-val">07:30h às 11:30h · início: 08h30</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Registro da Plenária</span></div>
+    <div class="card"><p class="body-p">Aos 19 dias do mês de Março de 2026, às 08h30 na Unidade Básica de Saúde Major Prates, localizada na Avenida Olímpio Prates, S/N — Major Prates, Montes Claros — MG, atendendo à convocação do Conselho Municipal de saúde de Montes Claros, reuniram-se servidores municipais da Secretaria Municipal de Saúde e população da região do grande Major Prates, no propósito de discutir em assembléia a elaboração de propostas e eleição de delegados na etapa de pré-conferência para a 11º Conferência Municipal de Saúde: <em>"Brasil das Brasileiras e dos Brasileiros: SUS e Soberania. Cuidar do povo é cuidar do Brasil."</em></p>
+<p class="body-p">O evento teve início com assinatura da lista de presença. O Sr. Márcio Cardoso Silva, Coordenador de Apoio ao Conselho Municipal de Saúde, apresentou a dinâmica e os objetivos da plenária. A gerente da USF Major Prates, Lorena, deu início aos trabalhos dando as boas-vindas aos presentes, ressaltando a importância das pré-conferências como instrumentos essenciais de participação popular. A gerente Cíntia representou as USF Safira e Esmeralda, destacando que essas USFs estão alocadas em casa alugada e, pela limitação da estrutura física, não têm farmácia nem sala de vacina. A gerente Thais explanou sobre a necessidade de elencação de propostas consensuais que sirvam de base para a formulação de diretrizes municipais, estaduais e nacionais.</p>
+<p class="body-p">A representante da Fundação Sara relatou que a USF Major Prates sempre foi referência para serviços de saúde para a sua família e destacou a necessidade de agilidade no agendamento de exames de análises clínicas para crianças com suspeita clínica de leucemia. A representante do CMS, Sandra, destacou a relevância das pré-conferências para o fortalecimento do controle social.</p>
+<p class="body-p">O mediador da plenária informou que na data de hoje, além da definição das propostas, serão eleitos 4 delegados representantes de usuários, 6 representantes de trabalhadores e 3 representantes da gestão para participação na 11ª Conferência Municipal de Saúde de Montes Claros que será realizada nos dias 22, 23 e 24 de abril de 2026.</p></div>
+  </section>
+  <section class="sec" id="propostas">
+    <div class="sec-head">
+      <span class="sec-title">Propostas Gerais Deliberadas</span>
+      <span class="sec-badge">33 propostas</span>
+    </div>
+    <div class="filter-row">
+      <input class="finput" id="fi" type="text" placeholder="🔍  Buscar nas propostas..." oninput="filtrar()">
+      <span class="fcount" id="fcnt">Todas as 33</span>
+    </div>
+    <div class="prop-grid" id="pg"></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Delegados Eleitos</span><span class="sec-badge">13 delegados</span></div>
+    <div class="del-grid">
+      <div class="del-card seg-u">
+        <div class="del-head">
+          <div class="del-icon">👥</div>
+          <span class="del-stitle">Usuários</span>
+          <span class="del-cnt">4</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Marizete Ribeiro de Almeida</span><span class="del-tel">(38) 99841-9305</span></li><li class="del-item"><span class="del-nome">Farley Sindeaux Ribeiro</span><span class="del-tel">(38) 99102-9650</span></li><li class="del-item"><span class="del-nome">Rosana Soares Ruas</span><span class="del-tel">(38) 99880-4996</span></li><li class="del-item"><span class="del-nome">Sandra Simone Mendes Gonçalves Carnielle</span><span class="del-tel">(38) 99996-1396</span></li></ul>
+      </div>
+      <div class="del-card seg-t">
+        <div class="del-head">
+          <div class="del-icon">🩺</div>
+          <span class="del-stitle">Trabalhadores</span>
+          <span class="del-cnt">6</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Daiane Seixas de Oliveira</span><span class="del-tel">(38) 99916-4250</span></li><li class="del-item"><span class="del-nome">Andreia Ferreira Berto</span><span class="del-tel">(38) 99952-2331</span></li><li class="del-item"><span class="del-nome">Rejane Almeida Costa</span><span class="del-tel">(38) 99114-9890</span></li><li class="del-item"><span class="del-nome">Ana Paula Gonçalves Araújo</span><span class="del-tel">(38) 98842-0839</span></li><li class="del-item"><span class="del-nome">Marcos Vinicius de Queiroz Souto</span><span class="del-tel">(38) 99246-6555</span></li><li class="del-item"><span class="del-nome">Ana Paula Chagas Macedo Honorio</span><span class="del-tel">(38) 99919-6204</span></li></ul>
+      </div>
+      <div class="del-card seg-g">
+        <div class="del-head">
+          <div class="del-icon">🏛️</div>
+          <span class="del-stitle">Gestão</span>
+          <span class="del-cnt">3</span>
+        </div>
+        <ul class="del-list"><li class="del-item"><span class="del-nome">Lorena Pereira Flávio</span><span class="del-tel">(61) 99903-5575</span></li><li class="del-item"><span class="del-nome">Cinthia Fagundes Silva Rodrigues</span><span class="del-tel">(38) 99171-9633</span></li><li class="del-item"><span class="del-nome">Thais Gomes Vieira</span><span class="del-tel">(38) 99192-7046</span></li></ul>
+      </div></div>
+  </section>
+  <section class="sec">
+    <div class="sec-head"><span class="sec-title">Encerramento</span></div>
+    <div class="enc">Às 11h10, o Presidente do CMS, Farley Sindeaux, declara encerrada a pré-conferência, a pré-conferência é declarada encerrada.</div>
+  </section>
+  <div class="doc-footer">
+    <div class="fw"></div>
+    <div class="fi2">
+      <span class="ft">Conselho Municipal de Saúde de Montes Claros · 11ª Conferência Municipal de Saúde · 2026</span>
+      <span class="fn">ATA-PRÉ-CONF · 007/2026 · 19.03.2026</span>
+    </div>
+  </div>
+</div>
+<script>
+const propostas = ["Reestruturação das Unidades Básicas de Saúde (UBS): Substituição de UBS instaladas em imóveis alugados e inadequados por unidades próprias, planejadas e com infraestrutura adequada. Como por exemplo as unidades do Safira, Diamante, Turmalina, Marfim e Esmeralda.", "Implantação de uma sala de vacina nas UBSs Safira e Esmeralda, assegurando que a população tenha acesso facilitado às ações de imunização.", "Implantação de uma farmácia nas UBSs Safira e Esmeralda, visando garantir a descentralização da assistência e o acesso facilitado da população aos medicamentos e insumos essenciais.", "Implantação do Centro Municipal de Análises Clínicas, mediante o aporte de recursos de financiamento tripartite, para fortalecer a rede de apoio diagnóstico e assegurar celeridade no processamento de exames.", "Criação do serviço de transporte sanitário gratuito dedicado ao atendimento de pacientes com destino à rede hospitalar, com horários fixos de ida e volta.", "Expansão do credenciamento de Equipes de Saúde Bucal para atingir 100% das equipes de Saúde da Família, mitigando a alta demanda reprimida.", "Implementação da especialidade de Odontopediatria nos Centros de Especialidades Odontológicas (CEO) do município.", "Melhoria na oferta e disponibilização de radiografias odontológicas em todas as UBS, fundamentais para o diagnóstico adequado e acompanhamento dos tratamentos.", "Adequação da infraestrutura das UBS, com ênfase na melhoria dos banheiros destinados aos usuários, garantindo conforto, higiene, acessibilidade e dignidade.", "Contratação de assistentes administrativos para compor o quadro de funcionários das UBS, reduzindo sobrecarga administrativa e desvio de função dos demais membros da equipe.", "Ampliação da oferta de consultas e procedimentos odontológicos especializados, com foco na redução da demanda reprimida em Endodontia e Cirurgia Bucomaxilofacial.", "Ampliação e diversificação do rol de insumos odontológicos para a Atenção Primária, com a inclusão de materiais como resina flow e pasta CTZ.", "Fortalecimento da atuação do Conselho Tutelar por meio da contratação de profissionais especializados para apoio técnico e administrativo.", "Garantir locais de trabalho salubres, com climatização adequada, uma vez que o uso de EPIs deixa o trabalhador em condições de superaquecimento.", "Padronização e disponibilização de kits cirúrgicos estéreis e descartáveis para a rede municipal de saúde bucal.", "Instituição de fluxo preferencial para a liberação e processamento de exames laboratoriais e de imagem destinados ao público infantil, fundamentado no princípio da prioridade absoluta do ECA.", "Instituição do programa de assistência odontológica no ambiente escolar, integrando as ações da Atenção Primária à Educação.", "Ampliação das equipes E-multi para todas as unidades de saúde, contribuindo para a redução da sobrecarga dos profissionais e melhoria do acesso aos serviços especializados.", "Implementação de um Programa de Educação Permanente em Legislação e Normativas do SUS, voltado para gerentes de unidades e assistentes administrativos.", "Regularizar o vínculo empregatício dos trabalhadores do SUS, substituindo vínculos precários por formas de contratação regulares.", "Otimização do fluxo de processamento e entrega de resultados de exames citopatológicos (PCCU), cujo tempo de espera para laudo excede seis meses.", "Construção de mais Centros de Especialidades Odontológicas para atender as demandas da população e reduzir as filas de espera.", "Fortalecimento da política de contratualização com prestadores de serviços, assegurando tabelas de remuneração atualizadas e mecanismos rigorosos de avaliação de desempenho.", "Implementar melhorias no transporte sanitário do município, a fim de melhorar o acesso da população aos serviços de saúde e reduzir faltas em atendimentos.", "Criação ou adequação de espaços reservados, confortáveis e climatizados, destinados ao repouso dos profissionais durante os intervalos de trabalho no horário saúde na hora.", "Instituição da Linha de Cuidado em cuidados paliativos, com financiamento tripartite, integrada aos diferentes níveis de atenção do SUS, com ênfase na linha de cuidado oncológica.", "Implementação da Política Nacional de Atenção à Oncologia Pediátrica (Lei n° 14.308/21), priorizando diagnóstico precoce e tratamento ágil no SUS.", "Estruturação e padronização do aporte de recursos psicopedagógicos e materiais lúdico-terapêuticos nos consultórios de Psicologia da rede municipal.", "Ampliar a lista de medicamentos essenciais ofertados nas farmácias do SUS, considerando as necessidades epidemiológicas locais e as demandas dos serviços de saúde mental.", "Adequar os recursos financeiros às reais demandas da população, garantindo maior oferta de serviços, redução de filas de espera e maior agilidade no acesso.", "Implementação de polos regionais para atendimentos de Fisioterapia e realização de ECG, reduzindo o absenteísmo e garantindo dignidade ao paciente.", "Instituição de um Programa de Educação Permanente em Estomaterapia e Tratamento de Feridas, aliado à padronização e descentralização de coberturas especiais para as UBS.", "Ampliação e descentralização dos serviços de assistência e dispensação de insumos estratégicos vinculados ao NAJU, como fraldas descartáveis e equipamentos para oxigenoterapia."];
+const pg = document.getElementById('pg');
+const total = propostas.length;
+propostas.forEach((txt, i) => {
+  const el = document.createElement('div');
+  el.className = 'prop';
+  el.dataset.txt = txt.toLowerCase();
+  el.innerHTML = `<span class="pnum">${i+1}</span><span class="ptxt">${txt}</span>`;
+  pg.appendChild(el);
+});
+function filtrar() {
+  const q = document.getElementById('fi').value.toLowerCase().trim();
+  const items = pg.querySelectorAll('.prop');
+  let n = 0;
+  items.forEach(el => {
+    const ok = !q || el.dataset.txt.includes(q);
+    el.classList.toggle('hidden', !ok);
+    if (ok) n++;
+  });
+  document.getElementById('fcnt').textContent = q ? `${n} de ${total} encontradas` : `Todas as ${total}`;
+}
+</script>
+</body>
+</html>
