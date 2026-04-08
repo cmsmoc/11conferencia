@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aglutinador de Propostas - Conferência de Saúde</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons para ícones modernos e leves -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilização customizada da scrollbar para o painel de lista */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="h-screen w-full bg-gray-50 flex overflow-hidden text-gray-800 font-sans">
+
+    <!-- PAINEL ESQUERDO: Lista de Propostas Brutas (55% da tela) -->
+    <section class="w-[55%] h-full flex flex-col bg-white border-r border-gray-200 shadow-sm z-10">
+        
+        <!-- Cabeçalho e Filtros (Fixo) -->
+        <div class="p-6 border-b border-gray-200 bg-white">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2 mb-4">
+                <i class="ph ph-files text-brand-600 text-3xl"></i>
+                Propostas Recebidas
+            </h1>
+            
+            <div class="flex gap-4">
+                <!-- Busca -->
+                <div class="relative flex-1">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="search-input" placeholder="Buscar por palavra-chave..." 
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                </div>
+                <!-- Filtro por Eixo -->
+                <select id="filter-eixo" class="w-1/3 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white">
+                    <option value="">Todos os Eixos</option>
+                    <option value="Eixo 1: Atenção Primária">Eixo 1: Atenção Primária</option>
+                    <option value="Eixo 2: Financiamento">Eixo 2: Financiamento</option>
+                    <option value="Eixo 3: Controle Social">Eixo 3: Controle Social</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Área de Rolagem dos Cards -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-gray-50/50" id="proposals-list">
+            <!-- Cards serão injetados via JS -->
+        </div>
+    </section>
+
+    <!-- PAINEL DIREITO: Área de Aglutinação (45% da tela, Fixo) -->
+    <section class="w-[45%] h-full flex flex-col bg-gray-50 p-8">
+        
+        <!-- Cabeçalho Área de Trabalho -->
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <i class="ph ph-git-merge text-brand-600 text-2xl"></i>
+                Aglutinar Propostas
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Selecione propostas na lista ao lado para mesclá-las em uma proposta macro.</p>
+        </div>
+
+        <!-- Indicador de Seleção -->
+        <div id="selection-indicator" class="bg-brand-50 border border-brand-200 text-brand-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-3 transition-all">
+            <i class="ph ph-check-circle text-xl"></i>
+            <span id="selected-count" class="font-medium">0 propostas selecionadas para aglutinar</span>
+        </div>
+
+        <!-- Formulário de Nova Proposta Macro -->
+        <div class="flex-1 flex flex-col gap-4">
+            
+            <div class="flex flex-col flex-1">
+                <label for="macro-textarea" class="block text-sm font-semibold text-gray-700 mb-2">Redação da Proposta Macro Unificada</label>
+                <textarea id="macro-textarea" 
+                    class="w-full flex-1 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none resize-none text-base shadow-inner bg-white disabled:bg-gray-100 disabled:cursor-not-allowed transition-all"
+                    placeholder="Redija a Proposta Macro unificada aqui..." disabled></textarea>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="w-1/3">
+                    <label for="abrangencia-select" class="block text-sm font-semibold text-gray-700 mb-2">Abrangência</label>
+                    <select id="abrangencia-select" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white disabled:bg-gray-100 disabled:cursor-not-allowed transition-all" disabled>
+                        <option value="" disabled selected>Selecione...</option>
+                        <option value="Municipal">Municipal</option>
+                        <option value="Estadual">Estadual</option>
+                        <option value="Nacional">Nacional</option>
+                    </select>
+                </div>
+                
+                <div class="flex-1 flex items-end">
+                    <button id="save-btn" 
+                        class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                        disabled>
+                        <i class="ph ph-floppy-disk text-xl"></i>
+                        Salvar Proposta Macro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Componente de Toast (Notificação flutuante) -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-4 rounded-lg shadow-xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        <i class="ph ph-check-circle text-green-400 text-2xl"></i>
+        <div>
+            <h4 class="font-bold text-sm">Sucesso!</h4>
+            <p class="text-sm text-gray-300">Proposta macro salva com sucesso.</p>
+        </div>
+    </div>
+
+    <!-- Script de Lógica Frontend -->
+    <script>
+        // -------------------------------------------------------------------
+        // DADOS MOCKADOS (Simulando a base bruta vinda do Google Apps Script)
+        // -------------------------------------------------------------------
+        let rawProposals = [
+            { 
+                id: 'PR-001', 
+                eixo: 'Eixo 1: Atenção Primária', 
+                evento: 'Conferência Municipal', 
+                text: 'Garantir a contratação de mais médicos para os postos de saúde da zona rural e periferia.', 
+                status: 'pending' // pending | agglutinated
+            },
+            { 
+                id: 'PR-002', 
+                eixo: 'Eixo 1: Atenção Primária', 
+                evento: 'Pré-Conferência Sul', 
+                text: 'Aumentar o número de equipes de Saúde da Família e Saúde Bucal.', 
+                status: 'pending' 
+            },
+            { 
+                id: 'PR-003', 
+                eixo: 'Eixo 2: Financiamento', 
+                evento: 'Conferência Municipal', 
+                text: 'Destinar 15% da arrecadação municipal exclusivamente para a Secretaria de Saúde.', 
+                status: 'pending' 
+            },
+            { 
+                id: 'PR-004', 
+                eixo: 'Eixo 3: Controle Social', 
+                evento: 'Plenária de Conselhos', 
+                text: 'Fortalecer os conselhos locais de saúde com capacitações semestrais para conselheiros.', 
+                status: 'pending' 
+            },
+            { 
+                id: 'PR-005', 
+                eixo: 'Eixo 1: Atenção Primária', 
+                evento: 'Conferência Municipal', 
+                text: 'Melhorar a infraestrutura das UBS (Unidades Básicas de Saúde), garantindo acessibilidade para PCDs.', 
+                status: 'pending' 
+            }
+        ];
+
+        // -------------------------------------------------------------------
+        // ESTADO DA APLICAÇÃO
+        // -------------------------------------------------------------------
+        let selectedIds = new Set();
+        let searchQuery = '';
+        let filterEixo = '';
+
+        // Elementos DOM
+        const domList = document.getElementById('proposals-list');
+        const domSearch = document.getElementById('search-input');
+        const domFilter = document.getElementById('filter-eixo');
+        const domSelectedCount = document.getElementById('selected-count');
+        const domIndicator = document.getElementById('selection-indicator');
+        const domTextarea = document.getElementById('macro-textarea');
+        const domAbrangencia = document.getElementById('abrangencia-select');
+        const domSaveBtn = document.getElementById('save-btn');
+        const domToast = document.getElementById('toast');
+
+        // -------------------------------------------------------------------
+        // RENDERIZAÇÃO E UI
+        // -------------------------------------------------------------------
+        function renderList() {
+            domList.innerHTML = '';
+            
+            // Filtrar itens
+            const filteredProposals = rawProposals.filter(p => {
+                const matchSearch = p.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    p.id.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchEixo = filterEixo === '' || p.eixo === filterEixo;
+                return matchSearch && matchEixo;
+            });
+
+            if(filteredProposals.length === 0) {
+                domList.innerHTML = `
+                    <div class="text-center py-10 text-gray-500 flex flex-col items-center">
+                        <i class="ph ph-magnifying-glass text-4xl mb-2 text-gray-300"></i>
+                        <p>Nenhuma proposta encontrada.</p>
+                    </div>`;
+                return;
+            }
+
+            // Renderizar Cards
+            filteredProposals.forEach(p => {
+                const isSelected = selectedIds.has(p.id);
+                const isAgglutinated = p.status === 'agglutinated';
+                
+                // Classes dinâmicas baseadas no estado
+                let cardClasses = 'bg-white border rounded-xl p-5 shadow-sm transition-all duration-200 relative ';
+                let checkboxDisabled = '';
+
+                if (isAgglutinated) {
+                    // Estado Desabilitado/Resolvido
+                    cardClasses += 'border-gray-200 opacity-60 bg-gray-100 cursor-not-allowed grayscale';
+                    checkboxDisabled = 'disabled';
+                } else if (isSelected) {
+                    // Estado Selecionado
+                    cardClasses += 'ring-2 ring-brand-500 border-brand-500 bg-brand-50 cursor-pointer';
+                } else {
+                    // Estado Normal
+                    cardClasses += 'border-gray-200 hover:border-brand-300 hover:shadow-md cursor-pointer';
+                }
+
+                // Criação do HTML do card
+                const cardHtml = `
+                    <div class="${cardClasses}" ${!isAgglutinated ? `onclick="toggleSelection('${p.id}')"` : ''} id="card-${p.id}">
+                        ${isAgglutinated ? `
+                            <span class="absolute top-4 right-4 bg-gray-800 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                <i class="ph-fill ph-lock-key"></i> Aglutinada
+                            </span>
+                        ` : ''}
+                        
+                        <div class="flex gap-4">
+                            <!-- Checkbox -->
+                            <div class="pt-1">
+                                <input type="checkbox" 
+                                    class="w-5 h-5 text-brand-600 rounded border-gray-300 focus:ring-brand-500 cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-300"
+                                    ${isSelected ? 'checked' : ''} 
+                                    ${checkboxDisabled}
+                                    onclick="event.stopPropagation(); toggleSelection('${p.id}')">
+                            </div>
+                            
+                            <!-- Conteúdo -->
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="bg-gray-100 text-gray-600 text-xs font-mono px-2 py-1 rounded border border-gray-200">${p.id}</span>
+                                    <span class="text-xs font-semibold text-brand-700 bg-brand-100 px-2 py-1 rounded">${p.eixo}</span>
+                                </div>
+                                <p class="text-gray-800 text-sm leading-relaxed mb-3 font-medium">${p.text}</p>
+                                <div class="flex items-center text-xs text-gray-500 gap-1">
+                                    <i class="ph ph-map-pin"></i>
+                                    <span>Origem: <strong>${p.evento}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Inserir string HTML no final (usando insertAdjacentHTML para melhor performance se a lista for grande)
+                domList.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function updateWorkspaceState() {
+            const count = selectedIds.size;
+            
+            // Atualizar texto do painel direito
+            if (count === 0) {
+                domSelectedCount.textContent = "0 propostas selecionadas";
+                domIndicator.classList.remove('bg-brand-50', 'border-brand-200', 'text-brand-700');
+                domIndicator.classList.add('bg-gray-100', 'border-gray-200', 'text-gray-500');
+                
+                // Desabilitar form
+                domTextarea.disabled = true;
+                domAbrangencia.disabled = true;
+                domSaveBtn.disabled = true;
+            } else {
+                domSelectedCount.textContent = `${count} proposta${count > 1 ? 's' : ''} selecionada${count > 1 ? 's' : ''} para aglutinar`;
+                domIndicator.classList.add('bg-brand-50', 'border-brand-200', 'text-brand-700');
+                domIndicator.classList.remove('bg-gray-100', 'border-gray-200', 'text-gray-500');
+                
+                // Habilitar form
+                domTextarea.disabled = false;
+                domAbrangencia.disabled = false;
+                
+                // Botão salvar só habilita se textarea tiver algo e abrangência selecionada (Validação simples via input)
+                validateForm();
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // LÓGICA DE INTERAÇÃO E EVENTOS
+        // -------------------------------------------------------------------
+        function toggleSelection(id) {
+            // Se já está resolvida, não faz nada
+            const proposal = rawProposals.find(p => p.id === id);
+            if (proposal.status === 'agglutinated') return;
+
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else {
+                selectedIds.add(id);
+            }
+            
+            // Re-renderizar lista para atualizar bordas/checkboxes visualmente
+            renderList();
+            updateWorkspaceState();
+        }
+
+        function validateForm() {
+            if (selectedIds.size > 0 && domTextarea.value.trim().length > 5 && domAbrangencia.value !== "") {
+                domSaveBtn.disabled = false;
+            } else {
+                domSaveBtn.disabled = true;
+            }
+        }
+
+        function showToast() {
+            domToast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                domToast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // -------------------------------------------------------------------
+        // SIMULAÇÃO DE BACKEND (Google Apps Script)
+        // -------------------------------------------------------------------
+        
+        /* =============================================================================
+        FUNÇÃO DE INTEGRAÇÃO (Pronta para plugar na API do GAS)
+        =============================================================================
+        
+        Você usará a API fetch() ou a tag google.script.run se estiver rodando 
+        diretamente dentro de um Web App do Apps Script. Exemplo:
+
+        function saveToGoogleSheets(macroText, abrangencia, originIds) {
+            // Exemplo usando google.script.run (Melhor para SaaS interno GSuite)
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    console.log("Sucesso no GAS!", response);
+                    // Aqui você chamaria onSaveSuccess()
+                })
+                .withFailureHandler(function(error) {
+                    console.error("Erro no GAS", error);
+                    alert("Erro ao salvar no servidor.");
+                })
+                .registrarPropostaMacro(macroText, abrangencia, originIds);
+        }
+        =============================================================================
+        */
+
+        function simulateBackendSave(macroText, abrangencia, originIds) {
+            return new Promise((resolve) => {
+                // Simulando tempo de rede (700ms)
+                domSaveBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i> Salvando...';
+                domSaveBtn.disabled = true;
+                
+                setTimeout(() => {
+                    resolve({ success: true, message: "Macro registrada." });
+                }, 700);
+            });
+        }
+
+        // Ação de Salvar
+        async function handleSave() {
+            const macroText = domTextarea.value;
+            const abrangencia = domAbrangencia.value;
+            const originIds = Array.from(selectedIds);
+
+            // Simula a chamada da função comentada acima (saveToGoogleSheets)
+            await simulateBackendSave(macroText, abrangencia, originIds);
+
+            // Callback de Sucesso:
+            // 1. Marcar as propostas originais como aglutinadas no estado local
+            rawProposals = rawProposals.map(p => {
+                if (originIds.includes(p.id)) {
+                    return { ...p, status: 'agglutinated' };
+                }
+                return p;
+            });
+
+            // 2. Limpar área de trabalho
+            selectedIds.clear();
+            domTextarea.value = '';
+            domAbrangencia.value = '';
+            
+            // 3. Restaurar botão e mostrar sucesso
+            domSaveBtn.innerHTML = '<i class="ph ph-floppy-disk text-xl"></i> Salvar Proposta Macro';
+            
+            // 4. Atualizar UI
+            renderList();
+            updateWorkspaceState();
+            showToast();
+        }
+
+        // -------------------------------------------------------------------
+        // LISTENERS DE EVENTOS DOM
+        // -------------------------------------------------------------------
+        domSearch.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderList();
+        });
+
+        domFilter.addEventListener('change', (e) => {
+            filterEixo = e.target.value;
+            renderList();
+        });
+
+        domTextarea.addEventListener('input', validateForm);
+        domAbrangencia.addEventListener('change', validateForm);
+        domSaveBtn.addEventListener('click', handleSave);
+
+        // Inicialização
+        renderList();
+        updateWorkspaceState();
+
+    </script>
+</body>
+</html>
