@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Consolidado - Propostas das Pré-Conferências</title>
+    
+    <!-- ── TIPOGRAFIA ── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- ── ESTILOS SWISS DESIGN ── -->
+    <style>
+        :root {
+            --primary: #1d9c4f;
+            --accent: #157BAB;
+            --highlight: #FFCC29;
+            --dark: #0D2244;
+            --white: #FFFFFF;
+            --off: #F7F8FA;
+            --ink: #111827;
+            --gray: #6B7280;
+            --light-gray: #E5E7EB;
+        }
+
+        /* ── RESET & BASE ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--ink);
+            background-color: var(--off);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── ELEMENTOS DE MARCA ── */
+        .brand-stripe {
+            height: 8px;
+            width: 100%;
+            background: linear-gradient(to right, var(--highlight) 0%, var(--highlight) 33.3%, var(--primary) 33.3%, var(--primary) 66.6%, var(--accent) 66.6%, var(--accent) 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        /* ── GRID & ESTRUTURA ── */
+        .container {
+            max-width: 1080px;
+            margin: 40px auto;
+            background: var(--white);
+            padding: 60px 80px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border-radius: 4px;
+        }
+
+        /* ── CABEÇALHO (HERO) ── */
+        .header {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid var(--light-gray);
+            margin-top: 20px;
+        }
+
+        .header-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        .eyebrow {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .title-display {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--gray);
+            max-width: 800px;
+        }
+
+        /* ── CONTROLES (INTERFACE) ── */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            background: var(--off);
+            padding: 16px 24px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .btn-print {
+            background-color: var(--dark);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-print:hover {
+            background-color: var(--accent);
+        }
+
+        /* ── CONTEÚDO (EIXOS E PROPOSTAS) ── */
+        .eixo-section {
+            margin-bottom: 80px;
+        }
+
+        .eixo-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid var(--accent);
+            display: inline-block;
+        }
+
+        .propostas-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .proposta-card {
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            padding: 24px;
+            position: relative;
+            page-break-inside: avoid;
+        }
+
+        .proposta-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary);
+        }
+
+        .proposta-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 0.05em;
+        }
+
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-tag {
+            background: var(--off);
+            padding: 4px 8px;
+            border-radius: 2px;
+            color: var(--dark);
+        }
+
+        .proposta-text {
+            font-size: 1rem;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+
+        /* ── ESTADOS DE CARREGAMENTO ── */
+        #loader {
+            text-align: center;
+            padding: 60px 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── RESPONSIVIDADE ── */
+        @media (max-width: 800px) {
+            .container { padding: 40px; margin: 20px auto; }
+            .title-display { font-size: 2rem; }
+        }
+
+        @media (max-width: 560px) {
+            .container { padding: 24px; margin: 0; border-radius: 0; }
+            .header-logo { max-width: 200px; }
+            .title-display { font-size: 1.75rem; }
+            .controls { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .proposta-card { padding: 16px; }
+        }
+
+        /* ── IMPRESSÃO (Otimização Rigorosa) ── */
+        @media print {
+            body { background: var(--white); font-size: 10pt; }
+            .brand-stripe { position: absolute; }
+            .container { 
+                margin: 0; 
+                padding: 0; 
+                box-shadow: none; 
+                max-width: 100%; 
+            }
+            .controls, #loader { display: none !important; }
+            .header { margin-bottom: 30px; padding-bottom: 20px; }
+            .header-logo { max-width: 220px; }
+            
+            .eixo-section { margin-bottom: 40px; }
+            .eixo-title { border-bottom-color: var(--dark); margin-bottom: 20px; }
+            
+            .propostas-grid { gap: 12px; }
+            .proposta-card { 
+                border: none; 
+                border-bottom: 1px solid #ddd; 
+                padding: 12px 0; 
+                page-break-inside: avoid;
+            }
+            .proposta-card::before { display: none; }
+            .proposta-meta { font-size: 8pt; margin-bottom: 8px; }
+            .proposta-text { font-size: 10pt; }
+            
+            @page { margin: 2cm 1.5cm; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="brand-stripe"></div>
+
+    <main class="container">
+        
+        <!-- ── CABEÇALHO ── -->
+        <header class="header">
+            <!-- Logo Horizontal do CMS apropriada para fundo claro -->
+            <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/logohbl.png" alt="Conselho Municipal de Saúde de Montes Claros" class="header-logo">
+            <div class="eyebrow">Documento Oficial Consolidado</div>
+            <h1 class="title-display">Propostas das Pré-Conferências Municipais de Saúde</h1>
+            <p class="subtitle">Relatório integral contendo todas as deliberações geradas pelas 13 Pré-Conferências Municipais de Saúde de Montes Claros, organizadas sistematicamente por Eixo Temático.</p>
+        </header>
+
+        <!-- ── CONTROLES ── -->
+        <div class="controls no-print">
+            <div id="status-text">Carregando dados da base central...</div>
+            <button class="btn-print" onclick="window.print()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Imprimir Relatório
+            </button>
+        </div>
+
+        <!-- ── ÁREA DE CONTEÚDO DINÂMICO ── -->
+        <div id="loader">Lendo diretrizes. Por favor, aguarde...</div>
+        <div id="content-area"></div>
+
+    </main>
+
+    <!-- ── LÓGICA DE PROCESSAMENTO E RENDERIZAÇÃO ── -->
+    <script>
+        // URL direta do CSV fornecido
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ32FFFj_u5J9rx1bRjJ6fOw6qteP-EaKYNdAZWs1x3pFTyArLa0sU0u7qIVd5ayA0826SYc2VS7riB/pub?gid=1145102250&single=true&output=csv';
+
+        // Função robusta para converter CSV textual em Array, respeitando aspas internas
+        function parseCSV(text) {
+            let result = [];
+            let row = [];
+            let inQuotes = false;
+            let currentVal = '';
+            
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let nextChar = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        currentVal += '"';
+                        i++; 
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    row.push(currentVal.trim());
+                    currentVal = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') i++;
+                    row.push(currentVal.trim());
+                    if (row.some(val => val !== '')) result.push(row);
+                    row = [];
+                    currentVal = '';
+                } else {
+                    currentVal += char;
+                }
+            }
+            if (currentVal || row.length > 0) {
+                row.push(currentVal.trim());
+                if (row.some(val => val !== '')) result.push(row);
+            }
+            return result;
+        }
+
+        // Função principal de inicialização
+        async function loadData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Falha na comunicação com o servidor de dados.');
+                
+                const csvText = await response.text();
+                const dataArray = parseCSV(csvText);
+                
+                // Remove cabeçalho
+                const header = dataArray.shift();
+                
+                // Agrupamento lógico por Eixo
+                const eixosMap = {};
+                let totalPropostas = 0;
+
+                dataArray.forEach(row => {
+                    // Esperado: [Nome_Conferencia, N, Proposta, Eixo, Diretriz]
+                    if (row.length < 5) return;
+                    
+                    const [conferencia, n, propostaTexto, eixo, diretriz] = row;
+                    if (!propostaTexto) return; // ignora linhas vazias
+                    
+                    const nomeEixo = eixo ? eixo.trim() : "Eixo Não Identificado";
+                    
+                    if (!eixosMap[nomeEixo]) {
+                        eixosMap[nomeEixo] = [];
+                    }
+                    
+                    eixosMap[nomeEixo].push({
+                        conferencia: conferencia.trim(),
+                        numero: n.trim(),
+                        texto: propostaTexto,
+                        diretriz: diretriz ? diretriz.trim() : "Diretriz Indefinida"
+                    });
+                    
+                    totalPropostas++;
+                });
+
+                renderLayout(eixosMap, totalPropostas);
+
+            } catch (error) {
+                document.getElementById('loader').innerHTML = `
+                    <div style="color: red;">
+                        Ocorreu um erro ao carregar os dados.<br>
+                        <small>${error.message}</small><br>
+                        <small>Por favor, verifique sua conexão ou tente novamente mais tarde.</small>
+                    </div>`;
+            }
+        }
+
+        // Função de construção do DOM
+        function renderLayout(eixosMap, total) {
+            const contentArea = document.getElementById('content-area');
+            const statusText = document.getElementById('status-text');
+            
+            document.getElementById('loader').style.display = 'none';
+            statusText.innerHTML = `<strong>${total} propostas</strong> organizadas e prontas para impressão.`;
+            
+            // Ordena os eixos alfabeticamente para manter a sequência (Eixo 1, Eixo 2...)
+            const chavesOrdenadas = Object.keys(eixosMap).sort((a, b) => a.localeCompare(b));
+
+            let htmlContent = '';
+
+            chavesOrdenadas.forEach(nomeEixo => {
+                const propostas = eixosMap[nomeEixo];
+                
+                htmlContent += `
+                    <section class="eixo-section">
+                        <h2 class="eixo-title">${nomeEixo}</h2>
+                        <div class="propostas-grid">
+                `;
+
+                propostas.forEach(prop => {
+                    htmlContent += `
+                        <article class="proposta-card">
+                            <div class="proposta-meta">
+                                <span class="meta-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                    ${prop.conferencia}
+                                </span>
+                                <span class="meta-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                                    ${prop.diretriz}
+                                </span>
+                                <span class="meta-item meta-tag">Prop. Nº ${prop.numero}</span>
+                            </div>
+                            <div class="proposta-text">
+                                ${prop.texto}
+                            </div>
+                        </article>
+                    `;
+                });
+
+                htmlContent += `
+                        </div>
+                    </section>
+                `;
+            });
+
+            contentArea.innerHTML = htmlContent;
+        }
+
+        // Inicia a aplicação
+        window.addEventListener('DOMContentLoaded', loadData);
+
+    </script>
+</body>
+</html>
