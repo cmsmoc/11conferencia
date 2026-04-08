@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Propostas — 11ª CMS Montes Claros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           BRAND GUIDE TOKENS — 11ª CMS MONTES CLAROS
+           ═══════════════════════════════════════════════════════════════ */
+        :root {
+            --azul-sus:        #1A5EA8;
+            --azul-medio:      #2E8BC0;
+            --azul-claro:      #7EC8E3;
+            --azul-wave:       #0D3D6B;
+            --verde-sus:       #3AAA35;
+            --verde-wave:      #5BBF6A;
+            --amarelo-brasil:  #F5C800;
+            --branco-puro:     #FFFFFF;
+            --cinza-off:       #F4F7FB;
+            --cinza-texto:     #2C3E50;
+            --cinza-medio:     #6B7F96;
+            --cinza-borda:     #D6E4F0;
+            --font: 'Georama', sans-serif;
+            --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+            --sombra-card: 0 4px 24px rgba(26,94,168,.10);
+            --radius: 14px;
+        }
+
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--cinza-off);
+            color: var(--cinza-texto);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* ── HEADER & SIGNATURE WAVE ── */
+        .report-header {
+            background: linear-gradient(160deg, #0D3D6B 0%, #1A5EA8 50%, #2E8BC0 100%);
+            padding: 60px 40px 80px;
+            position: relative;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .report-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23F4F7FB' d='M0,60 C480,10 960,50 1440,0 L1440,60 Z'/%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: 5px 16px;
+            border-radius: 999px;
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .report-title span { color: var(--amarelo-brasil); }
+        .report-subtitle { opacity: 0.8; font-weight: 400; font-size: 16px; }
+
+        /* ── CONTAINER & CARDS ── */
+        .main-content {
+            max-width: 1000px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--sombra-card);
+            border: 1.5px solid var(--cinza-borda);
+            margin-bottom: 30px;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .card-accent {
+            height: 6px;
+            background: var(--gradient-wave);
+        }
+
+        .card-body { padding: 32px; }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--azul-sus);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 20px; height: 3px;
+            background: var(--gradient-wave);
+            border-radius: 2px;
+        }
+
+        /* ── DASHBOARD STATS ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            background: var(--cinza-off);
+            padding: 24px;
+            border-radius: var(--radius);
+            border-left: 5px solid var(--azul-sus);
+            transition: transform 0.2s;
+        }
+
+        .stat-item h4 {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--cinza-medio);
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--azul-sus);
+            line-height: 1;
+        }
+
+        /* ── TABLES ── */
+        .table-wrap { overflow-x: auto; margin-top: 10px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead th {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--cinza-medio);
+            padding: 14px 20px;
+            background: var(--cinza-off);
+            border-bottom: 2px solid var(--cinza-borda);
+        }
+
+        tbody td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--cinza-borda);
+            font-size: 14px;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: #F9FBFF; }
+
+        .badge-rank {
+            background: var(--azul-claro);
+            color: var(--azul-sus);
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .count-cell { font-weight: 700; text-align: right; font-size: 16px; color: var(--azul-wave); }
+
+        /* ── GRÁFICOS DE BARRAS (CSS) ── */
+        .theme-item { margin-bottom: 24px; }
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .theme-name { font-weight: 700; font-size: 15px; color: var(--cinza-texto); }
+        .theme-count { font-weight: 800; font-size: 14px; color: var(--azul-sus); }
+        .bar-outer {
+            width: 100%;
+            height: 10px;
+            background: var(--cinza-borda);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .bar-inner {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 1s ease-out;
+        }
+        .theme-desc {
+            font-size: 12.5px;
+            color: var(--cinza-medio);
+            margin-top: 6px;
+            padding-left: 2px;
+        }
+
+        /* ── GRID DE ANÁLISE ── */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .analysis-box h5 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--azul-wave);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .analysis-box h5 svg { color: var(--amarelo-brasil); }
+        .analysis-box ul { list-style: none; }
+        .analysis-box li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .analysis-box li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--verde-sus);
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* ── FOOTER & PRINT ── */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--cinza-medio);
+            font-size: 12px;
+        }
+
+        @media print {
+            body { background: white; }
+            .main-content { margin-top: 20px; }
+            .card { box-shadow: none; border: 1px solid #eee; }
+            .report-header { padding: 40px 20px; }
+            .report-header::after { display: none; }
+            header { background: #0D3D6B !important; color: white !important; }
+            @page { margin: 1.5cm; }
+            .no-print { display: none; }
+        }
+
+        /* ── BOTÃO DE IMPRESSÃO ── */
+        .print-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--amarelo-brasil);
+            color: var(--azul-wave);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            border: none;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+        .print-fab:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+<button class="print-fab no-print" onclick="window.print()" title="Imprimir Relatório">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+</button>
+
+<header class="report-header">
+    <div class="brand-tag">Relatório de Gestão Participativa</div>
+    <h1 class="report-title">Análise de <span>Propostas</span></h1>
+    <p class="report-subtitle">11ª Conferência Municipal de Saúde de Montes Claros</p>
+</header>
+
+<main class="main-content">
+
+    <!-- DASHBOARD DE RESUMO -->
+    <div class="card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+            <div class="section-label">Indicadores de Participação</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>Total de Propostas Analisadas</h4>
+                    <div class="stat-value">463</div>
+                </div>
+                <div class="stat-item" style="border-color: var(--verde-sus);">
+                    <h4>Conferências Únicas</h4>
+                    <div class="stat-value">13</div>
+                </div>
+                <div class="stat-item" style="border-color: var(--amarelo-brasil);">
+                    <h4>Tema Predominante</h4>
+                    <div class="stat-value">Infraestrutura</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RANKING DE CONFERÊNCIAS -->
+    <div class="card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+            <div class="section-label">Volume de Propostas por Conferência / Segmento</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">#</th>
+                            <th>Conferência / Segmento</th>
+                            <th style="text-align: right;">Qtd. Propostas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge-rank">01</span></td><td><strong>Servidores Públicos Municipais</strong></td><td class="count-cell">92</td></tr>
+                        <tr><td><span class="badge-rank">02</span></td><td>Grande Independência</td><td class="count-cell">52</td></tr>
+                        <tr><td><span class="badge-rank">03</span></td><td>Zona Rural</td><td class="count-cell">46</td></tr>
+                        <tr><td><span class="badge-rank">04</span></td><td>Grande Maracanã</td><td class="count-cell">42</td></tr>
+                        <tr><td><span class="badge-rank">05</span></td><td>Grande Delfino</td><td class="count-cell">37</td></tr>
+                        <tr><td><span class="badge-rank">06</span></td><td>Grande Major Prates</td><td class="count-cell">33</td></tr>
+                        <tr><td><span class="badge-rank">07</span></td><td>Grande Renascença</td><td class="count-cell">33</td></tr>
+                        <tr><td><span class="badge-rank">08</span></td><td>Saúde da Mulher</td><td class="count-cell">32</td></tr>
+                        <tr><td><span class="badge-rank">09</span></td><td>População LGBTQIA+</td><td class="count-cell">29</td></tr>
+                        <tr><td><span class="badge-rank">10</span></td><td>Grande Santos Reis</td><td class="count-cell">28</td></tr>
+                        <tr><td><span class="badge-rank">11</span></td><td>Prestadores de Serviço e PCDs</td><td class="count-cell">25</td></tr>
+                        <tr><td><span class="badge-rank">12</span></td><td>População em Situação de Rua</td><td class="count-cell">16</td></tr>
+                        <tr><td><span class="badge-rank">13</span></td><td>Igualdade Racial</td><td class="count-cell">12</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMAS RECORRENTES -->
+    <div class="card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+            <div class="section-label">Análise Temática das Demandas</div>
+            
+            <!-- Barra: Infraestrutura -->
+            <div class="theme-item">
+                <div class="theme-header">
+                    <span class="theme-name">Infraestrutura</span>
+                    <span class="theme-count">168 Propostas</span>
+                </div>
+                <div class="bar-outer"><div class="bar-inner" style="width: 100%; background: var(--azul-sus);"></div></div>
+                <p class="theme-desc">Foco massivo em reformas de UBS, climatização, construção de novas unidades e aquisição de equipamentos.</p>
+            </div>
+
+            <!-- Barra: RH -->
+            <div class="theme-item">
+                <div class="theme-header">
+                    <span class="theme-name">Recursos Humanos</span>
+                    <span class="theme-count">92 Propostas</span>
+                </div>
+                <div class="bar-outer"><div class="bar-inner" style="width: 55%; background: var(--verde-sus);"></div></div>
+                <p class="theme-desc">Demandas por contratação de profissionais, melhores condições de trabalho e capacitação continuada.</p>
+            </div>
+
+            <!-- Barra: Exames -->
+            <div class="theme-item">
+                <div class="theme-header">
+                    <span class="theme-name">Exames e Consultas</span>
+                    <span class="theme-count">71 Propostas</span>
+                </div>
+                <div class="bar-outer"><div class="bar-inner" style="width: 42%; background: var(--azul-medio);"></div></div>
+                <p class="theme-desc">Necessidade de redução de filas de espera, agendamentos ágeis e ampliação da oferta de especialidades.</p>
+            </div>
+
+            <!-- Barra: Saúde do Trabalhador -->
+            <div class="theme-item">
+                <div class="theme-header">
+                    <span class="theme-name">Saúde do Trabalhador / Servidores</span>
+                    <span class="theme-count">57 Propostas</span>
+                </div>
+                <div class="bar-outer"><div class="bar-inner" style="width: 34%; background: var(--amarelo-brasil);"></div></div>
+                <p class="theme-desc">Eixo voltado especificamente para a valorização e saúde mental/física dos profissionais da rede municipal.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PADRÕES E CORRELAÇÕES -->
+    <div class="card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+            <div class="section-label">Padrões Geográficos e Sociais</div>
+            <div class="analysis-grid">
+                
+                <div class="analysis-box">
+                    <h5>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        Recortes Territoriais
+                    </h5>
+                    <ul>
+                        <li><strong>Grande Independência:</strong> Elevada demanda por infraestrutura local específica.</li>
+                        <li><strong>Zona Rural:</strong> Necessidade prioritária de transporte sanitário e garantia de acesso geográfico.</li>
+                        <li><strong>Regiões Periféricas:</strong> Concentração de pedidos de reformas físicas e construção de novas UBS.</li>
+                    </ul>
+                </div>
+
+                <div class="analysis-box">
+                    <h5>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Segmentos Específicos
+                    </h5>
+                    <ul>
+                        <li><strong>Saúde da Mulher (32):</strong> Foco em preventivos (mamografia, USG) e pré-natal humanizado.</li>
+                        <li><strong>População LGBTQIA+ (29):</strong> Reivindicação de atendimento especializado e combate à discriminação.</li>
+                        <li><strong>PCD e Prestadores (25):</strong> Acessibilidade estrutural e ampliação de serviços de reabilitação.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- VALIDAÇÃO DE DADOS -->
+    <div class="card" style="background: var(--azul-sus); color: white; border: none;">
+        <div class="card-body">
+            <div class="section-label" style="color: rgba(255,255,255,0.9); border-color: var(--amarelo-brasil);">Correlação e Validação</div>
+            <p style="font-size: 14.5px; opacity: 0.95;">
+                A análise textual das <strong>463 propostas</strong> apresenta uma correlação direta com as diretrizes elencadas no Eixo (Página 9). A dominância das menções a <strong>Infraestrutura Física (24 menções diretas)</strong> e <strong>Recursos Humanos (12 menções diretas)</strong> nas diretrizes valida estatisticamente as preocupações manifestadas pela população nas pré-conferências.
+            </p>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <p><strong>Conselho Municipal de Saúde de Montes Claros</strong></p>
+    <p>Relatório Gerado em 8 de Abril de 2026 · 11ª Conferência Municipal de Saúde</p>
+    <p style="margin-top: 10px; opacity: 0.5;">Participação Social e Transparência no SUS</p>
+</footer>
+
+</body>
+</html>
