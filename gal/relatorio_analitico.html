@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Analítico: Representatividade e Legitimidade</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   TOKENS DE DESIGN & BRAND GUIDE — 11ª CMS Montes Claros
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Paleta Primária */
+  --azul-sus:        #1A5EA8;
+  --azul-medio:      #2E8BC0;
+  --azul-claro:      #7EC8E3;
+  --azul-wave:       #0D3D6B;
+
+  /* Paleta Secundária */
+  --verde-sus:       #3AAA35;
+  --verde-wave:      #5BBF6A;
+  --amarelo-brasil:  #F5C800;
+  --branco-puro:     #FFFFFF;
+  --cinza-off:       #F4F7FB;
+  --cinza-texto:     #2C3E50;
+  --cinza-medio:     #6B7F96;
+  --cinza-borda:     #D6E4F0;
+  
+  /* Cores de Segmentos */
+  --seg-usuario:     #7EC8E3;
+  --seg-trabalhador: #3AAA35;
+  --seg-gestor:      #F5C800;
+  --seg-prestador:   #9B59B6;
+
+  /* Gradientes */
+  --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+  
+  /* Tipografia */
+  --font: 'Georama', sans-serif;
+
+  /* Sombras e Raios */
+  --sombra-card:    0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06);
+  --radius:   14px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+}
+
+/* ── RESET BÁSICO ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--azul-wave); /* Fundo escuro fora da folha A4 no preview */
+  color: var(--cinza-texto);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+/* ── CONTÊINER A4 (Otimização para Impressão e Tela) ── */
+.a4-container {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 40px auto;
+  background: var(--cinza-off); /* Nunca branco puro conforme guia */
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── HEADER ── */
+.report-header {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 60%, var(--azul-medio) 100%);
+  padding: 48px 40px 70px;
+  position: relative;
+  color: var(--branco-puro);
+}
+.report-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 48px;
+  /* Transição em onda exata para o cinza-off (#F4F7FB) */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48'%3E%3Cpath fill='%23F4F7FB' d='M0,48 C480,8 960,40 1440,0 L1440,48 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.header-tag {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+.report-title {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 16px;
+}
+.report-meta {
+  font-size: 14px;
+  color: rgba(255,255,255,.8);
+  font-weight: 500;
+  border-left: 3px solid var(--amarelo-brasil);
+  padding-left: 12px;
+}
+.report-meta strong { color: var(--amarelo-brasil); }
+
+/* ── CONTEÚDO E CARDS ── */
+.content-wrapper {
+  padding: 0 40px 40px;
+}
+.card {
+  background: var(--branco-puro);
+  border-radius: var(--radius);
+  box-shadow: var(--sombra-card);
+  border: 1.5px solid var(--cinza-borda);
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.card-top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: var(--gradient-wave);
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--azul-sus);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 4px;
+  background: var(--gradient-wave);
+  border-radius: 2px;
+}
+.card p { margin-bottom: 16px; color: var(--cinza-texto); text-align: justify; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── GRÁFICO (Dilema da Participação) ── */
+.chart-box {
+  background: var(--cinza-off);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin: 24px 0;
+  border: 1px solid var(--cinza-borda);
+}
+.chart-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--azul-wave);
+  margin-bottom: 12px;
+  text-align: center;
+}
+.bar-wrap {
+  display: flex;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.1);
+  margin-bottom: 12px;
+}
+.bar-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── TABELA DE ANÁLISE ── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: var(--cinza-off);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cinza-medio);
+  border-bottom: 2px solid var(--cinza-borda);
+}
+tbody tr {
+  border-bottom: 1px solid var(--cinza-borda);
+}
+tbody tr:nth-child(even) { background: #FCFDFE; }
+tbody td {
+  padding: 14px 16px;
+  vertical-align: top;
+}
+.badge-align {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.badge-medio { background: #FEF8E7; color: #9A6500; }
+.badge-alto  { background: #E8F4FD; color: var(--azul-sus); }
+.badge-max   { background: #E8F8EC; color: #1B7A30; }
+
+/* ── LISTAS E CITAÇÕES ── */
+ul.custom-list {
+  list-style: none;
+  padding-left: 0;
+}
+ul.custom-list li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+ul.custom-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--azul-medio);
+  font-weight: 800;
+}
+.pull-quote {
+  border-left: 4px solid var(--verde-sus);
+  background: #F0F9F1;
+  padding: 16px 20px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--verde-sus);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 20px 0;
+}
+
+/* ── DESTAQUE CONCLUSÃO ── */
+.highlight-box {
+  background: var(--azul-sus);
+  color: var(--branco-puro);
+  text-align: center;
+  padding: 32px;
+  border-radius: var(--radius);
+  box-shadow: var(--sombra-card);
+  margin-top: 32px;
+  page-break-inside: avoid;
+}
+.highlight-box h2 {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--amarelo-brasil);
+  margin-bottom: 16px;
+  letter-spacing: -.02em;
+}
+.highlight-box p { color: rgba(255,255,255,.9); text-align: center; }
+
+/* ── RODAPÉ ── */
+.signature {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid var(--cinza-borda);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 13px;
+}
+.signature-name { font-weight: 800; color: var(--azul-wave); text-transform: uppercase; letter-spacing: .05em; }
+.signature-role { color: var(--cinza-medio); }
+
+/* ── PRINT MEDIA QUERIES ── */
+@media print {
+  @page { size: A4; margin: 0; }
+  body { background: #fff; margin: 0; padding: 0; }
+  .a4-container { 
+    width: 100%; 
+    box-shadow: none; 
+    margin: 0; 
+    background: var(--cinza-off) !important; /* Força o cinza-off institucional na impressão */
+  }
+  .print-btn { display: none !important; }
+}
+
+/* Botão Flutuante Print */
+.print-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--amarelo-brasil);
+  color: var(--azul-wave);
+  border: none;
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  cursor: pointer;
+  box-shadow: var(--sombra-hover);
+  z-index: 100;
+  transition: transform 0.2s;
+}
+.print-btn:hover { transform: translateY(-3px); }
+
+/* RESPONSIVIDADE P/ TELA MENOR */
+@media screen and (max-width: 768px) {
+  .a4-container { width: 100%; margin: 0; border-radius: 0; }
+  .content-wrapper { padding: 0 20px 40px; }
+  .report-header { padding: 40px 20px 60px; }
+  .report-title { font-size: 24px; }
+  .chart-legend { flex-direction: column; align-items: center; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ Imprimir Relatório (A4)</button>
+
+<div class="a4-container">
+  
+  <header class="report-header">
+    <div class="header-tag">Documento Estratégico · CMS / SMS</div>
+    <h1 class="report-title">Relatório Analítico:<br>Representatividade e Legitimidade nas Conferências de Saúde</h1>
+    <div class="report-meta">
+      <strong>Referência:</strong> Ciclo da 18ª Conferência Nacional de Saúde (18ª CNS)<br>
+      <em>"Saúde, Democracia, Soberania e SUS: Cuidar do Povo é Cuidar do Brasil"</em>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+
+    <!-- SEÇÃO 1 -->
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">1. Introdução e Contexto Estratégico</h2>
+      <p>As Conferências de Saúde não são meros ritos burocráticos; são instâncias deliberativas de soberania nacional. No horizonte da 18ª CNS, a saúde é reafirmada como expressão concreta da democracia e ferramenta de resistência contra as ameaças neofascistas e as agendas ultraliberais que tentam subordinar o direito à vida à lógica do mercado.</p>
+      <p>Conforme o Documento Orientador, o papel estratégico destes fóruns é converter a indignação diária em poder político, assegurando que as decisões institucionais nasçam da realidade das periferias e comunidades. Entretanto, a representatividade não é uma métrica estática, mas a base de legitimidade do SUS. A análise do perfil dos participantes torna-se imperativa para garantir que as propostas não sejam capturadas por interesses setoriais, servindo ao projeto de reconstrução do pacto democrático.</p>
+    </div>
+
+    <!-- SEÇÃO 2 -->
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">2. O Dilema da Participação: O Risco da Paralisia Institucional (+80%)</h2>
+      <p>A análise demográfica dos delegados revela uma hegemonia de trabalhadores e gestores que, em diversos momentos, ultrapassa 80% da composição ativa. Essa assimetria impõe um risco real de "captura técnica" e paralisia institucional. A Conferência corre o risco de deixar de ser um espaço de conquista de direitos para se tornar uma mesa de negociação de "dores de cabeça da gestão".</p>
+      
+      <!-- Representação Gráfica -->
+      <div class="chart-box">
+        <div class="chart-title">Hegemonia de Participação (Distorção do Controle Social)</div>
+        <div class="bar-wrap">
+          <div class="bar-segment" style="width: 50%; background: var(--seg-trabalhador);" title="Trabalhadores">Trabalhadores</div>
+          <div class="bar-segment" style="width: 30%; background: var(--seg-gestor);" title="Gestores/Prestadores">Gestores & Prestadores</div>
+          <div class="bar-segment" style="width: 20%; background: var(--seg-usuario); color: var(--azul-wave);" title="Usuários">Usuários (20%)</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background: var(--seg-trabalhador);"></div> Força de Trabalho</div>
+          <div class="legend-item"><div class="legend-dot" style="background: var(--seg-gestor);"></div> Máquina Pública</div>
+          <div class="legend-item"><div class="legend-dot" style="background: var(--seg-usuario);"></div> Sociedade Civil</div>
+        </div>
+      </div>
+
+      <p><strong>Distorções críticas identificadas na predominância técnico-gerencial:</strong></p>
+      <ul class="custom-list">
+        <li><strong>Foco Procedimentalista:</strong> Substituição da discussão sobre determinantes sociais por fluxos de agendamento e compra de equipamentos.</li>
+        <li><strong>Hegemonia do Modelo Biomédico:</strong> Ênfase na doença e no procedimento em detrimento da saúde como resultado das condições de vida.</li>
+        <li><strong>Corporativismo Exacerbado:</strong> Sobreposição de pautas laborais específicas às necessidades de saúde das populações vulnerabilizadas.</li>
+        <li><strong>Barreira Linguística:</strong> Uso de jargões técnicos que excluem o segmento usuário, esvaziando o conteúdo político.</li>
+      </ul>
+    </div>
+
+    <!-- SEÇÃO 3 -->
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">3. APS como Elo de Representatividade e o Entrave da Precarização</h2>
+      <p>A Atenção Primária à Saúde (APS), enquanto ordenadora da rede (Eixo 4), possui o potencial técnico para atuar como "tradutora" das demandas do território. Contudo, essa mediação é limitada por um paradoxo estrutural: o profissional só pode ser um elo com a comunidade se possuir estabilidade e vínculo.</p>
+      <p>A mercantilização do trabalho, manifesta em processos de "pejotização" e terceirização desenfreada, fragiliza esse elo. Um profissional precarizado, submetido a metas produtivistas, tende a priorizar demandas corporativas de sobrevivência.</p>
+      
+      <div class="pull-quote">
+        "Para que o trabalhador da APS seja a bússola da representatividade social, é preciso que ele se reconheça como parte de um projeto de Estado, e não como mão de obra de uma 'indústria da doença'."
+      </div>
+    </div>
+
+    <!-- SEÇÃO 4 -->
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">4. Análise Crítica das Propostas: Consumo vs. Mudança Sistêmica</h2>
+      <p>A análise das demandas extraídas de documentos como "Saúde da Mulher" e "Zona Rural" revela uma tensão entre o anseio por consumo tecnológico imediato e a necessidade de transformações estruturais.</p>
+      
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Categoria de Demanda</th>
+              <th>Foco Técnico (Procedimento)</th>
+              <th>Foco Social (Sistêmico)</th>
+              <th>Alinhamento (18ª CNS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Saúde da Mulher / Exames</strong></td>
+              <td>U.S. Morfológico, Doppler, Histeroscopia, Implanon, Mamografia.</td>
+              <td>Combate à Violência Doméstica, Saúde Mental (Prop. 25, 29).</td>
+              <td><span class="badge-align badge-medio">MÉDIO</span> Resolve gargalos, mas mantém modelo biomédico.</td>
+            </tr>
+            <tr>
+              <td><strong>Determinantes Sociais</strong></td>
+              <td>Acesso pontual a insumos da RENAME (estradiol, lubrificantes).</td>
+              <td>Saneamento Básico (Zona Rural), Segurança Alimentar.</td>
+              <td><span class="badge-align badge-alto">ALTO</span> Ataca causas estruturais do adoecimento.</td>
+            </tr>
+            <tr>
+              <td><strong>Soberania e Tecnologia</strong></td>
+              <td>Compra de serviços e exames terceirizados (Dependência).</td>
+              <td>Fortalecimento do CEIS para produção nacional de insumos.</td>
+              <td><span class="badge-align badge-max">MÁXIMO</span> Garante independência e sustentabilidade.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEÇÕES 5 e 6 -->
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">5. Diretrizes para a SMS: Gestão Consciente</h2>
+      <p>A Secretaria Municipal de Saúde deve realizar uma leitura política das propostas, traduzindo-as em ações de gestão que transcendam o imediatismo eleitoral:</p>
+      <ul class="custom-list">
+        <li><strong>Combate à Precarização:</strong> Instituir planos de carreira que desestimulem a "Pejotização", garantindo que o profissional tenha vínculo estável.</li>
+        <li><strong>Mecanismos de Escuta Ativa:</strong> Criar canais que compensem o "viés dos 80%", garantindo voz a grupos historicamente invisibilizados (População de Rua, LGBTQIAPN+).</li>
+        <li><strong>Planejamento Epidemiológico:</strong> Integrar solicitações de exames técnicos com indicadores reais de morbimortalidade.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <h2 class="section-title">6. Recomendações para o Plenário do CMS</h2>
+      <p>Como guardião da democracia participativa, o CMS deve abandonar o papel de homologador técnico e assumir sua função de fiscalizador da soberania sanitária:</p>
+      <ul class="custom-list">
+        <li><strong>Calendário de Formação Obrigatória:</strong> Agenda de educação permanente para conselheiros usuários, visando mitigar a assimetria técnica.</li>
+        <li><strong>Priorização Orçamentária:</strong> Garantir que propostas voltadas a grupos vulnerabilizados tenham dotação específica e protegida contra austeridade.</li>
+        <li><strong>Monitoramento Baseado em Indicadores:</strong> Utilizar dados epidemiológicos para validar as propostas da Conferência.</li>
+      </ul>
+    </div>
+
+    <!-- SEÇÃO 7 / CONCLUSÃO -->
+    <div class="highlight-box">
+      <h2>A Saúde como Projeto de Nação</h2>
+      <p>A máxima de Paulo Freire ecoa com urgência: <em>"A democracia se constrói na prática da liberdade"</em>. A representatividade nas Conferências de Saúde é um processo de resistência contra o esvaziamento das instâncias colegiadas. A legitimidade plena do sistema só será atingida quando a gestão e o conselho garantirem que a voz do usuário oriente o destino dos recursos públicos.</p>
+      <p style="margin-top: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--amarelo-brasil);">Saúde é Soberania: Cuidar do povo é cuidar do Brasil.</p>
+    </div>
+
+    <div class="signature">
+      <div class="signature-name">Alexandre Dourado Pereira de Souza</div>
+      <div class="signature-role">Relatoria Analítica — Conferência Municipal de Saúde</div>
+    </div>
+
+  </div> <!-- /content-wrapper -->
+</div> <!-- /a4-container -->
+
+</body>
+</html>
