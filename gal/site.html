@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Transparência | 18ª CMS Montes Claros</title>
+    
+    <!-- Google Fonts: Georama (Official Brand Font) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (Ícones Modernos) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Georama', 'sans-serif']
+                    },
+                    colors: {
+                        cms: {
+                            'azul-sus': '#1A5EA8',
+                            'azul-medio': '#2E8BC0',
+                            'azul-claro': '#7EC8E3',
+                            'azul-wave': '#0D3D6B',
+                            'verde-sus': '#3AAA35',
+                            'verde-wave': '#5BBF6A',
+                            'amarelo': '#F5C800',
+                            'cinza-off': '#F4F7FB',
+                            'cinza-texto': '#2C3E50',
+                            'cinza-medio': '#6B7F96',
+                            'cinza-borda': '#D6E4F0'
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06)',
+                        'hover': '0 12px 40px rgba(26,94,168,.18), 0 2px 8px rgba(26,94,168,.10)'
+                    },
+                    backgroundImage: {
+                        'gradient-wave': 'linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Chart.js & PapaParse -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        body { background-color: #F4F7FB; color: #2C3E50; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F7FB; }
+        ::-webkit-scrollbar-thumb { background: #2E8BC0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #1A5EA8; }
+        
+        /* Masonry Grid Fixes */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Glassmorphism for Sticky Filter */
+        .glass-filter {
+            background: rgba(244, 247, 251, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(214, 228, 240, 0.8);
+        }
+
+        /* Header Wave Effect from Brand Guide */
+        .brand-header {
+            background: linear-gradient(160deg, #0D3D6B 0%, #1A5EA8 50%, #2E8BC0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .brand-header::before {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23F4F7FB' d='M0,60 C480,10 960,50 1440,0 L1440,60 Z'/%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+        }
+        .brand-header::after {
+            content: ''; position: absolute; top: -60px; right: -60px; width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(245,200,0,.12) 0%, transparent 70%); border-radius: 50%; pointer-events: none;
+        }
+
+        /* Loader */
+        .loader {
+            border: 4px solid #D6E4F0;
+            border-radius: 50%;
+            border-top: 4px solid #1A5EA8;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Toast Animation */
+        .toast-enter { transform: translateY(100%); opacity: 0; }
+        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    </style>
+</head>
+<body class="antialiased selection:bg-cms-amarelo selection:text-cms-azul-wave min-h-screen flex flex-col">
+
+    <!-- TOPBAR / NAV TABS -->
+    <nav class="bg-cms-azul-wave border-b-[3px] border-cms-amarelo/30 sticky top-0 z-50 flex justify-between items-center px-4 shadow-md">
+        <div class="flex items-center gap-3 py-2 md:py-0 hidden md:flex pl-4">
+            <img src="https://i.ibb.co/jkbLx2nz/icon-GG.png" alt="Ícone do Evento" class="h-10 w-10 object-contain">
+        </div>
+        <div class="flex justify-center flex-grow">
+            <button onclick="switchTab('home')" id="btn-tab-home" class="font-sans text-[11px] md:text-xs font-black tracking-widest uppercase px-4 md:px-8 py-4 md:py-5 text-cms-amarelo border-b-[3px] border-cms-amarelo -mb-[3px] transition-colors focus:outline-none">
+                Início & Contexto
+            </button>
+            <button onclick="switchTab('propostas')" id="btn-tab-propostas" class="font-sans text-[11px] md:text-xs font-black tracking-widest uppercase px-4 md:px-8 py-4 md:py-5 text-white/60 border-b-[3px] border-transparent hover:text-white/90 -mb-[3px] transition-colors focus:outline-none">
+                Mural de Propostas
+            </button>
+        </div>
+        <div class="w-14 hidden md:block"></div> <!-- Spacer for centering -->
+    </nav>
+
+    <!-- ==========================================
+         ABA 1: HOME & CONTEXTUALIZAÇÃO
+         ========================================== -->
+    <div id="tab-home" class="flex-grow w-full">
+        
+        <!-- HERO HOME -->
+        <header class="brand-header pt-12 pb-28 relative">
+            <div class="max-w-6xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 text-center lg:text-left">
+                    <img src="https://i.ibb.co/bMWQVvBC/Logotipo-CMSMOC-2025-A6.png" alt="Conselho Municipal de Saúde Montes Claros" class="h-28 md:h-36 object-contain mb-8 mx-auto lg:mx-0 drop-shadow-xl">
+                    
+                    <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 text-[10px] font-bold uppercase tracking-[0.14em] px-4 py-1.5 rounded-full mb-6 shadow-sm">
+                        <div class="w-2 h-2 rounded-full bg-cms-amarelo animate-pulse"></div>
+                        Montes Claros, MG
+                    </div>
+                    
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-[-0.02em] mb-6">
+                        Propostas das Pré-Conferências da <br>
+                        <span class="text-cms-amarelo">18ª Conferência Municipal de Saúde de Montes Claros</span>
+                    </h1>
+                    
+                    <p class="text-white/85 text-[15px] md:text-lg leading-relaxed font-medium mb-8 max-w-2xl mx-auto lg:mx-0">
+                        A voz da nossa cidade já virou projeto! Agora que você entende como tudo se organiza, te convidamos a explorar o nosso painel interativo. Navegue pelas propostas finais construídas pela nossa comunidade, ajudando a construir um SUS juntos.
+                    </p>
+
+                    <button onclick="switchTab('propostas')" class="bg-cms-amarelo text-cms-azul-wave px-8 py-4 rounded-full font-black text-[13px] tracking-[0.12em] uppercase hover:bg-white hover:shadow-hover transition-all duration-300 shadow-card flex items-center gap-3 mx-auto lg:mx-0 group">
+                        Explorar Propostas 
+                        <i class="ph-bold ph-arrow-right text-lg group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-5 hidden lg:flex justify-center relative">
+                    <!-- Composição de Ícones Decorativa -->
+                    <div class="relative w-full max-w-md flex items-center justify-center">
+                        <div class="absolute inset-0 bg-white/5 rounded-full animate-pulse border border-white/10 scale-90"></div>
+                        <img src="https://i.ibb.co/sJNjVQXc/11conflogo.png" alt="Logo da Conferência" class="w-full object-contain relative z-10 drop-shadow-2xl">
+                        
+                        <div class="absolute top-4 right-0 bg-cms-amarelo w-16 h-16 rounded-full flex items-center justify-center shadow-lg rotate-12 z-20">
+                            <i class="ph-bold ph-users-three text-cms-azul-wave text-3xl"></i>
+                        </div>
+                        <div class="absolute bottom-8 left-4 bg-cms-verde-wave w-14 h-14 rounded-full flex items-center justify-center shadow-lg -rotate-12 z-20">
+                            <i class="ph-bold ph-first-aid text-white text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- SEÇÃO: VOCÊ DECIDE -->
+        <section class="max-w-6xl mx-auto px-6 py-20">
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-card border-[1.5px] border-cms-borda relative overflow-hidden">
+                <i class="ph-duotone ph-quotes text-cms-cinza-off text-[180px] absolute -top-10 -right-10 z-0"></i>
+                
+                <div class="relative z-10 flex flex-col md:flex-row gap-10 items-center">
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <div class="bg-cms-cinza-off w-40 h-40 rounded-full flex items-center justify-center border-4 border-white shadow-card">
+                            <i class="ph-duotone ph-handshake text-[80px] text-cms-azul-sus"></i>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <h2 class="text-3xl font-black text-cms-azul-wave mb-4 tracking-tight">Quem decide como o SUS funciona? <span class="text-cms-azul-medio">A resposta é: você.</span></h2>
+                        <p class="text-cms-texto text-base md:text-[17px] leading-relaxed font-medium mb-4">
+                            A Conferência de Saúde é o grande momento em que a população, os trabalhadores e os gestores se reúnem para debater, sugerir e desenhar o futuro da nossa saúde pública.
+                        </p>
+                        <p class="text-cms-medio text-[15px] leading-relaxed">
+                            O SUS nasceu da voz do povo, e é justamente a participação da sociedade que serve como o motor dessa engrenagem, garantindo que os recursos e os atendimentos cheguem de verdade na vida de quem mais precisa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: 4 EIXOS NACIONAIS -->
+        <section class="bg-white border-t border-b border-cms-borda py-24 relative">
+            <div class="absolute top-0 left-0 w-full h-[6px] bg-gradient-wave"></div>
+            
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-cms-azul-claro/20 text-cms-azul-sus text-[10px] font-bold uppercase tracking-[0.14em] mb-4">Estrutura do Debate</div>
+                    <h2 class="text-3xl md:text-4xl font-black text-cms-azul-wave tracking-tight max-w-2xl mx-auto">Para organizar nossas ideias, a conferência divide os debates em <span class="text-cms-amarelo">4 Eixos Nacionais</span> principais:</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Eixo 1 -->
+                    <div class="p-8 rounded-[20px] bg-cms-cinza-off border-[1.5px] border-cms-borda hover:shadow-card hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-16 h-16 bg-[#E8F4FD] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                            <i class="ph-duotone ph-scales text-4xl text-[#1A5EA8]"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-cms-azul-wave mb-3">1. Democracia e Saúde como Direito</h3>
+                        <p class="text-cms-texto leading-relaxed text-[15px]">Foco em garantir que a saúde pública e de qualidade seja acessível a todos os cidadãos, fortalecendo o poder de decisão da comunidade para proteger o nosso SUS.</p>
+                    </div>
+
+                    <!-- Eixo 2 -->
+                    <div class="p-8 rounded-[20px] bg-cms-cinza-off border-[1.5px] border-cms-borda hover:shadow-card hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-16 h-16 bg-[#FEF8E7] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                            <i class="ph-duotone ph-currency-circle-dollar text-4xl text-[#9A6500]"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-cms-azul-wave mb-3">2. O Orçamento da Saúde</h3>
+                        <p class="text-cms-texto leading-relaxed text-[15px]">O debate sobre como arrecadar e investir o dinheiro de forma justa, garantindo recursos suficientes para que os postos funcionem bem e os profissionais de saúde sejam valorizados.</p>
+                    </div>
+
+                    <!-- Eixo 3 -->
+                    <div class="p-8 rounded-[20px] bg-cms-cinza-off border-[1.5px] border-cms-borda hover:shadow-card hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-16 h-16 bg-[#E8F8EC] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                            <i class="ph-duotone ph-leaf text-4xl text-[#1B7A30]"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-cms-azul-wave mb-3">3. Saúde, Clima e Meio Ambiente</h3>
+                        <p class="text-cms-texto leading-relaxed text-[15px]">Uma discussão sobre como o lugar onde vivemos, a falta de saneamento, a água e as mudanças no clima afetam diretamente o nosso bem-estar e o que fazer para proteger a vida.</p>
+                    </div>
+
+                    <!-- Eixo 4 -->
+                    <div class="p-8 rounded-[20px] bg-cms-cinza-off border-[1.5px] border-cms-borda hover:shadow-card hover:-translate-y-1 transition-all duration-300 group">
+                        <div class="w-16 h-16 bg-[#F0EBF8] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                            <i class="ph-duotone ph-stethoscope text-4xl text-[#5B2D8E]"></i>
+                        </div>
+                        <h3 class="text-xl font-black text-cms-azul-wave mb-3">4. O Atendimento na Prática</h3>
+                        <p class="text-cms-texto leading-relaxed text-[15px]">Como organizar a gestão, os postinhos, os hospitais e as filas para que o cuidado chegue rápido, com qualidade e de forma completa (integral) em cada região da cidade.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: 6 DIRETRIZES (SUB-EIXOS ESTADUAIS) -->
+        <section class="max-w-6xl mx-auto px-6 py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 flex justify-center">
+                    <i class="ph-duotone ph-map-trifold text-[200px] text-cms-azul-claro/50"></i>
+                </div>
+                
+                <div class="lg:col-span-7">
+                    <h2 class="text-3xl font-black text-cms-azul-wave mb-6 tracking-tight">As 6 Diretrizes Estaduais (O caso de Minas Gerais)</h2>
+                    <p class="text-cms-texto text-[15px] leading-relaxed mb-6">
+                        Em nosso estado, os debates são guiados por 6 Diretrizes. A lógica é bem simples: as quatro primeiras diretrizes são um <strong>espelho exato dos 4 Eixos Nacionais</strong>, garantindo que estejamos no mesmo compasso do resto do Brasil.
+                    </p>
+                    <p class="text-cms-texto text-[15px] leading-relaxed mb-8">
+                        Já as duas últimas diretrizes são um desdobramento direto do <em>Eixo 4</em> (Atendimento na Prática). Para assegurar que nenhuma vida fique para trás, essas diretrizes dão um foco especial a públicos que exigem políticas mais justas e estruturadas:
+                    </p>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-card border-[1.5px] border-cms-borda">
+                            <div class="w-12 h-12 rounded-full bg-cms-azul-sus/10 flex items-center justify-center flex-shrink-0">
+                                <i class="ph-bold ph-wheelchair text-2xl text-cms-azul-sus"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-cms-azul-wave text-[15px]">Diretriz 5: Saúde Integral da Pessoa com Deficiência</h4>
+                                <p class="text-sm text-cms-medio mt-1">Foco na acessibilidade e estruturação do cuidado inclusivo.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-5 bg-white rounded-2xl shadow-card border-[1.5px] border-cms-borda">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                <i class="ph-bold ph-rainbow text-2xl text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-cms-azul-wave text-[15px]">Diretriz 6: Saúde da População LGBTQIA+</h4>
+                                <p class="text-sm text-cms-medio mt-1">Garantia de acolhimento qualificado, respeito à identidade e cuidado humanizado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ==========================================
+         ABA 2: EXPLORADOR DE PROPOSTAS
+         ========================================== -->
+    <div id="tab-propostas" class="hidden flex-grow w-full">
+        
+        <!-- HEADER COMPACTO PROPOSTAS -->
+        <header class="brand-header pt-12 pb-24 relative">
+            <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+                <h1 class="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight mb-4">
+                    Explorador de <span class="text-cms-amarelo">Propostas</span>
+                </h1>
+                <p class="text-white/80 text-[15px] font-medium max-w-2xl mx-auto">
+                    Pesquise, filtre e acesse a íntegra de todas as demandas aprovadas nos eixos temáticos da conferência.
+                </p>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 relative z-20 -mt-20">
+            
+            <!-- DATA VIZ (DASHBOARD) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                <div class="bg-white rounded-[14px] shadow-card p-6 lg:col-span-1 border-[1.5px] border-cms-borda">
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="ph-fill ph-chart-pie-slice text-xl text-cms-azul-medio"></i>
+                        <h3 class="text-[11px] font-bold text-cms-azul-sus uppercase tracking-[0.12em]">Eixos Temáticos</h3>
+                    </div>
+                    <div class="relative h-60 w-full">
+                        <canvas id="eixosChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-[14px] shadow-card p-6 lg:col-span-2 border-[1.5px] border-cms-borda">
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="ph-fill ph-chart-bar text-xl text-cms-verde-sus"></i>
+                        <h3 class="text-[11px] font-bold text-cms-azul-sus uppercase tracking-[0.12em]">Propostas por Evento</h3>
+                    </div>
+                    <div class="relative h-60 w-full">
+                        <canvas id="eventosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FILTERS (Sticky Glass) -->
+            <div class="glass-filter rounded-[14px] shadow-sm border border-cms-borda p-3 md:p-4 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between sticky top-[72px] z-40">
+                <!-- Search -->
+                <div class="w-full md:w-1/2 relative group">
+                    <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-cms-medio text-lg group-focus-within:text-cms-azul-sus transition-colors"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar por assunto, palavra-chave..." class="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-cms-borda focus:outline-none focus:ring-2 focus:ring-cms-azul-medio focus:border-transparent transition-all text-sm font-medium text-cms-texto shadow-sm placeholder:text-cms-medio">
+                </div>
+                
+                <!-- Dropdowns -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <div class="relative w-full sm:w-56">
+                        <i class="ph-fill ph-funnel absolute left-4 top-1/2 -translate-y-1/2 text-cms-medio"></i>
+                        <select id="eixoFilter" class="w-full pl-10 pr-10 py-3 rounded-xl bg-white border border-cms-borda focus:outline-none focus:ring-2 focus:ring-cms-azul-medio text-sm font-bold text-cms-texto appearance-none cursor-pointer shadow-sm">
+                            <option value="">Todos os Eixos</option>
+                        </select>
+                        <i class="ph-bold ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-cms-medio pointer-events-none"></i>
+                    </div>
+
+                    <div class="relative w-full sm:w-56">
+                        <i class="ph-fill ph-map-pin absolute left-4 top-1/2 -translate-y-1/2 text-cms-medio"></i>
+                        <select id="eventoFilter" class="w-full pl-10 pr-10 py-3 rounded-xl bg-white border border-cms-borda focus:outline-none focus:ring-2 focus:ring-cms-azul-medio text-sm font-bold text-cms-texto appearance-none cursor-pointer shadow-sm">
+                            <option value="">Todos os Eventos</option>
+                        </select>
+                        <i class="ph-bold ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 text-cms-medio pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loadingState" class="py-24 flex flex-col items-center justify-center text-cms-azul-wave">
+                <div class="loader mb-6"></div>
+                <p class="font-bold text-[11px] tracking-[0.14em] uppercase text-cms-medio">Buscando propostas na base oficial...</p>
+            </div>
+
+            <!-- RESULTS HEADER -->
+            <div id="resultsHeader" class="mb-6 flex justify-between items-center hidden px-2">
+                <h2 class="text-xl font-black text-cms-azul-wave flex items-center gap-2 tracking-tight">
+                    <i class="ph-fill ph-list-dashes text-cms-azul-medio"></i>
+                    Mural de Propostas
+                </h2>
+                <div class="bg-cms-azul-claro/20 text-cms-azul-sus border border-cms-azul-claro/50 px-3 py-1 rounded-full font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                    <span id="resultsCount">0</span>
+                    <span class="uppercase tracking-widest text-[9px]">encontradas</span>
+                </div>
+            </div>
+
+            <!-- PROPOSALS MASONRY GRID -->
+            <div id="proposalsGrid" class="masonry-grid hidden">
+                <!-- Cards injected by JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-cms-azul-wave text-white px-6 py-4 rounded-[14px] shadow-hover flex items-center gap-3 font-semibold text-sm z-50 toast-enter hidden border border-white/10">
+        <i class="ph-fill ph-check-circle text-cms-verde-wave text-xl"></i>
+        <span>Proposta copiada para a área de transferência!</span>
+    </div>
+
+    <!-- FOOTER OFICIAL -->
+    <footer class="bg-cms-azul-wave py-10 px-6 w-full mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <img src="https://i.ibb.co/YBV9NY1j/Prefeitura-Logo-Governo-Slogan-Secretarias-1.png" alt="Prefeitura de Montes Claros e SUS" class="h-16 object-contain bg-white/10 p-2 rounded-xl">
+                <img src="https://i.ibb.co/ksxpJdVw/iconcms512.png" alt="Conselho Municipal de Saúde" class="h-16 object-contain">
+            </div>
+            
+            <div class="text-center lg:text-right">
+                <div class="text-[14px] font-black text-white/90 tracking-[0.04em] mb-1.5">
+                    Conselho Municipal de Saúde · <span class="text-cms-amarelo">Montes Claros</span>
+                </div>
+                <div class="text-[12px] font-medium text-white/50">
+                    18ª Conferência Municipal de Saúde · Transparência e Controle Social
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- APPLICATION LOGIC -->
+    <script>
+        // 1. DATA & STATE
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ32FFFj_u5J9rx1bRjJ6fOw6qteP-EaKYNdAZWs1x3pFTyArLa0sU0u7qIVd5ayA0826SYc2VS7riB/pub?gid=907005864&single=true&output=csv';
+        
+        let allProposals = [];
+        let filteredProposals = [];
+        let chartsInstance = { eixos: null, eventos: null };
+        let chartsInitialized = false;
+
+        // Metadados dos eventos (Data/Local)
+        const eventsMeta = {
+            "saúde da mulher": { data: "10/03/2026", local: "CIMAMS" },
+            "pcd": { data: "11/03/2026", local: "Câmara Municipal" },
+            "renascença": { data: "12/03/2026", local: "Salão Paroquial - Alice Maia" },
+            "santos reis": { data: "13/03/2026", local: "Hospital Mário Ribeiro" },
+            "delfino": { data: "17/03/2026", local: "Rede Filhas de Jesus" },
+            "independência": { data: "18/03/2026", local: "Assembleia de Deus Madureira" },
+            "major prates": { data: "19/03/2026", local: "UBS Major Prates" },
+            "maracanã": { data: "20/03/2026", local: "CAIC Maracanã" },
+            "zona rural": { data: "23/03/2026", local: "Sindicato Trabalhadores Rurais" },
+            "situação de rua": { data: "24/03/2026", local: "Centro POP" },
+            "racial": { data: "25/03/2026", local: "Casa da Cidadania" },
+            "lgbtqia": { data: "26/03/2026", local: "Câmara Municipal" },
+            "servidor": { data: "27/03/2026", local: "CIMAMS" }
+        };
+
+        // Função de Troca de Abas (Tabs)
+        function switchTab(tab) {
+            document.getElementById('tab-home').classList.toggle('hidden', tab !== 'home');
+            document.getElementById('tab-propostas').classList.toggle('hidden', tab !== 'propostas');
+            
+            // Atualiza estilo dos botões
+            const btnHome = document.getElementById('btn-tab-home');
+            const btnPropostas = document.getElementById('btn-tab-propostas');
+            
+            const activeClass = "font-sans text-[11px] md:text-xs font-black tracking-widest uppercase px-4 md:px-8 py-4 md:py-5 text-cms-amarelo border-b-[3px] border-cms-amarelo -mb-[3px] transition-colors focus:outline-none";
+            const inactiveClass = "font-sans text-[11px] md:text-xs font-black tracking-widest uppercase px-4 md:px-8 py-4 md:py-5 text-white/60 border-b-[3px] border-transparent hover:text-white/90 -mb-[3px] transition-colors focus:outline-none";
+            
+            btnHome.className = tab === 'home' ? activeClass : inactiveClass;
+            btnPropostas.className = tab === 'propostas' ? activeClass : inactiveClass;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Inicializa gráficos se a aba propostas for aberta pela primeira vez com dados carregados
+            if (tab === 'propostas' && allProposals.length > 0 && !chartsInitialized) {
+                initCharts();
+                chartsInitialized = true;
+            }
+        }
+
+        // Helpers Visuais (Segmentos)
+        function getAxisVisuals(eixo) {
+            const e = eixo.toLowerCase();
+            if(e.includes('i -') || e.includes('um')) return { bg: 'bg-[#E8F4FD]', text: 'text-[#1A5EA8]', icon: 'ph-users' }; 
+            if(e.includes('ii -') || e.includes('dois')) return { bg: 'bg-[#E8F8EC]', text: 'text-[#1B7A30]', icon: 'ph-shield-plus' }; 
+            if(e.includes('iii -') || e.includes('tres') || e.includes('três')) return { bg: 'bg-[#FEF8E7]', text: 'text-[#9A6500]', icon: 'ph-chart-line-up' }; 
+            if(e.includes('iv -') || e.includes('quatro')) return { bg: 'bg-[#F0EBF8]', text: 'text-[#5B2D8E]', icon: 'ph-currency-circle-dollar' }; 
+            return { bg: 'bg-gray-100', text: 'text-gray-700', icon: 'ph-target' }; 
+        }
+
+        function getEventIcon(evento) {
+            const e = evento.toLowerCase();
+            if(e.includes('mulher')) return 'ph-gender-female text-pink-500';
+            if(e.includes('rural')) return 'ph-plant text-[#3AAA35]';
+            if(e.includes('pcd') || e.includes('prestadores')) return 'ph-wheelchair text-[#1A5EA8]';
+            if(e.includes('rua')) return 'ph-tent text-orange-500';
+            if(e.includes('racial')) return 'ph-users-three text-amber-700';
+            if(e.includes('lgbtqia')) return 'ph-rainbow text-purple-500';
+            if(e.includes('servidor')) return 'ph-identification-badge text-[#2E8BC0]';
+            return 'ph-map-pin text-[#1A5EA8]'; 
+        }
+
+        function getEventMeta(eventName) {
+            const nameLower = eventName.toLowerCase();
+            for (const key in eventsMeta) {
+                if (nameLower.includes(key)) return eventsMeta[key];
+            }
+            return null;
+        }
+
+        // 2. INIT & FETCH
+        document.addEventListener('DOMContentLoaded', () => {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    processData(results.data);
+                },
+                error: function(err) {
+                    console.error("Erro ao carregar CSV:", err);
+                    document.getElementById('loadingState').innerHTML = `<div class="flex flex-col items-center"><i class="ph-fill ph-warning-circle text-red-500 text-5xl mb-4"></i><p class="text-red-600 font-bold text-lg">Erro ao carregar os dados. Verifique a conexão.</p></div>`;
+                }
+            });
+        });
+
+        // 3. PROCESS DATA
+        function processData(rawData) {
+            allProposals = rawData.map(row => {
+                const keys = Object.keys(row);
+                const eventoKey = keys.find(k => k.toLowerCase().includes('evento') || k.toLowerCase().includes('pré')) || keys[0];
+                const eixoKey = keys.find(k => k.toLowerCase().includes('eixo') || k.toLowerCase().includes('tema')) || keys[1];
+                const textoKey = keys.find(k => k.toLowerCase().includes('proposta') || k.toLowerCase().includes('texto')) || keys[2];
+
+                return {
+                    evento: row[eventoKey] ? row[eventoKey].trim() : 'Evento Geral',
+                    eixo: row[eixoKey] ? row[eixoKey].trim() : 'Eixo Geral',
+                    texto: row[textoKey] ? row[textoKey].trim() : ''
+                };
+            }).filter(p => p.texto !== '');
+
+            filteredProposals = [...allProposals];
+
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('resultsHeader').classList.remove('hidden');
+            document.getElementById('proposalsGrid').classList.remove('hidden');
+
+            initDashboard();
+        }
+
+        // 4. INITIALIZE UI
+        function initDashboard() {
+            populateFilters();
+            renderCards(filteredProposals);
+            
+            const uniqueEventsCount = new Set(allProposals.map(p => p.evento)).size;
+            
+            // Se o usuário estiver na aba Propostas ao carregar, já inicializa os gráficos
+            if (!document.getElementById('tab-propostas').classList.contains('hidden') && !chartsInitialized) {
+                initCharts();
+                chartsInitialized = true;
+            }
+
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('eixoFilter').addEventListener('change', applyFilters);
+            document.getElementById('eventoFilter').addEventListener('change', applyFilters);
+        }
+
+        // 5. RENDER CARDS (Brand Guide Design + Masonry)
+        function renderCards(data) {
+            const grid = document.getElementById('proposalsGrid');
+            document.getElementById('resultsCount').innerText = data.length;
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20 bg-white rounded-[14px] border-2 border-dashed border-cms-borda masonry-item">
+                        <i class="ph-duotone ph-ghost text-6xl text-cms-medio mb-4"></i>
+                        <p class="font-bold text-cms-azul-wave uppercase tracking-[0.1em] mb-2 text-sm">Nenhuma proposta encontrada</p>
+                        <p class="text-cms-medio text-sm">Tente buscar por outras palavras.</p>
+                    </div>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            data.forEach((item) => {
+                const card = document.createElement('div');
+                const axisVis = getAxisVisuals(item.eixo);
+                const evIcon = getEventIcon(item.evento);
+                const meta = getEventMeta(item.evento);
+
+                // Strip "Grande" to save space
+                let shortEvent = item.evento.replace(/Grande /g, '');
+
+                card.className = `masonry-item bg-white rounded-[14px] shadow-card hover:shadow-hover hover:-translate-y-1.5 transition-all duration-300 flex flex-col border-[1.5px] border-cms-borda relative overflow-hidden group`;
+                
+                card.innerHTML = `
+                    <!-- Eixo Top Bar (Gradient Assinatura) -->
+                    <div class="h-[6px] w-full bg-gradient-wave"></div>
+                    
+                    <div class="p-6 flex flex-col h-full">
+                        
+                        <!-- Cabeçalho do Card -->
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cms-cinza-off border border-cms-borda text-cms-cinza-texto text-[10px] font-bold uppercase tracking-[0.1em]">
+                                <i class="ph-fill ${evIcon} text-sm"></i>
+                                ${shortEvent}
+                            </div>
+                            
+                            <button onclick="copyToClipboard(this, \`${item.texto.replace(/"/g, '&quot;')}\`)" class="text-cms-medio hover:text-cms-azul-sus hover:bg-cms-azul-claro/20 p-1.5 rounded-lg transition-colors flex-shrink-0" title="Copiar Proposta">
+                                <i class="ph-bold ph-copy text-lg"></i>
+                            </button>
+                        </div>
+
+                        <!-- Tag do Eixo (Segment Colors) -->
+                        <div class="mb-4">
+                            <span class="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.14em] px-2.5 py-0.5 rounded-full ${axisVis.bg} ${axisVis.text}">
+                                <i class="ph-bold ${axisVis.icon}"></i> Eixo Temático
+                            </span>
+                            <p class="text-[13px] font-bold text-cms-azul-wave mt-1.5 leading-tight line-clamp-2" title="${item.eixo}">${item.eixo}</p>
+                        </div>
+
+                        <!-- Corpo da Proposta -->
+                        <div class="flex-grow relative mb-5 pt-2">
+                            <i class="ph-fill ph-quotes text-cms-borda text-4xl absolute -top-4 -left-2 z-0 opacity-50"></i>
+                            <p class="text-cms-texto text-[15px] leading-relaxed relative z-10 whitespace-pre-wrap">${item.texto}</p>
+                        </div>
+
+                        <!-- Footer (Metadados) -->
+                        ${meta ? `
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold text-cms-medio pt-4 border-t border-cms-borda mt-auto">
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-calendar-blank text-cms-azul-claro"></i> ${meta.data}</span>
+                            <span class="flex items-center gap-1.5"><i class="ph-bold ph-buildings text-cms-azul-claro"></i> ${meta.local}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+            
+            grid.appendChild(fragment);
+        }
+
+        // 6. FILTERS Logic
+        function populateFilters() {
+            const eixos = [...new Set(allProposals.map(p => p.eixo))].sort();
+            const eventos = [...new Set(allProposals.map(p => p.evento))].sort();
+            
+            const eixoSelect = document.getElementById('eixoFilter');
+            const eventoSelect = document.getElementById('eventoFilter');
+            
+            eixos.forEach(e => eixoSelect.innerHTML += `<option value="${e}">${e.length > 60 ? e.substring(0,60)+'...' : e}</option>`);
+            eventos.forEach(e => eventoSelect.innerHTML += `<option value="${e}">${e}</option>`);
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const eixoTerm = document.getElementById('eixoFilter').value;
+            const eventoTerm = document.getElementById('eventoFilter').value;
+
+            filteredProposals = allProposals.filter(p => {
+                const matchText = p.texto.toLowerCase().includes(searchTerm) || p.eixo.toLowerCase().includes(searchTerm) || p.evento.toLowerCase().includes(searchTerm);
+                const matchEixo = eixoTerm === "" || p.eixo === eixoTerm;
+                const matchEvento = eventoTerm === "" || p.evento === eventoTerm;
+                return matchText && matchEixo && matchEvento;
+            });
+
+            renderCards(filteredProposals);
+            if(chartsInitialized) updateCharts();
+        }
+
+        // 7. COPY TO CLIPBOARD
+        function copyToClipboard(btnElement, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btnElement.querySelector('i');
+                icon.className = 'ph-fill ph-check text-cms-verde-sus text-lg';
+                
+                const toast = document.getElementById('toast');
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('toast-enter-active'), 10);
+                
+                setTimeout(() => {
+                    icon.className = 'ph-bold ph-copy text-lg';
+                    toast.classList.remove('toast-enter-active');
+                    setTimeout(() => toast.classList.add('hidden'), 300);
+                }, 3000);
+            });
+        }
+
+        // 8. DATA VIZ (Chart.js adaptado ao Brand Guide)
+        function initCharts() {
+            const brandColors = ['#1A5EA8', '#3AAA35', '#F5C800', '#5B2D8E', '#2E8BC0', '#6B7F96'];
+            Chart.defaults.font.family = "'Georama', sans-serif";
+            Chart.defaults.color = '#6B7F96';
+
+            const ctxEixos = document.getElementById('eixosChart').getContext('2d');
+            chartsInstance.eixos = new Chart(ctxEixos, {
+                type: 'doughnut',
+                data: getChartData(filteredProposals, 'eixo', brandColors),
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 15, font: {size: 11, weight: '600'} } },
+                        tooltip: { backgroundColor: '#0D3D6B', padding: 12, cornerRadius: 8, titleFont: { weight: '800' } }
+                    },
+                    cutout: '70%', borderWidth: 2, borderColor: '#ffffff'
+                }
+            });
+
+            const ctxEventos = document.getElementById('eventosChart').getContext('2d');
+            chartsInstance.eventos = new Chart(ctxEventos, {
+                type: 'bar',
+                data: getChartData(filteredProposals, 'evento', ['#2E8BC0']), // Azul Médio
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { backgroundColor: '#0D3D6B', padding: 12, cornerRadius: 8, titleFont: { weight: '800' } }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#D6E4F0' } },
+                        y: { grid: { display: false }, ticks: { font: {size: 10, weight: '700'}, color: '#2C3E50' } }
+                    },
+                    borderRadius: 6,
+                    barPercentage: 0.7
+                }
+            });
+        }
+
+        function updateCharts() {
+            if(!chartsInstance.eixos || !chartsInstance.eventos) return;
+            const brandColors = ['#1A5EA8', '#3AAA35', '#F5C800', '#5B2D8E', '#2E8BC0', '#6B7F96'];
+            
+            chartsInstance.eixos.data = getChartData(filteredProposals, 'eixo', brandColors);
+            chartsInstance.eixos.update();
+            
+            chartsInstance.eventos.data = getChartData(filteredProposals, 'evento', ['#2E8BC0']);
+            chartsInstance.eventos.update();
+        }
+
+        function getChartData(dataArray, key, colors) {
+            const counts = dataArray.reduce((acc, curr) => {
+                let val = curr[key];
+                if(key === 'eixo' && val.length > 40) val = val.substring(0, 40) + '...';
+                acc[val] = (acc[val] || 0) + 1;
+                return acc;
+            }, {});
+
+            const sortedKeys = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+            const sortedData = sortedKeys.map(k => counts[k]);
+            const bgColors = sortedKeys.map((_, i) => colors[i % colors.length]);
+
+            return {
+                labels: sortedKeys,
+                datasets: [{ data: sortedData, backgroundColor: bgColors, borderWidth: 0 }]
+            };
+        }
+    </script>
+</body>
+</html>
