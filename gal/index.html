@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel 11ª Conferência — CMS Montes Claros</title>
+<!-- TIPOGRAFIA OFICIAL -->
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" rel="stylesheet" />
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   BRANDED INVENTORY — 11ª CMS MONTES CLAROS
+   Aplicações do Brand Guide ao Painel de Apresentações
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* -- PALETA PRIMÁRIA -- */
+  --azul-sus:        #1A5EA8;
+  --azul-medio:      #2E8BC0;
+  --azul-claro:      #7EC8E3;
+  --azul-wave:       #0D3D6B;
+
+  /* -- PALETA SECUNDÁRIA -- */
+  --verde-sus:       #3AAA35;
+  --verde-wave:      #5BBF6A;
+  --amarelo-brasil:  #F5C800;
+  --branco-puro:     #FFFFFF;
+  --cinza-off:       #F4F7FB; 
+  --cinza-texto:     #2C3E50;
+  --cinza-medio:     #6B7F96;
+  --cinza-borda:     #D6E4F0;
+
+  /* -- GRADIENTES -- */
+  --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+  --gradient-header: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 60%, var(--azul-medio) 100%);
+
+  /* -- TOKENS -- */
+  --font: 'Georama', sans-serif;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+  --sombra-card: 0 4px 24px rgba(26,94,168,.10);
+  --sombra-hover: 0 12px 40px rgba(26,94,168,.18);
+}
+
+/* -- RESET & BASE -- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--cinza-off);
+  color: var(--cinza-texto);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* -- HEADER -- */
+header {
+  background: var(--gradient-header);
+  padding: 64px 24px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Elemento de Onda SVG (Signature) */
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23F4F7FB' d='M0,60 C480,10 960,50 1440,0 L1440,60 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+
+.badge-intro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24px;
+}
+.badge-intro::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--amarelo-brasil);
+  border-radius: 50%;
+}
+
+header h1 {
+  font-weight: 800;
+  font-size: clamp(28px, 5vw, 42px);
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+header h1 span { color: var(--amarelo-brasil); }
+
+header p {
+  color: rgba(255,255,255,0.7);
+  font-size: 15px;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* -- CONTEÚDO PRINCIPAL -- */
+main {
+  flex: 1;
+  max-width: 1280px;
+  margin: -40px auto 80px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+/* -- FILTROS -- */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+.filter-btn {
+  background: #fff;
+  border: 1.5px solid var(--cinza-borda);
+  color: var(--cinza-medio);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: var(--sombra-card);
+}
+.filter-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--azul-medio);
+  color: var(--azul-sus);
+}
+.filter-btn.active {
+  background: var(--azul-sus);
+  border-color: var(--azul-sus);
+  color: #fff;
+}
+
+/* -- GRID & CARDS -- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+}
+
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--cinza-borda);
+  overflow: hidden;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--sombra-hover);
+  border-color: var(--azul-medio);
+}
+
+.card-accent {
+  height: 6px;
+  background: var(--gradient-wave);
+}
+
+.card-badge {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  z-index: 20;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.thumb-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background: var(--azul-wave);
+  border-bottom: 1px solid var(--cinza-borda);
+}
+.thumb-iframe {
+  width: 400%; height: 400%;
+  transform: scale(0.25);
+  transform-origin: top left;
+  border: none;
+  pointer-events: none;
+  position: absolute;
+}
+
+.card-content {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.card-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--cinza-texto);
+  margin-bottom: 12px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.card-meta {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--cinza-medio);
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* -- MODAL -- */
+#presentation-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 29, 48, 0.98);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  flex-direction: column;
+}
+#presentation-modal.active { display: flex; }
+
+.modal-header {
+  height: 64px;
+  background: var(--azul-wave);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 3px solid var(--amarelo-brasil);
+}
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #fff;
+}
+.modal-title-text {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: .02em;
+}
+.btn-close {
+  background: rgba(255,255,255,.1);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 11px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  transition: all 0.2s;
+}
+.btn-close:hover { background: #fff; color: var(--azul-wave); }
+
+.modal-body { flex: 1; position: relative; background: #000; }
+.modal-body iframe { width: 100%; height: 100%; border: none; }
+
+#status-message {
+  text-align: center;
+  padding: 80px 40px;
+  color: var(--cinza-medio);
+  font-weight: 600;
+  grid-column: 1 / -1;
+}
+
+/* -- FOOTER -- */
+footer {
+  background: var(--azul-wave);
+  padding: 48px 24px;
+  text-align: center;
+  margin-top: auto;
+}
+.footer-logo {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.footer-logo span { color: var(--amarelo-brasil); }
+.footer-copy {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* -- ANIMAÇÕES -- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card { animation: fadeIn 0.5s ease backwards; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge-intro">Conselho Municipal de Saúde</div>
+  <h1>Painel de <span>Apresentações</span></h1>
+  <p>Inventário dinâmico de eixos temáticos, dados institucionais e documentos estratégicos da 11ª Conferência Municipal de Saúde de Montes Claros.</p>
+</header>
+
+<main>
+  <!-- Contêiner de Filtros -->
+  <div class="filters-container" id="filters-container">
+    <!-- Gerado via JavaScript -->
+  </div>
+
+  <!-- Galeria de Cards -->
+  <div class="gallery-grid" id="gallery">
+    <div id="status-message">Conectando ao repositório institucional...</div>
+  </div>
+</main>
+
+<!-- Modal de Visualização Fullscreen -->
+<div id="presentation-modal">
+  <div class="modal-header">
+    <div class="modal-title-wrap">
+      <span id="modal-badge-container"></span>
+      <span class="modal-title-text" id="modal-title-text">Apresentação CMS</span>
+    </div>
+    <button class="btn-close" onclick="closeModal()">
+      <span class="material-symbols-rounded" style="font-size:18px">close</span> FECHAR
+    </button>
+  </div>
+  <div class="modal-body">
+    <iframe id="fullscreen-iframe" src=""></iframe>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Conselho Municipal de Saúde · <span>Montes Claros</span></div>
+  <div class="footer-copy">11ª CMS · 22 a 24 de Abril de 2026 · Controle Social e Transparência</div>
+</footer>
+
+<script>
+  /* ═══════════════════════════════════════════════════════════════
+     LOGICA DE INTEGRAÇÃO GITHUB API
+     ═══════════════════════════════════════════════════════════════ */
+  
+  const GITHUB_USERNAME = "cmsmoc"; 
+  const GITHUB_REPO = "11conferencia"; 
+  const FOLDER_PATH = "consolidado";                
+
+  // Configuração de cores para categorias (Extraídas do Brand Guide)
+  const BRAND_COLORS = [
+    { bg: '#2E8BC0', text: '#fff' }, // Azul Médio
+    { bg: '#3AAA35', text: '#fff' }, // Verde SUS
+    { bg: '#F5C800', text: '#0D3D6B' }, // Amarelo (texto navy)
+    { bg: '#0D3D6B', text: '#fff' }, // Navy SUS
+    { bg: '#5BBF6A', text: '#fff' }  // Verde Wave
+  ];
+
+  let allPresentations = []; 
+  let categoriesData = {};
+
+  const galleryEl = document.getElementById('gallery');
+  const filtersEl = document.getElementById('filters-container');
+  const modal = document.getElementById('presentation-modal');
+  const modalIframe = document.getElementById('fullscreen-iframe');
+  const modalTitle = document.getElementById('modal-title-text');
+  const modalBadgeContainer = document.getElementById('modal-badge-container');
+
+  // Inicializa a aplicação
+  async function init() {
+    let colorIndex = 0;
+    try {
+      // Busca lista da pasta raiz 'pres'
+      const rootUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
+      const rootResponse = await fetch(rootUrl);
+      
+      if (!rootResponse.ok) throw new Error("Erro na comunicação com servidor.");
+      const rootItems = await rootResponse.json();
+
+      for (const item of rootItems) {
+        // Arquivos HTML soltos na raiz vão para categoria "Documentos"
+        if (item.type === 'file' && item.name.endsWith('.html') && item.name !== 'index.html') {
+          allPresentations.push(createFileData(item, 'Documentos', { bg: '#6B7F96', text: '#fff' }));
+        } 
+        // Subpastas viram categorias específicas
+        else if (item.type === 'dir') {
+          const catName = formatName(item.name);
+          if (!categoriesData[catName]) {
+            categoriesData[catName] = BRAND_COLORS[colorIndex % BRAND_COLORS.length];
+            colorIndex++;
+          }
+
+          // Busca arquivos dentro da subpasta
+          const subResponse = await fetch(item.url);
+          if (subResponse.ok) {
+            const subItems = await subResponse.json();
+            for (const subItem of subItems) {
+              if (subItem.type === 'file' && subItem.name.endsWith('.html') && subItem.name !== 'index.html') {
+                allPresentations.push(createFileData(subItem, catName, categoriesData[catName]));
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      galleryEl.innerHTML = `<div id="status-message">Falha ao carregar o inventário. Verifique o repositório ou os limites da API do GitHub.</div>`;
+      return;
+    }
+
+    renderFilters();
+    renderGallery(allPresentations);
+  }
+
+  // Objeto de dados do arquivo
+  function createFileData(apiItem, categoryName, colorTheme) {
+    let relativePath = apiItem.path;
+    // Se o path contém a pasta base, removemos para o iframe carregar localmente se necessário
+    if (FOLDER_PATH && relativePath.startsWith(FOLDER_PATH + '/')) {
+      relativePath = relativePath.substring(FOLDER_PATH.length + 1);
+    }
+
+    return {
+      path: relativePath,
+      name: apiItem.name,
+      title: formatName(apiItem.name.replace('.html', '')),
+      category: categoryName,
+      color: colorTheme
+    };
+  }
+
+  // Formatação de Nomes
+  function formatName(str) {
+    return str.replace(/[-_]/g, ' ')
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+
+  // Filtros
+  function renderFilters() {
+    if (allPresentations.length === 0) return;
+    const categories = [...new Set(allPresentations.map(p => p.category))].sort();
+
+    let buttonsHTML = `<button class="filter-btn active" onclick="filterGallery('Todas', this)">Todas</button>`;
+    categories.forEach(cat => {
+      buttonsHTML += `<button class="filter-btn" onclick="filterGallery('${cat}', this)">${cat}</button>`;
+    });
+    filtersEl.innerHTML = buttonsHTML;
+  }
+
+  function filterGallery(category, btnElement) {
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    const filtered = category === 'Todas' 
+      ? allPresentations 
+      : allPresentations.filter(p => p.category === category);
+
+    renderGallery(filtered);
+  }
+
+  // Galeria
+  function renderGallery(filesToRender) {
+    galleryEl.innerHTML = ''; 
+    if (filesToRender.length === 0) {
+      galleryEl.innerHTML = '<div id="status-message">Nenhum registro encontrado nesta categoria.</div>';
+      return;
+    }
+
+    filesToRender.forEach((file, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.onclick = () => openModal(file.path, file.title, file.category, file.color.bg, file.color.text);
+
+      card.innerHTML = `
+        <div class="card-accent"></div>
+        <div class="card-badge" style="background: ${file.color.bg}; color: ${file.color.text};">
+          ${file.category}
+        </div>
+        <div class="thumb-container">
+          <iframe class="thumb-iframe" src="${file.path}" scrolling="no" tabindex="-1"></iframe>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${file.title}</h3>
+          <div class="card-meta">
+            <span class="material-symbols-rounded" style="font-size: 16px;">Analytics</span>
+            Painel 11ª CMS
+          </div>
+        </div>
+      `;
+      galleryEl.appendChild(card);
+    });
+  }
+
+  // Modal
+  function openModal(filePath, title, category, bg, text) {
+    modalTitle.innerText = title;
+    modalBadgeContainer.innerHTML = `<span style="font-size:9px; font-weight:800; padding:4px 12px; border-radius:999px; background:${bg}; color:${text}; text-transform:uppercase;">${category}</span>`;
+    modalIframe.src = filePath;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; 
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    modalIframe.src = ""; 
+    document.body.style.overflow = 'auto'; 
+  }
+
+  // Fechar com ESC
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  init();
+</script>
+
+</body>
+</html>
