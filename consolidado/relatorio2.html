@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Consolidado - CMS Montes Claros</title>
+    
+    <!-- Tipografia Institucional -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. VARIÁVEIS DO DESIGN SYSTEM (SWISS DESIGN / CMS MOC)
+           ========================================================================== */
+        :root {
+            /* Paleta de Cores */
+            --c-navy: #0D2E5A;
+            --c-blue: #1B6CB5;
+            --c-green: #1E8A4A;
+            --c-yellow: #F5C400;
+            --c-white: #FFFFFF;
+            --c-offwhite: #F7F8FA;
+            --c-ink: #111827;
+            --c-gray-light: #E5E7EB;
+
+            /* Tipografia */
+            --f-display: 900 32px/1.2 'Montserrat', sans-serif;
+            --f-heading: 700 20px/1.3 'Montserrat', sans-serif;
+            --f-eyebrow: 700 11px/1.2 'Montserrat', sans-serif;
+            --f-body: 400 14px/1.75 'Open Sans', sans-serif;
+            --f-body-bold: 700 14px/1.75 'Open Sans', sans-serif;
+        }
+
+        /* ==========================================================================
+           2. RESET E BASE
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: var(--c-offwhite);
+            color: var(--c-ink);
+            font: var(--f-body);
+        }
+
+        /* ==========================================================================
+           3. ESTRUTURA DO LAYOUT E ALINHAMENTOS
+           ========================================================================== */
+        .cms-wrap {
+            max-width: 210mm; /* Formato A4 aproximado */
+            margin: 3rem auto;
+            background-color: var(--c-white);
+            padding: 8%; /* Regra de Ouro: Margens generosas */
+            box-shadow: 0 10px 40px rgba(13, 46, 90, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Marca d'água institucional */
+        .cms-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            opacity: 0.03;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           4. CABEÇALHO (HEADER)
+           ========================================================================== */
+        .cms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 2rem;
+            border-bottom: 4px solid var(--c-navy);
+            margin-bottom: 4rem;
+        }
+
+        .cms-header-logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        .cms-header-title {
+            text-align: right;
+        }
+
+        .cms-header-title h1 {
+            font: var(--f-display);
+            text-transform: uppercase;
+            letter-spacing: -1.5px;
+            color: var(--c-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .cms-header-title p {
+            font: var(--f-eyebrow);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--c-blue);
+        }
+
+        /* ==========================================================================
+           5. CONTEÚDO E TABELAS/GRIDS DE PROPOSTAS
+           ========================================================================== */
+        .cms-loader {
+            font: var(--f-heading);
+            color: var(--c-blue);
+            text-align: center;
+            padding: 4rem 0;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Categorias (Eixos) */
+        .cms-eixo-section {
+            margin-bottom: 4rem;
+            page-break-before: always;
+        }
+        .cms-eixo-section:first-child {
+            page-break-before: auto;
+        }
+
+        .cms-eixo-title {
+            font: var(--f-display);
+            color: var(--c-navy);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--c-yellow); /* Acento/Destaque */
+            display: inline-block;
+        }
+
+        /* Subcategorias (Diretrizes) */
+        .cms-diretriz-section {
+            margin-bottom: 3rem;
+        }
+
+        .cms-diretriz-title {
+            font: var(--f-heading);
+            color: var(--c-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .cms-diretriz-title::before {
+            content: "";
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--c-green); /* Ponto de destaque */
+        }
+
+        /* Lista de Propostas (CSS Grid Milimétrico) */
+        .cms-propostas-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            border-top: 1px solid var(--c-gray-light);
+        }
+
+        .cms-proposta-item {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 2rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--c-gray-light);
+            page-break-inside: avoid;
+            align-items: start;
+        }
+
+        .cms-proposta-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .cms-proposta-origem {
+            font: var(--f-eyebrow);
+            color: var(--c-navy);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cms-proposta-numero {
+            font: var(--f-body-bold);
+            color: var(--c-blue);
+            font-size: 12px;
+        }
+
+        .cms-proposta-texto {
+            font: var(--f-body);
+            color: var(--c-ink);
+        }
+
+        /* ==========================================================================
+           6. RODAPÉ E ASSINATURA
+           ========================================================================== */
+        .cms-footer {
+            margin-top: 6rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--c-gray-light);
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .cms-signature {
+            margin-bottom: 1rem;
+        }
+
+        .cms-signature img {
+            height: 80px;
+            width: auto;
+            mix-blend-mode: multiply; /* Para a assinatura mesclar perfeitamente */
+        }
+
+        .cms-footer-text {
+            font: var(--f-eyebrow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--c-navy);
+        }
+
+        /* ==========================================================================
+           7. REGRAS DE IMPRESSÃO PROFISSIONAL (@media print)
+           ========================================================================== */
+        @media print {
+            body {
+                background-color: var(--c-white);
+            }
+            .cms-wrap {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                max-width: none;
+                box-shadow: none;
+            }
+            .cms-watermark {
+                display: none; /* Evitar conflito de leitura na tinta impressa */
+            }
+            /* Otimização de quebra de páginas */
+            h1, h2, h3, .cms-header {
+                page-break-after: avoid;
+            }
+            .cms-proposta-item {
+                break-inside: avoid;
+            }
+            @page {
+                margin: 20mm 15mm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/logline.png" alt="Marca d'água" class="cms-watermark">
+
+    <div class="cms-wrap">
+        <!-- Cabeçalho Institucional -->
+        <header class="cms-header">
+            <div class="cms-header-logo">
+                <!-- Logo Horizontal Fundo Claro escolhido seguindo as diretrizes -->
+                <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/logohbl.png" alt="Conselho Municipal de Saúde - Montes Claros">
+            </div>
+            <div class="cms-header-title">
+                <h1>Relatório Consolidado</h1>
+                <p>Propostas - 13 Pré-Conferências Municipais</p>
+            </div>
+        </header>
+
+        <!-- Container onde o JS vai injetar os dados -->
+        <main class="cms-content" id="relatorio-conteudo">
+            <div class="cms-loader">Carregando e processando propostas...</div>
+        </main>
+
+        <!-- Rodapé Institucional com Assinatura -->
+        <footer class="cms-footer" id="cms-footer" style="display: none;">
+            <div class="cms-signature">
+                <img src="https://cmsmoc.github.io/secretariaexecutiva/logo/ass.png" alt="Assinatura Eletrônica">
+            </div>
+            <div class="cms-footer-text">
+                Documento Gerado Eletronicamente<br>
+                Conselho Municipal de Saúde - Montes Claros/MG
+            </div>
+        </footer>
+    </div>
+
+    <!-- Script para Parser e Renderização Milimétrica -->
+    <script>
+        // URL da planilha fornecida
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ32FFFj_u5J9rx1bRjJ6fOw6qteP-EaKYNdAZWs1x3pFTyArLa0sU0u7qIVd5ayA0826SYc2VS7riB/pub?gid=1145102250&single=true&output=csv';
+
+        // =========================================================================
+        // DICIONÁRIO DE NOMENCLATURA OFICIAL (Altere aqui os nomes reais)
+        // O sistema intercepta o dado frio da planilha e exibe o título elegante.
+        // =========================================================================
+        const NOMENCLATURA_OFICIAL = {
+            eixos: {
+                "Eixo 1": "Eixo 1: Título Temático do Eixo Um",
+                "Eixo 2": "Eixo 2: Título Temático do Eixo Dois",
+                "Eixo 3": "Eixo 3: Título Temático do Eixo Três",
+                "Eixo 4": "Eixo 4: Título Temático do Eixo Quatro",
+                "Eixo 5": "Eixo 5: Título Temático do Eixo Cinco"
+            },
+            diretrizes: {
+                "Diretriz 1": "Diretriz 1: Descrição da Diretriz",
+                "Diretriz 2": "Diretriz 2: Descrição da Diretriz",
+                "Diretriz 3": "Diretriz 3: Descrição da Diretriz",
+                "Diretriz 4": "Diretriz 4: Descrição da Diretriz",
+                "Diretriz 5": "Diretriz 5: Descrição da Diretriz"
+            }
+        };
+
+        // Função para buscar nome bonito, caso não exista no dicionário usa o original da planilha
+        function getNomeFormatado(tipo, chave) {
+            // Trim para evitar problemas de espaço extra vindo do CSV (ex: " Eixo 1 " -> "Eixo 1")
+            const chaveLimpa = chave.trim();
+            if (NOMENCLATURA_OFICIAL[tipo] && NOMENCLATURA_OFICIAL[tipo][chaveLimpa]) {
+                return NOMENCLATURA_OFICIAL[tipo][chaveLimpa];
+            }
+            return chaveLimpa; // Retorna original se não achar
+        }
+
+        // Função robusta para converter CSV em Array (Lida com aspas duplas e vírgulas internas)
+        function parseCSV(text) {
+            const result = [];
+            let row = [];
+            let inQuotes = false;
+            let val = '';
+
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let nextChar = text[i + 1];
+
+                if (char === '"' && inQuotes && nextChar === '"') {
+                    val += '"';
+                    i++; 
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(val.trim());
+                    val = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') i++;
+                    row.push(val.trim());
+                    result.push(row);
+                    row = [];
+                    val = '';
+                } else {
+                    val += char;
+                }
+            }
+            if (val || row.length > 0) {
+                row.push(val.trim());
+                result.push(row);
+            }
+            return result;
+        }
+
+        async function initReport() {
+            try {
+                // 1. Busca os dados
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                
+                // 2. Transforma em Array
+                const rawData = parseCSV(csvText);
+                
+                // 3. Remove cabeçalho e linhas vazias
+                const header = rawData[0];
+                const rows = rawData.slice(1).filter(row => row.length >= 5 && row[0] !== "");
+
+                // 4. Estrutura de dados organizada (Agrupamento por Eixo -> Diretriz)
+                const reportData = {};
+
+                rows.forEach(row => {
+                    const conf = row[0];
+                    const num = row[1];
+                    const prop = row[2];
+                    const eixo = row[3];
+                    const diretriz = row[4];
+
+                    if (!reportData[eixo]) reportData[eixo] = {};
+                    if (!reportData[eixo][diretriz]) reportData[eixo][diretriz] = [];
+
+                    reportData[eixo][diretriz].push({ conf, num, prop });
+                });
+
+                // 5. Renderização em HTML seguindo as diretrizes de design
+                const contentDiv = document.getElementById('relatorio-conteudo');
+                contentDiv.innerHTML = ''; // Limpa loader
+
+                // Ordenar Eixos alfabeticamente/numericamente usando a chave original
+                const eixosSorted = Object.keys(reportData).sort();
+
+                eixosSorted.forEach(eixoKey => {
+                    // Sessão do Eixo
+                    const eixoSection = document.createElement('div');
+                    eixoSection.className = 'cms-eixo-section';
+                    
+                    const eixoHeader = document.createElement('h2');
+                    eixoHeader.className = 'cms-eixo-title';
+                    // Puxa o título bonito configurado no topo do script
+                    eixoHeader.textContent = getNomeFormatado('eixos', eixoKey);
+                    eixoSection.appendChild(eixoHeader);
+
+                    // Ordenar Diretrizes
+                    const diretrizesSorted = Object.keys(reportData[eixoKey]).sort();
+
+                    diretrizesSorted.forEach(diretrizKey => {
+                        const dirSection = document.createElement('div');
+                        dirSection.className = 'cms-diretriz-section';
+
+                        const dirHeader = document.createElement('h3');
+                        dirHeader.className = 'cms-diretriz-title';
+                        // Puxa a diretriz bonita configurada no topo do script
+                        dirHeader.textContent = getNomeFormatado('diretrizes', diretrizKey);
+                        dirSection.appendChild(dirHeader);
+
+                        const gridPropostas = document.createElement('div');
+                        gridPropostas.className = 'cms-propostas-grid';
+
+                        // Inserir cada proposta
+                        reportData[eixoKey][diretrizKey].forEach(item => {
+                            // Correção: recriando as definições do elemento propItem que estavam faltando
+                            const propItem = document.createElement('div');
+                            propItem.className = 'cms-proposta-item';
+
+                            propItem.innerHTML = `
+                                <div class="cms-proposta-meta">
+                                    <span class="cms-proposta-origem">${item.conf}</span>
+                                    <span class="cms-proposta-numero">Proposta #${item.num}</span>
+                                </div>
+                                <div class="cms-proposta-texto">
+                                    ${item.prop}
+                                </div>
+                            `;
+                            gridPropostas.appendChild(propItem);
+                        });
+
+                        dirSection.appendChild(gridPropostas);
+                        eixoSection.appendChild(dirSection);
+                    });
+
+                    contentDiv.appendChild(eixoSection);
+                });
+
+                // Mostra o footer após renderizar
+                document.getElementById('cms-footer').style.display = 'block';
+
+            } catch (error) {
+                console.error("Erro ao carregar os dados:", error);
+                document.getElementById('relatorio-conteudo').innerHTML = `
+                    <div style="color: var(--c-navy); font-weight: bold;">
+                        Erro ao carregar o documento. Verifique a conexão com a internet ou as permissões da planilha.
+                    </div>`;
+            }
+        }
+
+        // Inicia o processo ao carregar a página
+        window.addEventListener('DOMContentLoaded', initReport);
+    </script>
+</body>
+</html>
