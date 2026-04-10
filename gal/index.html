@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel 11ª Conferência — CMS Montes Claros</title>
-<!-- TIPOGRAFIA OFICIAL -->
 <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,1,0" rel="stylesheet" />
 
 <style>
 /* ═══════════════════════════════════════════════════════════════
    BRANDED INVENTORY — 11ª CMS MONTES CLAROS
-   Aplicações do Brand Guide ao Painel de Apresentações
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -64,7 +62,6 @@ header {
   overflow: hidden;
 }
 
-/* Elemento de Onda SVG (Signature) */
 header::after {
   content: '';
   position: absolute;
@@ -202,6 +199,7 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+/* -- THUMBNAIL (Nova abordagem) -- */
 .thumb-container {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -210,13 +208,16 @@ main {
   background: var(--azul-wave);
   border-bottom: 1px solid var(--cinza-borda);
 }
-.thumb-iframe {
-  width: 400%; height: 400%;
-  transform: scale(0.25);
-  transform-origin: top left;
-  border: none;
-  pointer-events: none;
+.thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   position: absolute;
+  top: 0; left: 0;
+  transition: transform 0.5s ease;
+}
+.card:hover .thumb-image {
+  transform: scale(1.05);
 }
 
 .card-content {
@@ -243,6 +244,27 @@ main {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* -- BOTÃO DE DOWNLOAD -- */
+.btn-download {
+  background: var(--cinza-off);
+  color: var(--azul-sus);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 11px;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.btn-download:hover {
+  background: var(--azul-sus);
+  color: #fff;
 }
 
 /* -- MODAL -- */
@@ -345,18 +367,14 @@ footer {
 </header>
 
 <main>
-  <!-- Contêiner de Filtros -->
   <div class="filters-container" id="filters-container">
-    <!-- Gerado via JavaScript -->
-  </div>
+    </div>
 
-  <!-- Galeria de Cards -->
   <div class="gallery-grid" id="gallery">
-    <div id="status-message">Conectando ao repositório institucional...</div>
+    <div id="status-message">Conectando ao repositório institucional e buscando capas...</div>
   </div>
 </main>
 
-<!-- Modal de Visualização Fullscreen -->
 <div id="presentation-modal">
   <div class="modal-header">
     <div class="modal-title-wrap">
@@ -379,18 +397,17 @@ footer {
 
 <script>
   /* ═══════════════════════════════════════════════════════════════
-     LOGICA DE INTEGRAÇÃO GITHUB API
+     LÓGICA DE INTEGRAÇÃO GITHUB API
      ═══════════════════════════════════════════════════════════════ */
   
   const GITHUB_USERNAME = "cmsmoc"; 
   const GITHUB_REPO = "11conferencia"; 
   const FOLDER_PATH = "consolidado";                
 
-  // Configuração de cores para categorias (Extraídas do Brand Guide)
   const BRAND_COLORS = [
     { bg: '#2E8BC0', text: '#fff' }, // Azul Médio
     { bg: '#3AAA35', text: '#fff' }, // Verde SUS
-    { bg: '#F5C800', text: '#0D3D6B' }, // Amarelo (texto navy)
+    { bg: '#F5C800', text: '#0D3D6B' }, // Amarelo
     { bg: '#0D3D6B', text: '#fff' }, // Navy SUS
     { bg: '#5BBF6A', text: '#fff' }  // Verde Wave
   ];
@@ -405,23 +422,54 @@ footer {
   const modalTitle = document.getElementById('modal-title-text');
   const modalBadgeContainer = document.getElementById('modal-badge-container');
 
+  // Função para ler o HTML e extrair a tag <meta name="thumbnail" content="...">
+  async function fetchThumbnail(downloadUrl) {
+    if (!downloadUrl) return null;
+    try {
+      const response = await fetch(downloadUrl);
+      const htmlText = await response.text();
+      const match = htmlText.match(/<meta\s+name=["']thumbnail["']\s+content=["']([^"']+)["']/i);
+      return match ? match[1] : null; 
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // Objeto de dados do arquivo (aguarda o metadado)
+  async function createFileData(apiItem, categoryName, colorTheme) {
+    let relativePath = apiItem.path;
+    if (FOLDER_PATH && relativePath.startsWith(FOLDER_PATH + '/')) {
+      relativePath = relativePath.substring(FOLDER_PATH.length + 1);
+    }
+
+    const thumbUrl = await fetchThumbnail(apiItem.download_url);
+
+    return {
+      path: relativePath,
+      name: apiItem.name,
+      title: formatName(apiItem.name.replace('.html', '')),
+      category: categoryName,
+      color: colorTheme,
+      thumbnail: thumbUrl || 'https://via.placeholder.com/600x338/0D3D6B/FFFFFF?text=Sem+Capa' 
+    };
+  }
+
   // Inicializa a aplicação
   async function init() {
     let colorIndex = 0;
     try {
-      // Busca lista da pasta raiz 'pres'
       const rootUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${FOLDER_PATH}`;
       const rootResponse = await fetch(rootUrl);
       
       if (!rootResponse.ok) throw new Error("Erro na comunicação com servidor.");
       const rootItems = await rootResponse.json();
 
+      let fetchPromises = []; // Array para carregar todas as capas ao mesmo tempo
+
       for (const item of rootItems) {
-        // Arquivos HTML soltos na raiz vão para categoria "Documentos"
         if (item.type === 'file' && item.name.endsWith('.html') && item.name !== 'index.html') {
-          allPresentations.push(createFileData(item, 'Documentos', { bg: '#6B7F96', text: '#fff' }));
+          fetchPromises.push(createFileData(item, 'Documentos', { bg: '#6B7F96', text: '#fff' }));
         } 
-        // Subpastas viram categorias específicas
         else if (item.type === 'dir') {
           const catName = formatName(item.name);
           if (!categoriesData[catName]) {
@@ -429,18 +477,21 @@ footer {
             colorIndex++;
           }
 
-          // Busca arquivos dentro da subpasta
           const subResponse = await fetch(item.url);
           if (subResponse.ok) {
             const subItems = await subResponse.json();
             for (const subItem of subItems) {
               if (subItem.type === 'file' && subItem.name.endsWith('.html') && subItem.name !== 'index.html') {
-                allPresentations.push(createFileData(subItem, catName, categoriesData[catName]));
+                fetchPromises.push(createFileData(subItem, catName, categoriesData[catName]));
               }
             }
           }
         }
       }
+
+      // Aguarda todos os metadados serem carregados de uma vez
+      allPresentations = await Promise.all(fetchPromises);
+
     } catch (error) {
       console.error(error);
       galleryEl.innerHTML = `<div id="status-message">Falha ao carregar o inventário. Verifique o repositório ou os limites da API do GitHub.</div>`;
@@ -449,23 +500,6 @@ footer {
 
     renderFilters();
     renderGallery(allPresentations);
-  }
-
-  // Objeto de dados do arquivo
-  function createFileData(apiItem, categoryName, colorTheme) {
-    let relativePath = apiItem.path;
-    // Se o path contém a pasta base, removemos para o iframe carregar localmente se necessário
-    if (FOLDER_PATH && relativePath.startsWith(FOLDER_PATH + '/')) {
-      relativePath = relativePath.substring(FOLDER_PATH.length + 1);
-    }
-
-    return {
-      path: relativePath,
-      name: apiItem.name,
-      title: formatName(apiItem.name.replace('.html', '')),
-      category: categoryName,
-      color: colorTheme
-    };
   }
 
   // Formatação de Nomes
@@ -509,6 +543,7 @@ footer {
       const card = document.createElement('div');
       card.className = 'card';
       card.style.animationDelay = `${index * 0.05}s`;
+      
       card.onclick = () => openModal(file.path, file.title, file.category, file.color.bg, file.color.text);
 
       card.innerHTML = `
@@ -516,14 +551,23 @@ footer {
         <div class="card-badge" style="background: ${file.color.bg}; color: ${file.color.text};">
           ${file.category}
         </div>
+        
         <div class="thumb-container">
-          <iframe class="thumb-iframe" src="${file.path}" scrolling="no" tabindex="-1"></iframe>
+          <img src="${file.thumbnail}" class="thumb-image" alt="Capa de ${file.title}" loading="lazy">
         </div>
+        
         <div class="card-content">
           <h3 class="card-title">${file.title}</h3>
-          <div class="card-meta">
-            <span class="material-symbols-rounded" style="font-size: 16px;">Analytics</span>
-            Painel 11ª CMS
+          
+          <div class="card-meta" style="justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="material-symbols-rounded" style="font-size: 16px;">Analytics</span>
+              Painel 11ª CMS
+            </div>
+            
+            <a href="${file.path}" download="${file.name}" class="btn-download" title="Baixar arquivo" onclick="event.stopPropagation()">
+              <span class="material-symbols-rounded" style="font-size: 16px;">download</span>
+            </a>
           </div>
         </div>
       `;
