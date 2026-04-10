@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aglutinador de Propostas — 11ª CMS Montes Claros</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Georama', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            'azul-sus': '#1A5EA8',
+                            'azul-medio': '#2E8BC0',
+                            'azul-claro': '#7EC8E3',
+                            'azul-wave': '#0D3D6B',
+                            'verde-sus': '#3AAA35',
+                            'verde-wave': '#5BBF6A',
+                            'amarelo': '#F5C800',
+                            'cinza-off': '#F4F7FB',
+                            'cinza-texto': '#2C3E50',
+                            'cinza-medio': '#6B7F96',
+                            'cinza-borda': '#D6E4F0',
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-wave': 'linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%)',
+                        'gradient-header': 'linear-gradient(160deg, #0D3D6B 0%, #1A5EA8 50%, #2E8BC0 100%)',
+                    },
+                    boxShadow: {
+                        'card': '0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06)',
+                        'hover': '0 12px 40px rgba(26,94,168,.18), 0 2px 8px rgba(26,94,168,.10)',
+                        'onda': '0 -4px 32px rgba(26,94,168,.12)',
+                    },
+                    borderRadius: {
+                        'brand': '14px',
+                        'brand-sm': '8px',
+                        'brand-pill': '999px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos Essenciais e Scrollbar */
+        body { background-color: #F4F7FB; color: #2C3E50; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #F4F7FB; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #D6E4F0; border-radius: 999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6B7F96; }
+        body.modal-open { overflow: hidden; }
+        
+        /* Onda SVG no Header */
+        .header-wave {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 48px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 48'%3E%3Cpath fill='%23F4F7FB' d='M0,48 C480,8 960,40 1440,0 L1440,48 Z'/%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            z-index: 1;
+        }
+
+        /* Efeitos do Card ditados pelo Brand Guide */
+        .card-brand {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .card-brand:hover:not(.card-disabled) {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(26,94,168,.18), 0 2px 8px rgba(26,94,168,.10);
+            border-color: #2E8BC0;
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col md:flex-row overflow-hidden font-sans">
+
+    <section class="w-full md:w-[55%] h-full flex flex-col bg-brand-cinza-off border-r border-brand-cinza-borda relative z-10">
+        
+        <div class="relative bg-gradient-header pt-8 pb-16 px-6 md:px-8 overflow-hidden flex-shrink-0">
+            <div class="header-wave"></div>
+            
+            <div class="relative z-10">
+                <div class="inline-block bg-white/10 border border-white/20 text-white text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-brand-pill mb-4">
+                    11ª CMS • Montes Claros
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-white leading-tight mb-1">
+                    Aglutinador de <span class="text-brand-amarelo">Propostas</span>
+                </h1>
+                <p class="text-white/70 text-sm md:text-base font-medium">Selecione as propostas da base matriz para unificá-las.</p>
+            </div>
+        </div>
+
+        <div class="px-6 md:px-8 mt-[-28px] relative z-20 flex-shrink-0 mb-4">
+            <div class="bg-white rounded-brand shadow-card border-[1.5px] border-brand-cinza-borda p-3 md:p-4 flex flex-col md:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-brand-cinza-medio text-lg"></i>
+                    <input type="text" id="search-input" placeholder="Buscar palavra-chave ou ID..." 
+                        class="w-full pl-10 pr-4 py-2 bg-transparent border-none outline-none font-sans text-sm text-brand-cinza-texto placeholder-brand-cinza-medio">
+                </div>
+                <div class="w-full md:w-px md:h-8 bg-brand-cinza-borda hidden md:block self-center"></div>
+                <select id="filter-eixo" class="w-full md:w-1/3 bg-transparent border-none outline-none text-sm font-semibold text-brand-azul-sus cursor-pointer">
+                    <option value="">TODOS OS EIXOS</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="loading-state" class="flex-1 flex flex-col items-center justify-center text-brand-cinza-medio">
+            <i class="ph ph-spinner-gap animate-spin text-4xl text-brand-azul-sus mb-3"></i>
+            <p class="font-bold text-xs uppercase tracking-widest">Sincronizando Base...</p>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-6 md:px-8 pb-24 md:pb-8 space-y-4 custom-scrollbar hidden" id="proposals-list">
+            </div>
+
+        <div id="mobile-action-bar" class="fixed bottom-0 left-0 w-full bg-white border-t border-brand-cinza-borda p-4 shadow-onda md:hidden transform translate-y-full transition-transform duration-300 z-30 flex justify-between items-center">
+            <div class="flex flex-col">
+                <span class="text-[10px] font-extrabold text-brand-cinza-medio uppercase tracking-widest">Selecionadas</span>
+                <span class="font-extrabold text-brand-azul-sus text-lg leading-none" id="mobile-count">0</span>
+            </div>
+            <button onclick="toggleWorkspace(true)" class="bg-gradient-wave text-white px-6 py-3 rounded-brand-pill font-extrabold text-xs uppercase tracking-widest flex items-center gap-2 shadow-card">
+                Redigir Macro <i class="ph-bold ph-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <section id="workspace-panel" class="fixed inset-0 z-50 bg-brand-cinza-off flex flex-col transform translate-y-full transition-transform duration-300 md:static md:translate-y-0 md:w-[45%] md:h-full md:border-l border-brand-cinza-borda bg-white md:bg-brand-cinza-off">
+        
+        <div class="bg-brand-azul-wave md:bg-transparent p-6 pb-6 border-b border-brand-cinza-borda flex items-center justify-between md:pt-10 md:px-10">
+            <div>
+                <div class="flex items-center gap-2 text-brand-amarelo md:text-brand-azul-sus font-extrabold text-[10px] uppercase tracking-[0.15em] mb-2">
+                    <i class="ph-fill ph-git-merge text-lg"></i> Painel de Edição
+                </div>
+                <h2 class="text-xl md:text-2xl font-extrabold text-white md:text-brand-cinza-texto leading-tight">
+                    Redação <span class="text-brand-amarelo md:text-brand-azul-sus">Macro</span>
+                </h2>
+            </div>
+            <button onclick="toggleWorkspace(false)" class="p-2 bg-white/10 rounded-full md:hidden text-white">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 flex flex-col p-6 md:p-10 gap-6 overflow-y-auto">
+            
+            <div id="selection-indicator" class="bg-white border border-brand-cinza-borda text-brand-cinza-medio px-4 py-3 rounded-brand-sm flex items-center gap-3 transition-all text-sm shadow-sm">
+                <i class="ph-fill ph-info text-xl indicator-icon"></i>
+                <span id="selected-count" class="font-bold">Nenhuma proposta selecionada</span>
+            </div>
+
+            <div class="flex flex-col flex-1 min-h-[220px]">
+                <label class="block text-[11px] font-extrabold text-brand-azul-sus uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <div class="w-4 h-[3px] bg-gradient-wave rounded-full"></div> Texto Unificado Final
+                </label>
+                <textarea id="macro-textarea" 
+                    class="w-full flex-1 p-5 border-[1.5px] border-brand-cinza-borda rounded-brand bg-white text-sm font-medium text-brand-cinza-texto focus:ring-0 focus:border-brand-azul-medio outline-none resize-none shadow-inner disabled:bg-brand-cinza-off transition-all"
+                    placeholder="Redija aqui a síntese das propostas selecionadas..." disabled></textarea>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <div class="w-full">
+                    <label class="block text-[10px] font-extrabold text-brand-cinza-medio uppercase tracking-widest mb-2">Abrangência da Macro</label>
+                    <select id="abrangencia-select" class="w-full border-[1.5px] border-brand-cinza-borda rounded-brand-sm px-4 py-3 bg-white text-sm font-bold text-brand-cinza-texto focus:ring-0 focus:border-brand-azul-medio outline-none disabled:bg-brand-cinza-off transition-all cursor-pointer" disabled>
+                        <option value="" disabled selected>ESCOLHA UM NÍVEL...</option>
+                        <option value="Municipal">MUNICIPAL</option>
+                        <option value="Estadual">ESTADUAL</option>
+                        <option value="Nacional">NACIONAL</option>
+                    </select>
+                </div>
+                
+                <button id="save-btn" 
+                    class="w-full bg-brand-azul-sus text-white font-extrabold text-xs uppercase tracking-widest py-4 px-6 rounded-brand-pill shadow-card transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
+                    disabled>
+                    <i class="ph-bold ph-floppy-disk text-lg"></i> Salvar e Aglutinar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div id="toast" class="fixed top-4 md:top-auto md:bottom-8 right-4 md:right-8 bg-brand-azul-wave text-white px-6 py-4 rounded-brand shadow-onda flex items-center gap-4 transform -translate-y-24 md:translate-y-24 opacity-0 transition-all duration-300 z-[100] pointer-events-none border border-white/10">
+        <i class="ph-fill ph-check-circle text-brand-verde-wave text-3xl" id="toast-icon"></i>
+        <div>
+            <h4 class="font-extrabold text-sm tracking-wide" id="toast-title">Sucesso!</h4>
+            <p class="text-xs text-white/70 font-medium" id="toast-msg">Operação realizada.</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO DA API (GAS)
+        // ==========================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxbAg6XJHHksVwktBFq3VeWgPpeIjv7j82spT4ap2VhMW-s68BFIY8oRp0R61quycBJsg/exec';
+
+        let rawProposals = [];
+        let selectedIds = new Set();
+        let searchQuery = '';
+        let filterEixo = '';
+
+        // DOM Elements
+        const domList = document.getElementById('proposals-list');
+        const domLoading = document.getElementById('loading-state');
+        const domTextarea = document.getElementById('macro-textarea');
+        const domAbrangencia = document.getElementById('abrangencia-select');
+        const domSaveBtn = document.getElementById('save-btn');
+        const mobileActionBar = document.getElementById('mobile-action-bar');
+        const workspacePanel = document.getElementById('workspace-panel');
+
+        // ==========================================
+        // FETCH DATA
+        // ==========================================
+        async function loadData() {
+            try {
+                const response = await fetch(API_URL + "?t=" + new Date().getTime());
+                const result = await response.json();
+                
+                if (result.success) {
+                    rawProposals = result.data;
+                    domLoading.classList.add('hidden');
+                    domList.classList.remove('hidden');
+                    populateFilters();
+                    renderList();
+                } else {
+                    showToast('Erro ao carregar', result.error, 'error');
+                }
+            } catch (error) {
+                showToast('Erro de Conexão', 'Não foi possível acessar a planilha.', 'error');
+                domLoading.innerHTML = `<i class="ph-fill ph-warning text-4xl text-brand-amarelo mb-2"></i><p class="font-bold text-xs uppercase tracking-widest text-brand-cinza-texto">Falha na Conexão</p>`;
+            }
+        }
+
+        // ==========================================
+        // RENDER UI
+        // ==========================================
+        function populateFilters() {
+            const eixos = [...new Set(rawProposals.map(p => p.eixo))].filter(Boolean).sort();
+            const filterDom = document.getElementById('filter-eixo');
+            filterDom.innerHTML = '<option value="">TODOS OS EIXOS</option>';
+            eixos.forEach(eixo => {
+                filterDom.innerHTML += `<option value="${eixo}">${eixo.toUpperCase()}</option>`;
+            });
+        }
+
+        function renderList() {
+            domList.innerHTML = '';
+            
+            const filteredProposals = rawProposals.filter(p => {
+                const matchSearch = p.text?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    p.id?.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchEixo = filterEixo === '' || p.eixo === filterEixo;
+                return matchSearch && matchEixo;
+            });
+
+            if(filteredProposals.length === 0) {
+                domList.innerHTML = `<div class="text-center py-10 flex flex-col items-center"><i class="ph-fill ph-magnifying-glass text-4xl mb-3 text-brand-cinza-borda"></i><p class="font-bold text-xs uppercase tracking-widest text-brand-cinza-medio">Nenhuma proposta encontrada</p></div>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            filteredProposals.forEach(p => {
+                const isSelected = selectedIds.has(p.id);
+                const isAgglutinated = p.status === 'agglutinated';
+                
+                const card = document.createElement('div');
+                let classes = 'bg-white border-[1.5px] rounded-brand p-5 card-brand relative flex flex-col gap-3 shadow-card ';
+                
+                if (isAgglutinated) {
+                    classes += 'border-brand-cinza-borda bg-brand-cinza-off opacity-60 grayscale cursor-not-allowed card-disabled';
+                } else if (isSelected) {
+                    // Selecionado usa Azul-claro suave e borda primária
+                    classes += 'border-brand-azul-sus bg-brand-azul-claro/10 cursor-pointer !shadow-hover !transform-none ring-2 ring-brand-azul-sus/20';
+                } else {
+                    classes += 'border-brand-cinza-borda cursor-pointer';
+                }
+                
+                card.className = classes;
+                if (!isAgglutinated) card.onclick = () => toggleSelection(p.id);
+
+                // Badge Dinâmico de Eixo e ID
+                let eixoColor = 'bg-[#EAF4FB] text-brand-azul-sus'; // Padrão
+                if(p.eixo?.includes("2")) eixoColor = 'bg-[#E8F8EC] text-brand-verde-sus';
+                if(p.eixo?.includes("3")) eixoColor = 'bg-[#FEF8E7] text-[#9A6500]';
+
+                card.innerHTML = `
+                    ${!isAgglutinated ? `<div class="absolute top-0 left-0 right-0 h-[5px] bg-gradient-wave rounded-t-brand opacity-0 transition-opacity ${isSelected ? 'opacity-100' : ''}"></div>` : ''}
+                    
+                    ${isAgglutinated ? `
+                        <div class="absolute top-3 right-3 bg-brand-azul-wave text-white text-[9px] uppercase font-extrabold tracking-widest px-2 py-1 rounded shadow-sm flex items-center gap-1 z-10">
+                            <i class="ph-fill ph-lock-key"></i> Aglutinada
+                        </div>
+                    ` : ''}
+                    
+                    <div class="flex items-start gap-3">
+                        <div class="pt-1">
+                            <div class="w-5 h-5 rounded border-[1.5px] flex items-center justify-center transition-colors
+                                ${isSelected ? 'border-brand-azul-sus bg-brand-azul-sus text-white' : 'border-brand-cinza-medio bg-white'}
+                                ${isAgglutinated ? 'opacity-50' : ''}">
+                                ${isSelected ? '<i class="ph-bold ph-check text-xs"></i>' : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-wrap items-center gap-2 mb-2 mt-0.5">
+                                <span class="bg-white border border-brand-cinza-borda text-brand-cinza-texto text-[10px] font-extrabold font-mono px-2 py-[2px] rounded-brand-sm shadow-sm">${p.id}</span>
+                                <span class="${eixoColor} text-[9px] font-extrabold uppercase tracking-widest px-2 py-[2px] rounded-brand-pill whitespace-nowrap">${p.eixo}</span>
+                            </div>
+                            
+                            <p class="text-brand-cinza-texto text-sm leading-relaxed mb-3 font-medium">${p.text}</p>
+                            
+                            <div class="flex flex-col gap-1 mt-auto border-t border-brand-cinza-borda pt-3">
+                                <div class="flex items-center text-[11px] text-brand-cinza-medio font-semibold gap-1.5 truncate">
+                                    <i class="ph-fill ph-map-pin text-brand-azul-medio"></i> ${p.evento}
+                                </div>
+                                <div class="flex items-center text-[11px] text-brand-cinza-medio font-semibold gap-1.5 truncate">
+                                    <i class="ph-fill ph-target text-brand-amarelo"></i> Dir: ${p.diretriz}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+
+            domList.appendChild(fragment);
+        }
+
+        // ==========================================
+        // INTERAÇÃO E ESTADOS
+        // ==========================================
+        function toggleSelection(id) {
+            const proposal = rawProposals.find(p => p.id === id);
+            if (proposal.status === 'agglutinated') return;
+
+            if (selectedIds.has(id)) selectedIds.delete(id);
+            else selectedIds.add(id);
+            
+            renderList();
+            updateWorkspace();
+        }
+
+        function updateWorkspace() {
+            const count = selectedIds.size;
+            const ind = document.getElementById('selection-indicator');
+            const indText = document.getElementById('selected-count');
+            const indIcon = ind.querySelector('.indicator-icon');
+            
+            // Mobile
+            document.getElementById('mobile-count').textContent = count;
+            if (count > 0) mobileActionBar.classList.remove('translate-y-full');
+            else mobileActionBar.classList.add('translate-y-full');
+
+            // Workspace panel
+            if (count === 0) {
+                indText.textContent = "Nenhuma proposta selecionada";
+                ind.className = 'bg-white border border-brand-cinza-borda text-brand-cinza-medio px-4 py-3 rounded-brand-sm flex items-center gap-3 transition-all text-sm shadow-sm';
+                indIcon.className = 'ph-fill ph-info text-xl indicator-icon text-brand-cinza-medio';
+                domTextarea.disabled = domAbrangencia.disabled = true;
+            } else {
+                indText.textContent = `${count} proposta(s) em análise`;
+                ind.className = 'bg-[#E8F8EC] border border-[#5BBF6A] text-[#1B7A30] px-4 py-3 rounded-brand-sm flex items-center gap-3 transition-all text-sm shadow-sm';
+                indIcon.className = 'ph-fill ph-check-circle text-xl indicator-icon text-[#3AAA35]';
+                domTextarea.disabled = domAbrangencia.disabled = false;
+            }
+            validateForm();
+        }
+
+        function validateForm() {
+            if (selectedIds.size > 0 && domTextarea.value.trim().length > 5 && domAbrangencia.value !== "") {
+                domSaveBtn.disabled = false;
+                domSaveBtn.classList.add('bg-brand-azul-sus', 'hover:bg-brand-azul-wave');
+                domSaveBtn.classList.remove('bg-brand-cinza-medio');
+            } else {
+                domSaveBtn.disabled = true;
+                domSaveBtn.classList.remove('bg-brand-azul-sus', 'hover:bg-brand-azul-wave');
+                domSaveBtn.classList.add('bg-brand-cinza-medio');
+            }
+        }
+
+        function toggleWorkspace(show) {
+            if(show) {
+                workspacePanel.classList.remove('translate-y-full');
+                document.body.classList.add('modal-open');
+            } else {
+                workspacePanel.classList.add('translate-y-full');
+                document.body.classList.remove('modal-open');
+            }
+        }
+
+        // ==========================================
+        // POST (SALVAR MACRO)
+        // ==========================================
+        async function handleSave() {
+            const payload = {
+                macroText: domTextarea.value,
+                abrangencia: domAbrangencia.value,
+                originIds: Array.from(selectedIds)
+            };
+
+            domSaveBtn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-lg"></i> Salvando...';
+            domSaveBtn.disabled = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+
+                if(result.success) {
+                    showToast('Macro Registrada', `Vinculada com sucesso no GAS.`);
+                    
+                    // Update Local State
+                    rawProposals.forEach(p => {
+                        if (selectedIds.has(p.id)) p.status = 'agglutinated';
+                    });
+
+                    // Reset UI
+                    selectedIds.clear();
+                    domTextarea.value = '';
+                    domAbrangencia.value = '';
+                    toggleWorkspace(false);
+                    updateWorkspace();
+                    renderList();
+                } else throw new Error(result.error);
+            } catch(e) {
+                showToast('Erro de Validação', e.message, 'error');
+            } finally {
+                domSaveBtn.innerHTML = '<i class="ph-bold ph-floppy-disk text-lg"></i> Salvar e Aglutinar';
+                validateForm();
+            }
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            const icon = document.getElementById('toast-icon');
+            
+            if(type === 'success') {
+                icon.className = 'ph-fill ph-check-circle text-brand-verde-wave text-3xl';
+            } else {
+                icon.className = 'ph-fill ph-warning-circle text-brand-amarelo text-3xl';
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-24', '-translate-y-24');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                if(window.innerWidth < 768) toast.classList.add('-translate-y-24');
+                else toast.classList.add('translate-y-24');
+            }, 4000);
+        }
+
+        // ==========================================
+        // LISTENERS
+        // ==========================================
+        document.getElementById('search-input').addEventListener('input', (e) => { searchQuery = e.target.value; renderList(); });
+        document.getElementById('filter-eixo').addEventListener('change', (e) => { filterEixo = e.target.value; renderList(); });
+        domTextarea.addEventListener('input', validateForm);
+        domAbrangencia.addEventListener('change', validateForm);
+        domSaveBtn.addEventListener('click', handleSave);
+
+        // Boot
+        loadData();
+    </script>
+</body>
+</html>
