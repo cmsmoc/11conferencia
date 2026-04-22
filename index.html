@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11ª Conferência Municipal de Saúde — Montes Claros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-sus: #1A5EA8;
+            --azul-medio: #2E8BC0;
+            --azul-claro: #7EC8E3;
+            --azul-wave: #0D3D6B;
+            --verde-sus: #3AAA35;
+            --verde-wave: #5BBF6A;
+            --amarelo-brasil: #F5C800;
+            --cinza-off: #F4F7FB;
+            --cinza-texto: #1A2B3C;
+            --cinza-medio: #6B7F96;
+            --cinza-borda: #D6E4F0;
+            --radius: 16px;
+            --radius-pill: 999px;
+            --sombra: 0 4px 20px rgba(13, 61, 107, 0.08);
+            --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Georama', sans-serif; 
+            background-color: var(--cinza-off); 
+            color: var(--cinza-texto);
+            line-height: 1.5;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- AVISO TOPO --- */
+        #aviso-fixo {
+            display: none;
+            background: var(--amarelo-brasil);
+            color: var(--azul-wave);
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--azul-wave);
+            padding: 60px 24px 80px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 40'%3E%3Cpath fill='%23F4F7FB' d='M0,40 C480,10 960,35 1440,0 L1440,40 Z'/%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+        }
+        .header-content { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
+        .badge-live {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px; border-radius: var(--radius-pill);
+            font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 16px;
+        }
+        .badge-live::before { content: ''; width: 8px; height: 8px; background: var(--amarelo-brasil); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } 100% { opacity: 1; transform: scale(1); } }
+        
+        h1 { font-size: 36px; font-weight: 900; line-height: 1.1; margin-bottom: 8px; letter-spacing: -0.03em; }
+        h1 span { color: var(--amarelo-brasil); }
+        .subtitle { font-size: 16px; opacity: 0.8; font-weight: 400; }
+
+        /* --- GRID DE LINKS --- */
+        main { max-width: 600px; margin: -30px auto 80px; padding: 0 20px; position: relative; z-index: 5; }
+        
+        .section-label { 
+            font-size: 12px; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 0.1em; color: var(--azul-sus); margin: 32px 0 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1.5px; background: var(--cinza-borda); }
+
+        .link-gallery { display: grid; gap: 12px; }
+
+        /* --- CARDS --- */
+        .card {
+            background: white; border-radius: var(--radius); border: 1.5px solid var(--cinza-borda);
+            padding: 18px; display: flex; align-items: center; gap: 16px;
+            text-decoration: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--sombra);
+        }
+        .card:active { transform: scale(0.97); opacity: 0.8; }
+        
+        .card-icon { 
+            width: 52px; height: 52px; background: var(--cinza-off); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: var(--azul-sus);
+        }
+        .card-icon svg { width: 28px; height: 28px; }
+
+        .card-content { flex: 1; }
+        .card-title { font-size: 17px; font-weight: 800; color: var(--cinza-texto); line-height: 1.2; margin-bottom: 2px; }
+        .card-desc { font-size: 13px; color: var(--cinza-medio); font-weight: 400; }
+
+        /* DESTAQUE */
+        .card.destaque { background: var(--azul-sus); border: none; color: white; }
+        .card.destaque .card-title { color: white; }
+        .card.destaque .card-desc { color: rgba(255,255,255,0.7); }
+        .card.destaque .card-icon { background: rgba(255,255,255,0.15); color: var(--amarelo-brasil); }
+
+        /* DISABLED STATE */
+        .card.disabled { 
+            opacity: 0.6; filter: grayscale(1); pointer-events: none; 
+            border-style: dashed; background: #eef2f6;
+        }
+        .card.disabled::after {
+            content: 'AGUARDANDO LIBERAÇÃO'; font-size: 9px; font-weight: 900;
+            background: var(--cinza-medio); color: white; padding: 2px 8px;
+            border-radius: 4px; margin-left: auto;
+        }
+
+        /* MODAL */
+        #modal-aviso {
+            display: none; position: fixed; inset: 0; background: rgba(13, 61, 107, 0.7);
+            backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: 30px;
+        }
+        .modal-box {
+            background: white; border-radius: 24px; max-width: 400px; width: 100%;
+            padding: 32px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border-bottom: 6px solid var(--amarelo-brasil);
+        }
+        .modal-box h2 { font-weight: 900; color: var(--azul-wave); margin-bottom: 12px; font-size: 24px; }
+        .modal-box p { color: var(--cinza-medio); margin-bottom: 24px; }
+        .btn-modal {
+            background: var(--azul-sus); color: white; border: none; width: 100%;
+            padding: 16px; border-radius: var(--radius-pill); font-family: 'Georama';
+            font-weight: 800; font-size: 16px; cursor: pointer;
+        }
+
+        footer { text-align: center; padding: 40px 20px; color: var(--cinza-medio); font-size: 12px; }
+        footer strong { color: var(--azul-sus); }
+
+        @media (min-width: 601px) {
+            .link-gallery { grid-template-columns: 1fr 1fr; }
+            .card.destaque { grid-column: span 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="aviso-fixo">Aviso carreado da planilha...</div>
+
+    <header>
+        <div class="header-content">
+            <div class="badge-live">Plenária em andamento</div>
+            <h1>11ª Conferência <span>Municipal de Saúde</span></h1>
+            <p class="subtitle">Montes Claros, MG · 22 a 24 de Abril de 2026</p>
+        </div>
+    </header>
+
+    <main id="link-container">
+        <div style="text-align: center; padding: 50px; color: var(--cinza-medio);">Sincronizando central de links...</div>
+    </main>
+
+    <div id="modal-aviso">
+        <div class="modal-box">
+            <h2 id="modal-titulo">Bem-vindo</h2>
+            <p id="modal-texto">Carregando informações...</p>
+            <button class="btn-modal" onclick="closeModal()">OK, ENTENDI</button>
+        </div>
+    </div>
+
+    <footer>
+        Conselho Municipal de Saúde de <strong>Montes Claros</strong><br>
+        11ª CMS · 2026 · Transparência e Participação Popular
+    </footer>
+
+    <script>
+        // URL da sua planilha publicada como CSV (Note o final alterado para /pub?output=csv)
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ32FFFj_u5J9rx1bRjJ6fOw6qteP-EaKYNdAZWs1x3pFTyArLa0sU0u7qIVd5ayA0826SYc2VS7riB/pub?gid=667423390&single=true&output=csv';
+
+        // Mapa de Ícones SVG Sólidos
+        const ICON_MAP = {
+            'book': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M21 4H7a2 2 0 00-2 2v12a2 2 0 002 2h14V4zM7 18V6h12v12H7z"/><path d="M9 8h8v2H9zM9 12h8v2H9z"/></svg>`,
+            'check-badge': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"/></svg>`,
+            'users': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
+            'map': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.5 3l-6.5 2.5L8 3 3.5 5v16l6.5-2.5 6 2.5 4.5-2V3zM15 19l-6-2.5V5l6 2.5v14z"/></svg>`,
+            'eye': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`,
+            'layout': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>`,
+            'file-text': `<svg fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`
+        };
+
+        async function fetchLinks() {
+            try {
+                const response = await fetch(CSV_URL);
+                const csvData = await response.text();
+                const lines = csvData.split('\n').map(l => l.split(','));
+                const headers = lines[0];
+                const rows = lines.slice(1).map(row => {
+                    return headers.reduce((acc, header, i) => {
+                        acc[header.trim().toLowerCase()] = row[i] ? row[i].trim() : '';
+                        return acc;
+                    }, {});
+                });
+
+                renderSite(rows);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
+
+        function renderSite(data) {
+            const container = document.getElementById('link-container');
+            container.innerHTML = '';
+
+            // 1. Processar CONFIGS
+            const avisoFixo = data.find(d => d.id === 'aviso_topo');
+            if (avisoFixo && avisoFixo.status === 'ON') {
+                const el = document.getElementById('aviso-fixo');
+                el.textContent = avisoFixo.descricao;
+                el.style.display = 'block';
+            }
+
+            const avisoModal = data.find(d => d.id === 'aviso_modal');
+            if (avisoModal && avisoModal.status === 'ON' && !sessionStorage.getItem('modal_visto')) {
+                document.getElementById('modal-titulo').textContent = avisoModal.titulo;
+                document.getElementById('modal-texto').textContent = avisoModal.descricao;
+                document.getElementById('modal-aviso').style.display = 'flex';
+            }
+
+            // 2. Agrupar LINKS por categoria
+            const links = data.filter(d => d.tipo === 'LINK' && d.status !== 'OFF');
+            const categorias = [...new Set(links.map(l => l.categoria))];
+
+            categorias.forEach(cat => {
+                const section = document.createElement('section');
+                section.innerHTML = `<div class="section-label">${cat}</div>`;
+                
+                const gallery = document.createElement('div');
+                gallery.className = 'link-gallery';
+
+                const items = links.filter(l => l.categoria === cat);
+                items.forEach(item => {
+                    const isDestaque = item.id.includes('destaque');
+                    const isDisabled = item.status === 'DISABLED';
+                    
+                    const card = document.createElement('a');
+                    card.href = item.url;
+                    card.target = item.target || '_self';
+                    card.className = `card ${isDestaque ? 'destaque' : ''} ${isDisabled ? 'disabled' : ''}`;
+                    
+                    card.innerHTML = `
+                        <div class="card-icon">${ICON_MAP[item.icone] || ICON_MAP['file-text']}</div>
+                        <div class="card-content">
+                            <div class="card-title">${item.titulo}</div>
+                            <div class="card-desc">${item.descricao}</div>
+                        </div>
+                    `;
+                    gallery.appendChild(card);
+                });
+
+                section.appendChild(gallery);
+                container.appendChild(section);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modal-aviso').style.display = 'none';
+            sessionStorage.setItem('modal_visto', 'true');
+        }
+
+        window.onload = fetchLinks;
+    </script>
+</body>
+</html>
