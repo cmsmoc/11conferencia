@@ -54,10 +54,44 @@
         
         .toast { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: var(--verde-sus); color: white; padding: 12px 24px; border-radius: 999px; font-weight: 800; font-size: 12px; transition: 0.3s; z-index: 200; box-shadow: 0 4px 20px rgba(58,170,53,0.4); }
         .toast.show { bottom: 30px; }
+    /* --- SISTEMA DE AUTENTICAÇÃO --- */
+        #auth-overlay {
+            position: fixed; inset: 0; background: var(--cinza-off);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+            padding: 20px; transition: opacity 0.3s ease;
+        }
+        .auth-box {
+            background: white; padding: 40px 30px; border-radius: var(--radius);
+            box-shadow: 0 20px 40px rgba(13, 61, 107, 0.15); text-align: center; 
+            max-width: 320px; width: 100%; border-top: 6px solid var(--amarelo-brasil);
+        }
+        .auth-box h2 { color: var(--azul-wave); font-weight: 900; margin-bottom: 8px; font-size: 22px; }
+        .auth-box p { font-size: 13px; color: var(--cinza-medio); margin-bottom: 24px; }
+        #auth-pass {
+            width: 100%; padding: 14px; border: 2px solid var(--cinza-borda);
+            border-radius: 8px; margin-bottom: 12px; font-family: 'Georama';
+            font-size: 16px; text-align: center; outline: none; transition: border-color 0.2s;
+        }
+        #auth-pass:focus { border-color: var(--azul-sus); }
+        #auth-error { color: #d32f2f; font-size: 11px; font-weight: 800; display: none; margin-bottom: 12px; text-transform: uppercase; }
+        .btn-auth {
+            background: var(--azul-sus); color: white; border: none; width: 100%;
+            padding: 14px; border-radius: 8px; font-family: 'Georama'; font-weight: 800;
+            font-size: 14px; cursor: pointer; transition: background 0.2s; letter-spacing: 0.05em;
+        }
+        .btn-auth:hover, .btn-auth:active { background: var(--azul-wave); }
     </style>
 </head>
 <body>
-
+<div id="auth-overlay">
+        <div class="auth-box">
+            <h2>Acesso Restrito</h2>
+            <p>Área exclusiva da Coordenação de Apoio. Insira a credencial para continuar.</p>
+            <input type="password" id="auth-pass" placeholder="Digite a senha" onkeypress="if(event.key === 'Enter') checkAuth()">
+            <div id="auth-error">Senha incorreta. Tente novamente.</div>
+            <button class="btn-auth" onclick="checkAuth()">LIBERAR ACESSO</button>
+        </div>
+    </div>
     <header>
         <div class="tag-coord">Acesso Restrito</div>
         <h1>Painel de Apoio</h1>
@@ -82,6 +116,33 @@
     <div id="toast" class="toast">✓ LINK COPIADO COM SUCESSO!</div>
 
     <script>
+        // --- LÓGICA DE AUTENTICAÇÃO ---
+        function initAuth() {
+            // Verifica se já está logado nesta sessão
+            if (sessionStorage.getItem('marcio_auth') === 'true') {
+                document.getElementById('auth-overlay').style.display = 'none';
+            }
+        }
+
+        function checkAuth() {
+            const pass = document.getElementById('auth-pass').value;
+            if (pass === 'apoiocms2026') {
+                sessionStorage.setItem('marcio_auth', 'true');
+                const overlay = document.getElementById('auth-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 300); // Aguarda o fade out
+            } else {
+                const errorMsg = document.getElementById('auth-error');
+                const inputField = document.getElementById('auth-pass');
+                errorMsg.style.display = 'block';
+                inputField.value = '';
+                inputField.style.borderColor = '#d32f2f';
+                inputField.focus();
+            }
+        }
+
+        // Executar verificação imediatamente
+        initAuth();
         // URL da Aba MARCIO em formato CSV
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ32FFFj_u5J9rx1bRjJ6fOw6qteP-EaKYNdAZWs1x3pFTyArLa0sU0u7qIVd5ayA0826SYc2VS7riB/pub?gid=1721373850&single=true&output=csv';
 
