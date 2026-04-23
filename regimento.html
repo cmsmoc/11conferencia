@@ -1,616 +1,470 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Regimento Interno - 11ª CMS Montes Claros</title>
-  <style>
-    /* ════════════════════════════════════════════════════
-       CMS MONTES CLAROS · MASTER CSS · 2026
-       Swiss Design System · versão 1.0
-       Use, adapte, envie para IA como base.
-    ════════════════════════════════════════════════════ */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regimento Interno — 11ª CMS Montes Claros</title>
+<link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   TOKENS DE DESIGN OFICIAIS — 11ª CMS MONTES CLAROS
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Paleta Primária */
+  --azul-sus:        #1A5EA8;
+  --azul-medio:      #2E8BC0;
+  --azul-claro:      #7EC8E3;
+  --azul-wave:       #0D3D6B;
 
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap');
+  /* Paleta Secundária */
+  --verde-sus:       #3AAA35;
+  --verde-wave:      #5BBF6A;
+  --amarelo-brasil:  #F5C800;
+  --branco-puro:     #FFFFFF;
+  --cinza-off:       #F4F7FB;
+  --cinza-texto:     #2C3E50;
+  --cinza-medio:     #6B7F96;
+  --cinza-borda:     #D6E4F0;
 
-    /* ── TOKENS ── */
-    :root {
-      /* cores */
-      --cms-navy:    #0D2E5A;
-      --cms-blue:    #1B6CB5;
-      --cms-green:   #1E8A4A;
-      --cms-yellow:  #F5C400;
-      --cms-white:   #FFFFFF;
-      --cms-off:     #F7F8FA;
-      --cms-ink:     #111827;
-      --cms-muted:   #6B7280;
-      --cms-border:  #E5E7EB;
+  /* Gradientes & Efeitos */
+  --gradient-wave: linear-gradient(135deg, #1A5EA8 0%, #2E8BC0 40%, #5BBF6A 75%, #F5C800 100%);
+  --sombra-card:    0 4px 24px rgba(26,94,168,.10), 0 1px 4px rgba(26,94,168,.06);
+  
+  /* Tipografia & Formas */
+  --font: 'Georama', sans-serif;
+  --radius:   14px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+}
 
-      /* tipografia */
-      --font-display: 'Montserrat', 'Georama', Helvetica, sans-serif;
-      --font-body:    'Open Sans', Arial, sans-serif;
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--cinza-off);
+  color: var(--cinza-texto);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
 
-      /* espaçamentos */
-      --space-xs:  8px;
-      --space-sm:  16px;
-      --space-md:  32px;
-      --space-lg:  64px;
-      --space-xl:  96px;
+/* ── HEADER OBRIGATÓRIO ── */
+.page-header {
+  background: linear-gradient(135deg, var(--azul-wave) 0%, var(--azul-sus) 60%, var(--azul-medio) 100%);
+  padding: 48px 40px 100px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60'%3E%3Cpath fill='%23F4F7FB' d='M0,60 C480,10 960,50 1440,0 L1440,60 Z'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size: cover;
+}
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.conf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.9);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 20px;
+}
+.page-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin-bottom: 12px;
+}
+.page-title em {
+  font-style: normal;
+  color: var(--amarelo-brasil);
+}
+.page-sub {
+  color: rgba(255,255,255,.75);
+  font-size: 16px;
+  font-weight: 400;
+  max-width: 600px;
+}
 
-      /* raios */
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
+/* ── CONTEÚDO DO REGIMENTO ── */
+.regimento-content {
+  max-width: 900px;
+  margin: -40px auto 80px;
+  padding: 0 40px;
+  position: relative;
+  z-index: 5;
+}
+.capitulo-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--sombra-card);
+  border: 1.5px solid var(--cinza-borda);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.capitulo-card-top {
+  height: 5px;
+  background: var(--gradient-wave);
+}
+.capitulo-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--cinza-borda);
+  background: rgba(244, 247, 251, 0.4);
+}
+.capitulo-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--azul-sus);
+}
+.capitulo-body {
+  padding: 24px;
+}
+.artigo {
+  margin-bottom: 18px;
+}
+.artigo:last-child {
+  margin-bottom: 0;
+}
+.artigo strong {
+  color: var(--azul-wave);
+  font-weight: 700;
+}
+.artigo p, .artigo li {
+  font-size: 14px;
+  color: var(--cinza-texto);
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+.artigo ul, .artigo ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 6px;
+}
+.artigo li {
+  color: var(--cinza-medio);
+}
+.bloco-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amarelo-brasil);
+  background: #0D3D6B;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 12px;
+}
 
-      /* sombras */
-      --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
-      --shadow-md: 0 4px 20px rgba(0,0,0,.10);
-    }
+/* ── FOOTER ── */
+footer {
+  background: var(--azul-wave);
+  padding: 28px 40px;
+  text-align: center;
+}
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-logo {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,.9);
+  letter-spacing: .04em;
+}
+.footer-logo span { color: var(--amarelo-brasil); }
+.footer-copy {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+}
 
-    /* ── RESET MÍNIMO ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--cms-white);
-      color: var(--cms-ink);
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    /* ── LAYOUT ── */
-    .cms-wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 var(--space-lg);
-    }
-    .cms-wrap-wide { max-width: 1200px; }
-    .cms-wrap-narrow { max-width: 680px; }
-
-    @media (max-width: 680px) {
-      .cms-wrap, .cms-wrap-wide, .cms-wrap-narrow {
-        padding: 0 var(--space-sm);
-      }
-    }
-
-    .cms-section {
-      padding: var(--space-lg) 0;
-      border-bottom: 1px solid var(--cms-border);
-    }
-
-    .cms-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
-    .cms-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-sm); }
-    .cms-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--space-sm); }
-
-    @media (max-width: 760px) {
-      .cms-grid-2, .cms-grid-3, .cms-grid-4 { grid-template-columns: 1fr; }
-      .cms-grid-4 { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* ── TIPOGRAFIA ── */
-    .cms-display {
-      font-family: var(--font-display);
-      font-size: clamp(40px, 6vw, 80px);
-      font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 0.95;
-      color: var(--cms-navy);
-    }
-    .cms-h1 {
-      font-family: var(--font-display);
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1.05;
-      color: var(--cms-navy);
-    }
-    .cms-h2 {
-      font-family: var(--font-display);
-      font-size: clamp(20px, 2.5vw, 28px);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--cms-navy);
-    }
-    .cms-h3 {
-      font-family: var(--font-display);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--cms-navy);
-    }
-    .cms-eyebrow {
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--cms-blue);
-    }
-    .cms-body {
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.75;
-      color: var(--cms-ink);
-    }
-    .cms-caption {
-      font-family: var(--font-body);
-      font-size: 12px;
-      font-weight: 300;
-      letter-spacing: 0.3px;
-      color: var(--cms-muted);
-    }
-    .cms-accent-yellow { color: var(--cms-yellow); }
-    .cms-accent-blue   { color: var(--cms-blue); }
-    .cms-accent-green  { color: var(--cms-green); }
-
-    /* ── HEADER / HERO ── */
-    .cms-header {
-      background: var(--cms-navy);
-      color: var(--cms-white);
-      padding: var(--space-xl) var(--space-lg);
-    }
-    .cms-header-blue { background: var(--cms-blue); }
-    .cms-header-stripe {
-      border-top: 6px solid;
-      border-image: linear-gradient(to right, #F5C400 33%, #1E8A4A 33% 66%, #1B6CB5 66%) 1;
-    }
-
-    /* ── CARDS ── */
-    .cms-card {
-      background: var(--cms-white);
-      border: 1px solid var(--cms-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-      box-shadow: var(--shadow-sm);
-    }
-    .cms-card-navy   { background: var(--cms-navy);  color: var(--cms-white); border: none; }
-    .cms-card-blue   { background: var(--cms-blue);  color: var(--cms-white); border: none; }
-    .cms-card-yellow { background: var(--cms-yellow); color: var(--cms-navy);  border: none; }
-
-    .cms-card-top-blue   { border-top: 3px solid var(--cms-blue); }
-    .cms-card-top-yellow { border-top: 3px solid var(--cms-yellow); }
-    .cms-card-top-green  { border-top: 3px solid var(--cms-green); }
-    .cms-card-left-blue  { border-left: 4px solid var(--cms-blue); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
-
-    /* ── STAT / NÚMERO GRANDE ── */
-    .cms-stat {
-      text-align: center;
-      padding: var(--space-md);
-    }
-    .cms-stat-number {
-      font-family: var(--font-display);
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
-      color: var(--cms-navy);
-    }
-    .cms-stat-label {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--cms-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 6px;
-    }
-
-    /* ── BOTÕES ── */
-    .cms-btn {
-      display: inline-block;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 12px 28px;
-      border-radius: var(--radius-sm);
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity .2s;
-    }
-    .cms-btn:hover { opacity: .85; }
-    .cms-btn-primary   { background: var(--cms-yellow); color: var(--cms-navy); }
-    .cms-btn-secondary { background: var(--cms-blue);   color: var(--cms-white); }
-    .cms-btn-dark      { background: var(--cms-navy);   color: var(--cms-white); }
-    .cms-btn-outline   { background: transparent; border: 2px solid var(--cms-blue); color: var(--cms-blue); }
-
-    /* ── TABELAS ── */
-    .cms-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      background: var(--cms-white);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      border: 1px solid var(--cms-border);
-    }
-    .cms-table thead tr { background: var(--cms-navy); color: var(--cms-white); }
-    .cms-table th { padding: 11px 14px; text-align: left; font-weight: 600; }
-    .cms-table td { padding: 10px 14px; border-top: 1px solid var(--cms-border); }
-    .cms-table tbody tr:nth-child(even) td { background: var(--cms-off); }
-    .cms-table .cms-table-total td { background: #DBEAFE; font-weight: 700; }
-
-    /* ── LISTAS ── */
-    .cms-list { list-style: none; padding: 0; }
-    .cms-list li {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--cms-border);
-      font-size: 14px;
-    }
-    .cms-list li::before {
-      content: '●';
-      color: var(--cms-yellow);
-      font-size: 10px;
-      margin-top: 4px;
-      flex-shrink: 0;
-    }
-
-    /* ── FALA / CITAÇÃO ── */
-    .cms-fala {
-      border-left: 4px solid var(--cms-blue);
-      padding: 14px 20px;
-      margin: var(--space-sm) 0;
-      background: var(--cms-off);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    }
-    .cms-fala-nome {
-      font-family: var(--font-display);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--cms-blue);
-      margin-bottom: 6px;
-    }
-
-    /* ── ENCAMINHAMENTOS ── */
-    .cms-enc {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 14px 18px;
-      background: var(--cms-white);
-      border: 1px solid var(--cms-border);
-      border-radius: var(--radius-md);
-      margin-bottom: 8px;
-    }
-    .cms-enc-n {
-      min-width: 28px; height: 28px;
-      background: var(--cms-navy);
-      color: var(--cms-white);
-      border-radius: var(--radius-sm);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display);
-      font-size: 12px; font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    /* ── BADGE / TAG ── */
-    .cms-tag {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 4px;
-      font-family: var(--font-display);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .cms-tag-blue   { background: var(--cms-blue);   color: var(--cms-white); }
-    .cms-tag-yellow { background: var(--cms-yellow); color: var(--cms-navy); }
-    .cms-tag-green  { background: var(--cms-green);  color: var(--cms-white); }
-    .cms-tag-navy   { background: var(--cms-navy);  color: var(--cms-white); }
-    .cms-tag-outline{ border: 1.5px solid var(--cms-blue); color: var(--cms-blue); }
-
-    /* ── DIVISORES ── */
-    .cms-divider     { border: none; border-top: 1px solid var(--cms-border); margin: var(--space-md) 0; }
-    .cms-divider-bold{ border: none; border-top: 3px solid var(--cms-blue); margin: var(--space-md) 0; }
-    .cms-stripe {
-      height: 5px;
-      background: linear-gradient(to right, #F5C400 33.3%, #1E8A4A 33.3% 66.6%, #1B6CB5 66.6%);
-    }
-
-    /* ── FOOTER ── */
-    .cms-footer {
-      background: var(--cms-navy);
-      color: rgba(255,255,255,.55);
-      text-align: center;
-      padding: var(--space-md) var(--space-lg);
-      font-size: 13px;
-      font-family: var(--font-body);
-    }
-    .cms-footer strong { color: rgba(255,255,255,.85); }
-
-    /* ── UTILITÁRIOS ── */
-    .cms-bg-navy   { background: var(--cms-navy);   color: var(--cms-white); }
-    .cms-bg-blue   { background: var(--cms-blue);   color: var(--cms-white); }
-    .cms-bg-yellow { background: var(--cms-yellow); color: var(--cms-navy); }
-    .cms-bg-off    { background: var(--cms-off); }
-    .cms-text-white{ color: var(--cms-white); }
-    .cms-mt-sm { margin-top: var(--space-sm); }
-    .cms-mt-md { margin-top: var(--space-md); }
-    .cms-mb-sm { margin-bottom: var(--space-sm); }
-    .cms-mb-md { margin-bottom: var(--space-md); }
-    .cms-center   { text-align: center; }
-    .cms-bold     { font-weight: 700; }
-    .cms-light    { font-weight: 300; }
-  </style>
+@media (max-width: 640px) {
+  .page-header, .regimento-content { padding-left: 20px; padding-right: 20px; }
+  footer .footer-inner { flex-direction: column; text-align: center; }
+}
+</style>
 </head>
 <body>
 
-  <header class="cms-header cms-header-stripe cms-center">
-    <div class="cms-wrap">
-      <div class="cms-eyebrow cms-text-white cms-mb-sm">Montes Claros - MG</div>
-      <h1 class="cms-h1 cms-text-white">Regimento Interno</h1>
-      <p class="cms-body cms-text-white cms-mt-sm cms-light">11ª Conferência Municipal de Saúde</p>
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="conf-badge">11ª CMS · Montes Claros 2026</div>
+      <h1 class="page-title">Regimento <em>Interno</em></h1>
+      <p class="page-sub">Documento oficial que estabelece as regras, os objetivos e a estrutura de funcionamento da 11ª Conferência Municipal de Saúde.</p>
     </div>
   </header>
 
-  <main class="cms-wrap cms-section">
-    
-    <div class="cms-body">
-      
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO I<br><span class="cms-h3 cms-accent-blue">DAS DISPOSIÇÕES GERAIS, NATUREZA E OBJETIVOS</span></h2>
-      
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 1º</span> - A 11ª Conferência Municipal de Saúde de Montes Claros (11ª CMS), convocada pelo Conselho Municipal de Saúde (CMS) e pelo Poder Executivo Municipal, constitui-se como a instância máxima de deliberação democrática e participação social do Sistema Único de Saúde (SUS) em âmbito local.</p>
-      
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        A Etapa Plenária Final da 11ª CMS será realizada presencialmente nos dias 22, 23 e 24 de abril de 2026, no município de Montes Claros/MG.
+  <main class="regimento-content">
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo I — Das Disposições Gerais, Natureza e Objetivos</h2>
       </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 2º</span> - A 11ª CMS tem os seguintes objetivos principais:</p>
-      <ul class="cms-list cms-mb-sm">
-        <li><strong>I</strong> - Debater a saúde como direito fundamental e avaliar a situação de saúde da população de Montes Claros, consolidando as demandas levantadas nas 13 pré-conferências descentralizadas já realizadas no município;</li>
-        <li><strong>II</strong> - Formular, aprovar e priorizar as diretrizes e propostas que orientarão a revisão e a execução do Plano Municipal de Saúde para o período de 2026 a 2029;</li>
-        <li><strong>III</strong> - Filtrar e aprovar as diretrizes e propostas locais que serão enviadas para compor as políticas de saúde nas esferas Estadual e Nacional;</li>
-        <li><strong>IV</strong> - Eleger, de forma democrática e paritária, a delegação de 24 (vinte e quatro) pessoas delegadas que representarão o município de Montes Claros na 11ª Conferência Estadual de Saúde de Minas Gerais (11ª CESMG).</li>
-      </ul>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO II<br><span class="cms-h3 cms-accent-blue">DO TEMA E DOS EIXOS TEMÁTICOS</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 3º</span> - Em consonância com as etapas Estadual e Nacional, a 11ª CMS de Montes Claros terá como tema central: <span class="cms-bold cms-accent-blue">"Saúde, Democracia, Soberania e SUS: cuidar do povo é cuidar do Brasil"</span>.</p>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 4º</span> - Os debates, a sistematização das propostas e as deliberações da Conferência serão organizados obrigatoriamente em torno de 06 (seis) eixos temáticos oficiais:</p>
-      
-      <ul class="cms-list cms-mb-sm">
-        <li><span class="cms-tag cms-tag-navy">Eixo 1</span> Democracia, saúde como direito e soberania nacional;</li>
-        <li><span class="cms-tag cms-tag-blue">Eixo 2</span> Financiamento adequado e suficiente para o SUS, com base na justiça tributária e na sustentabilidade fiscal e social;</li>
-        <li><span class="cms-tag cms-tag-green">Eixo 3</span> Os desafios para o SUS na agenda nacional da defesa da vida e da saúde: emergências climáticas e justiça socioambiental;</li>
-        <li><span class="cms-tag cms-tag-yellow">Eixo 4</span> Modelo de atenção e gestão: territórios integrados e cuidado integral;</li>
-        <li><span class="cms-tag cms-tag-outline">Eixo 5</span> Saúde Integral das Pessoas com Deficiência: garantia do acesso humanizado e efetivação da inclusão social;</li>
-        <li><span class="cms-tag cms-tag-outline">Eixo 6</span> Saúde Integral da População LGBTIA+: Travessias do Cuidado, Humanização e Direito à Saúde.</li>
-      </ul>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO III<br><span class="cms-h3 cms-accent-blue">DA ESTRUTURA DE FUNCIONAMENTO E INSTÂNCIAS DELIBERATIVAS</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 5º</span> - A 11ª Conferência Municipal de Saúde de Montes Claros será constituída pelos seguintes espaços estratégicos e instâncias deliberativas:</p>
-      <ul class="cms-list cms-mb-sm">
-        <li><strong>I</strong> - Plenária de Abertura;</li>
-        <li><strong>II</strong> - Grupos de Trabalho (GTs);</li>
-        <li><strong>III</strong> - Plenária Final Deliberativa.</li>
-      </ul>
-
-      <div class="cms-fala">
-        <p><strong>§ 1º</strong> A Plenária de Abertura destina-se à instalação institucional e política da Etapa Municipal, bem como à leitura e aprovação deste Regimento Interno.</p>
-        <p class="cms-mt-sm"><strong>§ 2º</strong> Os Grupos de Trabalho (GTs) são as instâncias de debate e deliberação preliminar das diretrizes e propostas oriundas das pré-conferências, cujos encaminhamentos serão submetidos à Plenária Final.</p>
-        <p class="cms-mt-sm"><strong>§ 3º</strong> A Plenária Final Deliberativa é o espaço soberano de apreciação, votação e aprovação definitiva das propostas e diretrizes que comporão o Relatório Final da 11ª CMS, bem como o momento de eleição da delegação municipal.</p>
-      </div>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO IV<br><span class="cms-h3 cms-accent-blue">DA METODOLOGIA INOVADORA E DOS GRUPOS DE TRABALHO (GTs)</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 6º</span> - O Documento Base que guiará as deliberações dos Grupos de Trabalho é fruto direto de um processo amplo de escuta popular, sendo composto pelas 258 (duzentas e cinquenta e oito) propostas consolidadas, aprovadas e sistematizadas nas 13 (treze) Pré-Conferências Municipais realizadas nos diversos territórios e segmentos de Montes Claros.</p>
-      
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 7º</span> - Visando garantir a fluidez do debate, a coesão temática e o equilíbrio proporcional do volume de propostas, a Plenária da 11ª CMS adotará uma metodologia própria de reaglutinação estratégica, dividindo-se em 03 (três) Grupos de Trabalho simultâneos.</p>
-
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        O Eixo 4 (Modelo de Atenção e Gestão), devido à sua transversalidade e volume histórico de demandas, terá suas propostas fatiadas e distribuídas entre os três GTs, conforme afinidade logística e estrutural.
-      </div>
-
-      <p class="cms-mt-md cms-mb-sm"><span class="cms-bold">Art. 8º</span> - Os 03 (três) Grupos de Trabalho (GTs) funcionarão com a seguinte organização temática:</p>
-
-      <div class="cms-grid-3 cms-mb-md">
-        <div class="cms-card cms-card-top-blue">
-          <div class="cms-eyebrow cms-mb-sm">GT 1</div>
-          <h3 class="cms-h3 cms-mb-sm">A Máquina Pública</h3>
-          <p class="cms-caption cms-mb-sm">Gestão, Trabalho e Infraestrutura.</p>
-          <p class="cms-caption cms-bold">Foco: O financiamento, o controle social, a gestão dos trabalhadores e a infraestrutura do sistema.</p>
-          <ul class="cms-list cms-mt-sm">
-            <li><strong>a)</strong> Debaterá a integralidade das propostas do Eixo 1 e do Eixo 2.</li>
-            <li><strong>b)</strong> Debaterá as propostas do Eixo 4 referentes a: obras, reformas de UBS/UPAs, segurança, digitalização, prontuário eletrônico (e-SUS) e regulação de filas.</li>
-          </ul>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 1º</strong> - A 11ª Conferência Municipal de Saúde de Montes Claros (11ª CMS), convocada pelo Conselho Municipal de Saúde (CMS) e pelo Poder Executivo Municipal, constitui-se como a instância máxima de deliberação democrática e participação social do Sistema Único de Saúde (SUS) em âmbito local.</p>
+          <p><strong>Parágrafo único:</strong> A Etapa Plenária Final da 11ª CMS será realizada presencialmente nos dias 22, 23 e 24 de abril de 2026, no município de Montes Claros/MG.</p>
         </div>
-        
-        <div class="cms-card cms-card-top-yellow">
-          <div class="cms-eyebrow cms-mb-sm">GT 2</div>
-          <h3 class="cms-h3 cms-mb-sm">A Base do Cuidado</h3>
-          <p class="cms-caption cms-mb-sm">Atenção Primária e Populações Prioritárias.</p>
-          <p class="cms-caption cms-bold">Foco: A prevenção, o funcionamento do dia a dia nos territórios e a garantia da equidade em saúde.</p>
-          <ul class="cms-list cms-mt-sm">
-            <li><strong>a)</strong> Debaterá a integralidade das propostas do Eixo 5 e do Eixo 6.</li>
-            <li><strong>b)</strong> Debaterá as propostas do Eixo 4 referentes a: rotina das UBS, Saúde na Hora, ACS/ACE, vacinação, saúde da mulher, saúde bucal e populações vulneráveis.</li>
-          </ul>
-        </div>
-
-        <div class="cms-card cms-card-top-green">
-          <div class="cms-eyebrow cms-mb-sm">GT 3</div>
-          <h3 class="cms-h3 cms-mb-sm">A Rede e o Entorno</h3>
-          <p class="cms-caption cms-mb-sm">Especialidades, Assistência e Vigilância.</p>
-          <p class="cms-caption cms-bold">Foco: A média e alta complexidade, a logística de assistência e o impacto do meio ambiente na saúde.</p>
-          <ul class="cms-list cms-mt-sm">
-            <li><strong>a)</strong> Debaterá a integralidade das propostas do Eixo 3.</li>
-            <li><strong>b)</strong> Debaterá as propostas do Eixo 4 referentes a: mutirões de cirurgias e exames, especialistas, CEOs, transporte sanitário, Assistência Farmacêutica e CAPS.</li>
+        <div class="artigo">
+          <p><strong>Art. 2º</strong> - A 11ª CMS tem os seguintes objetivos principais:</p>
+          <ul>
+            <li><strong>I</strong> - Debater a saúde como direito fundamental e avaliar a situação de saúde da população de Montes Claros, consolidando as demandas levantadas nas 13 pré-conferências descentralizadas já realizadas no município;</li>
+            <li><strong>II</strong> - Formular, aprovar e priorizar as diretrizes e propostas que orientarão a revisão e a execução do Plano Municipal de Saúde para o período de 2026 a 2029;</li>
+            <li><strong>III</strong> - Filtrar e aprovar as diretrizes e propostas locais que serão enviadas para compor as políticas de saúde nas esferas Estadual e Nacional;</li>
+            <li><strong>IV</strong> - Eleger, de forma democrática e paritária, a delegação de 24 (vinte e quatro) pessoas delegadas que representarão o município de Montes Claros na 11ª Conferência Estadual de Saúde de Minas Gerais (11ª CESMG).</li>
           </ul>
         </div>
       </div>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 9º</span> - Nos Grupos de Trabalho, as propostas poderão ser aprovadas na íntegra, alteradas, aglutinadas ou rejeitadas pelos delegados presentes na sala.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        Somente as propostas que obtiverem maioria simples de aprovação nos Grupos de Trabalho serão encaminhadas para votação na Plenária Final Deliberativa.
-      </div>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO V<br><span class="cms-h3 cms-accent-blue">DOS PARTICIPANTES E DA PARIDADE DO SUS</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 10</span> - A 11ª Conferência Municipal de Saúde (CMS) de Montes Claros contará com duas categorias de participantes:</p>
-      <ul class="cms-list cms-mb-sm">
-        <li><strong>I</strong> - Pessoas Delegadas: com direito a voz e voto em todas as instâncias deliberativas;</li>
-        <li><strong>II</strong> - Pessoas Convidadas: com direito apenas a voz.</li>
-      </ul>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        O quantitativo de pessoas convidadas corresponderá a, no máximo, 10% (dez por cento) do número total de pessoas delegadas.
-      </div>
-
-      <p class="cms-mt-md cms-mb-sm"><span class="cms-bold">Art. 11</span> - Em todas as instâncias da 11ª CMS, bem como na formação da delegação geral, será rigorosamente assegurada a paridade do controle social, em conformidade com a Lei nº 8.142/1990 e a Resolução CNS nº 453/2012. A distribuição das vagas ocorrerá na seguinte proporção:</p>
-      
-      <div class="cms-grid-3 cms-mb-md cms-mt-sm">
-        <div class="cms-card cms-bg-blue cms-center">
-          <div class="cms-stat-number cms-text-white">50%</div>
-          <div class="cms-stat-label cms-text-white">Pessoas Usuárias</div>
-        </div>
-        <div class="cms-card cms-bg-navy cms-center">
-          <div class="cms-stat-number cms-text-white">25%</div>
-          <div class="cms-stat-label cms-text-white">Trabalhadoras da Saúde</div>
-        </div>
-        <div class="cms-card cms-bg-yellow cms-center">
-          <div class="cms-stat-number">25%</div>
-          <div class="cms-stat-label">Gestores e Prestadores</div>
-        </div>
-      </div>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 12</span> - Consideram-se pessoas usuárias aquelas que não possuem vínculo empregatício na área da Saúde, não ocupam cargo comissionado ou de chefia na gestão pública de saúde, e não prestam serviços privados na área da saúde.</p>
-      <div class="cms-fala">
-        <p><strong>§ 1º</strong> - É expressamente vedada a eleição de pessoas trabalhadoras de saúde que ocupam cargos de coordenação ou chefia para representar o segmento de trabalhadores ou de usuários.</p>
-        <p class="cms-mt-sm"><strong>§ 2º</strong> - Parlamentares (vereadores, deputados, etc.) não poderão participar enquanto pessoas delegadas na Conferência, em nenhuma hipótese.</p>
-      </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 13</span> - A composição do conjunto de pessoas delegadas da 11ª CMS deverá assegurar a cota mínima de 50% (cinquenta por cento) de mulheres.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        A eleição deverá ser fundada no princípio da equidade, observando e estimulando a representatividade de grupos étnico-raciais, população negra, pessoas com deficiência, população LGBTIA+, multiplicidade geracional (jovens e idosos), e pessoas em situação de vulnerabilidade.
-      </div>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO VI<br><span class="cms-h3 cms-accent-blue">DA INCLUSÃO, DA ACESSIBILIDADE E DA "CONFERENCINHA"</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 14</span> - Será assegurada acessibilidade plena na 11ª CMS, considerando os aspectos arquitetônicos, atitudinais, programáticos e comunicacionais (como intérpretes de Libras), de acordo com a Lei Brasileira de Inclusão da Pessoa com Deficiência (Lei nº 13.146/2015).</p>
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 15</span> - É obrigatória a promoção de um ambiente institucional seguro, respeitoso e livre de discriminação. A 11ª CMS será orientada por práticas rigorosas de enfrentamento ao racismo, à misoginia, ao capacitismo e à LGBTfobia institucional.</p>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO VII<br><span class="cms-h3 cms-accent-blue">DAS DIRETRIZES, PROPOSTAS E REGRAS DE FORMATAÇÃO</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 17</span> - Para garantir a padronização e a validade das deliberações da 11ª CMS, em consonância com as Diretrizes Metodológicas da etapa Estadual, define-se tecnicamente:</p>
-      
-      <div class="cms-enc">
-        <div class="cms-enc-n">I</div>
-        <div>
-          <strong class="cms-h3">Diretriz</strong><br>
-          <span class="cms-caption">Expressa o enunciado de uma ideia abrangente, que indica caminho, sentido ou rumo político, formulada de modo sintético em poucas frases.</span>
-        </div>
-      </div>
-      <div class="cms-enc">
-        <div class="cms-enc-n">II</div>
-        <div>
-          <strong class="cms-h3">Proposta</strong><br>
-          <span class="cms-caption">Indica a ação prática e direta a ser realizada para cumprir uma diretriz. A redação da proposta deve ser iniciada, obrigatoriamente, com um verbo no infinitivo (ex: Garantir, Ampliar, Construir, Criar) e estar sempre vinculada a uma Diretriz.</span>
-        </div>
-      </div>
-
-      <p class="cms-mt-md cms-mb-sm"><span class="cms-bold">Art. 18</span> - Todas as diretrizes e propostas que forem aprovadas na Plenária Final para serem encaminhadas à Etapa Estadual deverão conter, rigorosamente, o limite máximo de 700 (setecentos) caracteres com espaços.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        Propostas que excederem este limite não serão validadas pelo sistema estadual, cabendo à Comissão de Relatoria Municipal realizar os ajustes e sínteses textuais necessários sem alterar o mérito aprovado pela Plenária.
-      </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 19</span> - As diretrizes e propostas aprovadas que incidirem sobre a esfera de gestão exclusivamente municipal não subirão para o Estado, devendo ser remetidas ao Conselho Municipal de Saúde (CMS) como subsídio obrigatório para a revisão e elaboração do Plano Municipal de Saúde (2026-2029) e do Plano Plurianual (PPA).</p>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO VIII<br><span class="cms-h3 cms-accent-blue">DO RELATÓRIO FINAL E DO ENVIO DAS DELIBERAÇÕES AO ESTADO</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 20</span> - A Plenária Final Deliberativa da 11ª CMS de Montes Claros filtrará as propostas aprovadas nos Grupos de Trabalho e definirá, por meio de votação, a cota exata de deliberações que representarão o município nas esferas superiores, devendo enviar obrigatoriamente:</p>
-      <ul class="cms-list cms-mb-sm">
-        <li><strong>I - Para a esfera Estadual:</strong> 01 (uma) Diretriz e 02 (duas) Propostas para cada um dos 06 (seis) eixos temáticos estaduais;</li>
-        <li><strong>II - Para a esfera Nacional:</strong> 01 (uma) Diretriz e 01 (uma) Proposta para cada um dos eixos temáticos de âmbito nacional.</li>
-      </ul>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 21</span> - O Relatório Final da 11ª CMS de Montes Claros será consolidado pela Comissão de Relatoria e deverá ser enviado ao Conselho Estadual de Saúde de Minas Gerais (CESMG) no prazo máximo e improrrogável de 15 (quinze) dias após a realização da conferência municipal.</p>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 22</span> - Para a validação da etapa municipal perante o Estado, a Comissão Organizadora local deverá inserir as diretrizes e propostas aprovadas individualmente no formulário eletrônico oficial disponibilizado pelo CESMG.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        Dentro do mesmo prazo de 15 (quinze) dias, a organização deverá encaminhar, por e-mail oficial ao Estado, os seguintes documentos probatórios: a Ata da Conferência, a Lista de Presença e a Lista das Pessoas Delegadas Eleitas com suas respectivas suplências.
-      </div>
-
-      <hr class="cms-divider-bold">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO IX<br><span class="cms-h3 cms-accent-blue">DA ELEIÇÃO DA DELEGAÇÃO MUNICIPAL PARA A ETAPA ESTADUAL</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 23</span> - Na Plenária Final Deliberativa da 11ª CMS, serão eleitas as pessoas delegadas que representarão o município de Montes Claros na 11ª Conferência Estadual de Saúde de Minas Gerais (11ª CESMG).</p>
-
-      <div class="cms-fala">
-        <p><strong>§ 1º</strong> - Com base na proporcionalidade populacional estipulada pelo Estado (faixa de 301 a 500 mil habitantes), o município de Montes Claros elegerá uma delegação composta por 24 (vinte e quatro) pessoas delegadas titulares.</p>
-        <p class="cms-mt-sm"><strong>§ 2º</strong> - Respeitando rigorosamente a paridade do SUS estabelecida em Lei, as 24 vagas serão distribuídas da seguinte forma:</p>
-      </div>
-
-      <ul class="cms-list cms-mt-sm cms-mb-md">
-        <li><strong>I</strong> - 12 (doze) vagas para o segmento de Pessoas Usuárias (50%);</li>
-        <li><strong>II</strong> - 06 (seis) vagas para o segmento de Pessoas Trabalhadoras da Saúde (25%);</li>
-        <li><strong>III</strong> - 06 (seis) vagas para o segmento de Gestores e Prestadores de Serviços (25%).</li>
-      </ul>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 24</span> - Para garantir a segurança da representação municipal, para cada pessoa delegada titular eleita, deverão ser eleitas suplências (em ordem de 1ª, 2ª e 3ª suplência) obrigatoriamente dentro do mesmo segmento.</p>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 25</span> - A composição final da delegação municipal deverá assegurar a cota mínima de 50% (cinquenta por cento) de mulheres.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        A eleição deverá garantir a diversidade e a equidade, estimulando a representação de populações negras, indígenas, comunidade LGBTIA+, pessoas com deficiência, jovens, idosos e pessoas em situação de vulnerabilidade.
-      </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 26</span> - A eventual necessidade de substituição de pessoa delegada titular deverá ser comunicada formalmente pelo Conselho Municipal de Saúde à Comissão Organizadora Estadual com antecedência mínima de 07 (sete) dias da realização da Etapa Estadual.</p>
-      <div class="cms-fala">
-        <p><strong>§ 1º</strong> - A substituição deverá observar a ordem de suplência definida na Conferência Municipal, assegurada a manutenção da paridade do segmento.</p>
-        <p class="cms-mt-sm"><strong>§ 2º</strong> - A ausência de comunicação no prazo estabelecido no caput impossibilitará a substituição no momento do credenciamento da Etapa Estadual.</p>
-      </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 27</span> - O Conselho Municipal de Saúde (CMS) indicará, dentre as pessoas eleitas delegadas, uma pessoa coordenadora (ou chefe de delegação) para a articulação direta com a Comissão Organizadora do Estado.</p>
-
-      <hr class="cms-divider">
-
-      <h2 class="cms-h2 cms-accent-navy cms-mt-md cms-mb-sm">CAPÍTULO X<br><span class="cms-h3 cms-accent-blue">DOS RECURSOS FINANCEIROS E DISPOSIÇÕES FINAIS</span></h2>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 28</span> - As despesas logísticas com a preparação e realização da Etapa Municipal da 11ª CMS correrão à conta de dotações orçamentárias consignadas no Fundo Municipal de Saúde de Montes Claros.</p>
-      <div class="cms-fala">
-        <div class="cms-fala-nome">Parágrafo único</div>
-        Caberá ao Fundo Municipal de Saúde custear o transporte e a alimentação de ida e volta de todas as pessoas delegadas eleitas para o trajeto entre Montes Claros e o local da Conferência Estadual em Belo Horizonte/MG.
-      </div>
-
-      <p class="cms-mt-sm cms-mb-sm"><span class="cms-bold">Art. 29</span> - As despesas com alimentação e hospedagem das pessoas delegadas de Montes Claros durante a permanência na 11ª CESMG em Belo Horizonte serão de responsabilidade e custeio do Fundo Estadual de Saúde de Minas Gerais.</p>
-
-      <p class="cms-mb-sm"><span class="cms-bold">Art. 30</span> - Os casos omissos neste Regimento Interno serão dirimidos pela Comissão Organizadora da 11ª CMS, ad referendum do Pleno do Conselho Municipal de Saúde de Montes Claros.</p>
-
     </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo II — Do Tema e dos Eixos Temáticos</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 3º</strong> - Em consonância com as etapas Estadual e Nacional, a 11ª CMS de Montes Claros terá como tema central: <em>"Saúde, Democracia, Soberania e SUS: cuidar do povo é cuidar do Brasil"</em>.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 4º</strong> - Os debates, a sistematização das propostas e as deliberações da Conferência serão organizados obrigatoriamente em torno de 06 (seis) eixos temáticos oficiais:</p>
+          <ul>
+            <li><strong>I - Eixo 1:</strong> Democracia, saúde como direito e soberania nacional;</li>
+            <li><strong>II - Eixo 2:</strong> Financiamento adequado e suficiente para o SUS, com base na justiça tributária e na sustentabilidade fiscal e social;</li>
+            <li><strong>III - Eixo 3:</strong> Os desafios para o SUS na agenda nacional da defesa da vida e da saúde: emergências climáticas e justiça socioambiental;</li>
+            <li><strong>IV - Eixo 4:</strong> Modelo de atenção e gestão: territórios integrados e cuidado integral;</li>
+            <li><strong>V - Eixo 5:</strong> Saúde Integral das Pessoas com Deficiência: garantia do acesso humanizado e efetivação da inclusão social;</li>
+            <li><strong>VI - Eixo 6:</strong> Saúde Integral da População LGBTIA+: Travessias do Cuidado, Humanização e Direito à Saúde.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo III — Da Estrutura de Funcionamento e Instâncias Deliberativas</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 5º</strong> - A 11ª Conferência Municipal de Saúde de Montes Claros será constituída pelos seguintes espaços estratégicos e instâncias deliberativas: <strong>I</strong> - Plenária de Abertura; <strong>II</strong> - Grupos de Trabalho (GTs); <strong>III</strong> - Plenária Final Deliberativa.</p>
+          <p><strong>§ 1º</strong> A Plenária de Abertura destina-se à instalação institucional e política da Etapa Municipal, bem como à leitura e aprovação deste Regimento Interno.</p>
+          <p><strong>§ 2º</strong> Os Grupos de Trabalho (GTs) são as instâncias de debate e deliberação preliminar das diretrizes e propostas oriundas das pré-conferências, cujos encaminhamentos serão submetidos à Plenária Final.</p>
+          <p><strong>§ 3º</strong> A Plenária Final Deliberativa é o espaço soberano de apreciação, votação e aprovação definitiva das propostas e diretrizes que comporão o Relatório Final da 11ª CMS, bem como o momento de eleição da delegação municipal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo IV — Da Metodologia Inovadora e dos Grupos de Trabalho (GTs)</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 6º</strong> - O Documento Base que guiará as deliberações dos Grupos de Trabalho é fruto direto de um processo amplo de escuta popular, sendo composto pelas 258 (duzentas e cinquenta e oito) propostas consolidadas, aprovadas e sistematizadas nas 13 (treze) Pré-Conferências Municipais realizadas nos diversos territórios e segmentos de Montes Claros.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 7º</strong> - Visando garantir a fluidez do debate, a coesão temática e o equilíbrio proporcional do volume de propostas, a Plenária da 11ª CMS adotará uma metodologia própria de reaglutinação estratégica, dividindo-se em 03 (três) Grupos de Trabalho simultâneos.</p>
+          <p><strong>Parágrafo único:</strong> O Eixo 4 (Modelo de Atenção e Gestão), devido à sua transversalidade e volume histórico de demandas, terá suas propostas fatiadas e distribuídas entre os três GTs, conforme afinidade logística e estrutural.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 8º</strong> - Os 03 (três) Grupos de Trabalho (GTs) funcionarão com a seguinte organização temática:</p>
+          <ul>
+            <li><strong>I - GT 1: A Máquina Pública — Gestão, Trabalho e Infraestrutura.</strong> Foco: O financiamento, o controle social, a gestão dos trabalhadores e a infraestrutura do sistema. 
+              <br>a) Debaterá a integralidade das propostas do Eixo 1 (Democracia e Controle Social) e do Eixo 2 (Financiamento e Trabalhador). 
+              <br>b) Debaterá as propostas do Eixo 4 referentes a: obras, construções e reformas de UBS/UPAs, segurança nas unidades, digitalização, prontuário eletrônico (e-SUS) e regulação de filas.</li>
+            <li><strong>II - GT 2: A Base do Cuidado — Atenção Primária e Populações Prioritárias.</strong> Foco: A prevenção, o funcionamento do dia a dia nos territórios e a garantia da equidade em saúde.
+              <br>a) Debaterá a integralidade das propostas do Eixo 5 (Saúde da Pessoa com Deficiência) e do Eixo 6 (Saúde da População LGBTQIA+).
+              <br>b) Debaterá as propostas do Eixo 4 referentes a: rotina das UBS, programas como Saúde na Hora, Agentes Comunitários de Saúde (ACS/ACE), vacinação, saúde da mulher, saúde bucal preventiva e populações vulneráveis (Negra e em Situação de Rua).</li>
+            <li><strong>III - GT 3: A Rede e o Entorno — Especialidades, Assistência e Vigilância.</strong> Foco: A média e alta complexidade, a logística de assistência e o impacto do meio ambiente na saúde.
+              <br>a) Debaterá a integralidade das propostas do Eixo 3 (Emergências Climáticas e Justiça Socioambiental).
+              <br>b) Debaterá as propostas do Eixo 4 referentes a: mutirões de cirurgias e exames, especialistas, Centros de Especialidades Odontológicas (CEOs), transporte sanitário, Assistência Farmacêutica e Saúde Mental (CAPS).</li>
+          </ul>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 9º</strong> - Nos Grupos de Trabalho, as propostas poderão ser aprovadas na íntegra, alteradas, aglutinadas ou rejeitadas pelos delegados presentes na sala.</p>
+          <p><strong>Parágrafo único:</strong> Somente as propostas que obtiverem maioria simples de aprovação nos Grupos de Trabalho serão encaminhadas para votação na Plenária Final Deliberativa.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo V — Dos Participantes e da Paridade do SUS</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 10</strong> - A 11ª Conferência Municipal de Saúde (CMS) de Montes Claros contará com duas categorias de participantes: <strong>I</strong> - Pessoas Delegadas: com direito a voz e voto em todas as instâncias deliberativas; <strong>II</strong> - Pessoas Convidadas: com direito apenas a voz.</p>
+          <p><strong>Parágrafo único:</strong> O quantitativo de pessoas convidadas corresponderá a, no máximo, 10% (dez por cento) do número total de pessoas delegadas.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 11</strong> - Em todas as instâncias da 11ª CMS, bem como na formação da delegação geral, será rigorosamente assegurada a paridade do controle social, em conformidade com a Lei nº 8.142/1990 e a Resolução CNS nº 453/2012. A distribuição das vagas ocorrerá na seguinte proporção:</p>
+          <ul>
+            <li><strong>I</strong> - 50% (cinquenta por cento) para o segmento de pessoas usuárias;</li>
+            <li><strong>II</strong> - 25% (vinte e cinco por cento) para o segmento de pessoas trabalhadoras da saúde;</li>
+            <li><strong>III</strong> - 25% (vinte e cinco por cento) para o segmento de gestores e prestadores de serviços de saúde.</li>
+          </ul>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 12</strong> - Consideram-se pessoas usuárias aquelas que não possuem vínculo empregatício na área da Saúde, não ocupam cargo comissionado ou de chefia na gestão pública de saúde, e não prestam serviços privados na área da saúde.</p>
+          <p><strong>§ 1º</strong> - É expressamente vedada a eleição de pessoas trabalhadoras de saúde que ocupam cargos de coordenação ou chefia para representar o segmento de trabalhadores ou de usuários.</p>
+          <p><strong>§ 2º</strong> - Parlamentares (vereadores, deputados, etc.) não poderão participar enquanto pessoas delegadas na Conferência, em nenhuma hipótese.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 13</strong> - A composição do conjunto de pessoas delegadas da 11ª CMS deverá assegurar a cota mínima de 50% (cinquenta por cento) de mulheres.</p>
+          <p><strong>Parágrafo único:</strong> A eleição deverá ser fundada no princípio da equidade, observando e estimulando a representatividade de grupos étnico-raciais, população negra, pessoas com deficiência, população LGBTIA+, multiplicidade geracional (jovens e idosos), e pessoas em situação de vulnerabilidade.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo VI — Da Inclusão, da Acessibilidade e da "Conferencinha"</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 14</strong> - Será assegurada acessibilidade plena na 11ª CMS, considerando os aspectos arquitetônicos, atitudinais, programáticos e comunicacionais (como intérpretes de Libras), de acordo com a Lei Brasileira de Inclusão da Pessoa com Deficiência (Lei nº 13.146/2015).</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 15</strong> - É obrigatória a promoção de um ambiente institucional seguro, respeitoso e livre de discriminação. A 11ª CMS será orientada por práticas rigorosas de enfrentamento ao racismo, à misoginia, ao capacitismo e à LGBTfobia institucional.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo VII — Das Diretrizes, Propostas e Regras de Formatação</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 16</strong> - Para garantir a padronização e a validade das deliberações da 11ª CMS, em consonância com as Diretrizes Metodológicas da etapa Estadual, define-se tecnicamente:</p>
+          <ul>
+            <li><strong>I - Diretriz:</strong> expressa o enunciado de uma ideia abrangente, que indica caminho, sentido ou rumo político, formulada de modo sintético em poucas frases;</li>
+            <li><strong>II - Proposta:</strong> indica a ação prática e direta a ser realizada para cumprir uma diretriz. A redação da proposta deve ser iniciada, obrigatoriamente, com um verbo no infinitivo (ex: Garantir, Ampliar, Construir, Criar) e estar sempre vinculada a uma Diretriz.</li>
+          </ul>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 17</strong> - Todas as diretrizes e propostas que forem aprovadas na Plenária Final para serem encaminhadas à Etapa Estadual deverão conter, rigorosamente, o limite máximo de 700 (setecentos) caracteres com espaços.</p>
+          <p><strong>Parágrafo único:</strong> Propostas que excederem este limite não serão validadas pelo sistema estadual, cabendo à Comissão de Relatoria Municipal realizar os ajustes e sínteses textuais necessários sem alterar o mérito aprovado pela Plenária.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 18</strong> - As diretrizes e propostas aprovadas que incidirem sobre a esfera de gestão exclusivamente municipal não subirão para o Estado, devendo ser remetidas ao Conselho Municipal de Saúde (CMS) como subsídio obrigatório para a revisão e elaboração do Plano Municipal de Saúde (2026-2029) e do Plano Plurianual (PPA).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo VIII — Do Relatório Final e do Envio das Deliberações ao Estado</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 19</strong> - A Plenária Final Deliberativa da 11ª CMS de Montes Claros filtrará as propostas aprovadas nos Grupos de Trabalho e definirá, por meio de votação, a cota exata de deliberações que representarão o município nas esferas superiores, devendo enviar obrigatoriamente:</p>
+          <ul>
+            <li><strong>I</strong> - Para a esfera Estadual: 01 (uma) Diretriz e 02 (duas) Propostas para cada um dos 06 (seis) eixos temáticos estaduais;</li>
+            <li><strong>II</strong> - Para a esfera Nacional: 01 (uma) Diretriz e 01 (uma) Proposta para cada um dos eixos temáticos de âmbito nacional.</li>
+          </ul>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 20</strong> - O Relatório Final da 11ª CMS de Montes Claros será consolidado pela Comissão de Relatoria e deverá ser enviado ao Conselho Estadual de Saúde de Minas Gerais (CESMG) no prazo máximo e improrrogável de 15 (quinze) dias após a realização da conferência municipal.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 21</strong> - Para a validação da etapa municipal perante o Estado, a Comissão Organizadora local deverá inserir as diretrizes e propostas aprovadas individualmente no formulário eletrônico oficial disponibilizado pelo CESMG.</p>
+          <p><strong>Parágrafo único:</strong> Dentro do mesmo prazo de 15 (quinze) dias, a organização deverá encaminhar, por e-mail oficial ao Estado, os seguintes documentos probatórios: a Ata da Conferência, a Lista de Presença e a Lista das Pessoas Delegadas Eleitas com suas respectivas suplências.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo IX — Da Eleição da Delegação Municipal para a Etapa Estadual</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 22</strong> - Na Plenária Final Deliberativa da 11ª CMS, serão eleitas as pessoas delegadas que representarão o município de Montes Claros na 11ª Conferência Estadual de Saúde de Minas Gerais (11ª CESMG).</p>
+          <p><strong>§ 1º</strong> - Com base na proporcionalidade populacional estipulada pelo Estado (faixa de 301 a 500 mil habitantes), o município de Montes Claros elegerá uma delegação composta por 24 (vinte e quatro) pessoas delegadas titulares.</p>
+          <p><strong>§ 2º</strong> - Respeitando rigorosamente a paridade do SUS estabelecida em Lei, as 24 vagas serão distribuídas da seguinte forma:</p>
+          <ul>
+            <li><strong>I</strong> - 12 (doze) vagas para o segmento de Pessoas Usuárias (50%);</li>
+            <li><strong>II</strong> - 06 (seis) vagas para o segmento de Pessoas Trabalhadoras da Saúde (25%);</li>
+            <li><strong>III</strong> - 06 (seis) vagas para o segmento de Gestores e Prestadores de Serviços (25%).</li>
+          </ul>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 23</strong> - Para garantir a segurança da representação municipal, para cada pessoa delegada titular eleita, deverão ser eleitas suplências (em ordem de 1ª, 2ª e 3ª suplência) obrigatoriamente dentro do mesmo segmento.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 24</strong> - A composição final da delegação municipal deverá assegurar a cota mínima de 50% (cinquenta por cento) de mulheres.</p>
+          <p><strong>Parágrafo único:</strong> A eleição deverá garantir a diversidade e a equidade, estimulando a representação de populações negras, indígenas, comunidade LGBTIA+, pessoas com deficiência, jovens, idosos e pessoas em situação de vulnerabilidade.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 25</strong> - A eventual necessidade de substituição de pessoa delegada titular deverá ser comunicada formalmente pelo Conselho Municipal de Saúde à Comissão Organizadora Estadual com antecedência mínima de 07 (sete) dias da realização da Etapa Estadual.</p>
+          <p><strong>§ 1º</strong> - A substituição deverá observar a ordem de suplência definida na Conferência Municipal, assegurada a manutenção da paridade do segmento.</p>
+          <p><strong>§ 2º</strong> - A ausência de comunicação no prazo estabelecido no caput impossibilitará a substituição no momento do credenciamento da Etapa Estadual.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 26</strong> - O Conselho Municipal de Saúde (CMS) indicará, dentre as pessoas eleitas delegadas, uma pessoa coordenadora (ou chefe de delegação) para a articulação direta com a Comissão Organizadora do Estado.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="capitulo-card">
+      <div class="capitulo-card-top"></div>
+      <div class="capitulo-header">
+        <h2 class="capitulo-title">Capítulo X — Dos Recursos Financeiros e Disposições Finais</h2>
+      </div>
+      <div class="capitulo-body">
+        <div class="artigo">
+          <p><strong>Art. 27</strong> - As despesas logísticas com a preparação e realização da Etapa Municipal da 11ª CMS correrão à conta de dotações orçamentárias consignadas no Fundo Municipal de Saúde de Montes Claros.</p>
+          <p><strong>Parágrafo único:</strong> Caberá ao Fundo Municipal de Saúde custear o transporte e a alimentação de ida e volta de todas as pessoas delegadas eleitas para o trajeto entre Montes Claros e o local da Conferência Estadual em Belo Horizonte/MG.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 28</strong> - As despesas com alimentação e hospedagem das pessoas delegadas de Montes Claros durante a permanência na 11ª CESMG em Belo Horizonte serão de responsabilidade e custeio do Fundo Estadual de Saúde de Minas Gerais.</p>
+        </div>
+        <div class="artigo">
+          <p><strong>Art. 29</strong> - Os casos omissos neste Regimento Interno serão dirimidos pela Comissão Organizadora da 11ª CMS, <em>ad referendum</em> do Pleno do Conselho Municipal de Saúde de Montes Claros.</p>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <footer class="cms-footer cms-mt-md">
-    <p><strong>11ª Conferência Municipal de Saúde</strong></p>
-    <p>Montes Claros - MG, 2026</p>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Conselho Municipal de Saúde · <span>Montes Claros</span></div>
+      <div class="footer-copy">11ª Conferência Municipal de Saúde · 22–24 abril 2026 · Transparência e Controle Social</div>
+    </div>
   </footer>
 
 </body>
